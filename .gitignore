@@ -47,3 +47,23 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+fishnet_100m_label.shx
+fishnet_100m_label.shp.xml
+fishnet_100m_label.shp
+fishnet_100m_clipped.cpg
+fishnet_100m_clipped.prj
+fishnet_100m_clipped.dbf
+fishnet_100m_clipped.sbn
+fishnet_100m_clipped.sbx
+fishnet_100m_clipped.shp
+fishnet_100m_clipped.shp.xml
+fishnet_100m_clipped.shx
+fishnet_100m_label.CPG
+fishnet_100m_label.dbf
+fishnet_100m_label.prj
+fishnet_100m_label.sbn
+fishnet_100m_label.sbx
+range_map_fig/bAMWOx_CONUS_HabMap_2001v1/bAMWOx_CONUS_HabMap_2001v1.tif
+range_map_fig/bAMWOx_CONUS_HabMap_2001v1/bAMWOx_CONUS_HabMap_2001v1.tfw
+range_map_fig/bAMWOx_CONUS_HabMap_2001v1/bAMWOx_CONUS_HabMap_2001v1.tif.aux.xml
+range_map_fig/bAMWOx_CONUS_HabMap_2001v1/bAMWOx_CONUS_HabMap_2001v1.tif.vat.dbf

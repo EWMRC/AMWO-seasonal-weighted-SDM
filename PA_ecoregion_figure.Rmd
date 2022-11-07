@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(raster)
+library(terra)
+library(mapview)
+library(there)
+
+#COULD NOT GET THIS TO WORK: sticking with the fishnet method in Penn_utility_evaluation
+```
+
+Read in files
+```{r}
+pa_ecoregions <- st_read(here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.shp"))
+
+migratory_raster <- raster(here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) %>%
+  projectRaster(crs = crs(as_Spatial(pa_ecoregions))) %>% 
+  rast()
+
+breeding_raster <- raster(here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) %>%
+  projectRaster(crs = crs(as_Spatial(pa_ecoregions))) %>% 
+  rast()
+
+```
+
+Dissolve into l3 ecoregions
+```{r}
+pa_ecoregions %>% 
+  group_by(US_L3CODE) %>%
+  nest ->
+  pa_ecoregions_nested
+
+pa_ecoregions_nested %>%
+  mutate(data = map(data, function(x){
+    x %>%
+      st_union() %>%
+      st_sf() %>%
+      return()
+  })) ->
+  pa_ecoregions_nested
+
+pa_ecoregions_nested %>%
+  unnest(cols = c(data)) %>%
+  st_sf() ->
+  pa_ecoregions
+```
+
+for each ecoregion, extract the corresponding values
+```{r}
+#mig
+pa_ecoregions %>%
+  rowwise() %>%
+  mutate(mig_vals = map(geometry, function(x){
+    x %>%
+      vect() %>%
+      terra::mask(x = migratory_raster, mask = .) %>%
+      terra::values(mat=FALSE) %>%
+      unlist() %>%
+      return()
+  })) ->
+  pa_ecoregions
+
+#breeding
+pa_ecoregions %>%
+  rowwise() %>%
+  mutate(breeding_vals = map(geometry, function(x){
+    x %>%
+      vect() %>%
+      terra::mask(x = breeding_raster, mask = .) %>%
+      terra::values() %>%
+      unlist() %>%
+      return()
+  })) ->
+  pa_ecoregions
+```
+
+Pivoting to a table that I can input into ggplot
+```{r}
+pa_ecoregions %>%
+  mutate(mig_vals = list(na.omit(mig_vals))) %>%
+  mutate(breeding_vals = list(na.omit(breeding_vals))) ->
+  pa_ecoregions
+
+pa_ecoregions %>%
+  transmute(US_L3CODE = US_L3CODE, vals = list(mig_vals), season = "Migratory") %>%
+  st_drop_geometry() %>%
+  separate_rows(vals) %>%
+  filter(vals != "") ->
+  pa_ecoregions_mig
+
+pa_ecoregions %>%
+  transmute(US_L3CODE = US_L3CODE, vals = list(breeding_vals), season = "Breeding") %>%
+  st_drop_geometry() %>%
+  separate_rows(vals) ->
+  pa_ecoregions_breeding
+```
+
