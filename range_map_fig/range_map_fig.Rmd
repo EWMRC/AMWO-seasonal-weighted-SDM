@@ -6,14 +6,14 @@ output: html_notebook
 ```{r include = FALSE}
 library(tidyverse)
 library(sf)
-library(there)
+library(here)
 library(move)
 library(ggpubr)
 ```
 
 Load range map and merge fall and spring migratory ranges
 ```{r}
-range_shp <- st_read(here_file("Projects", "PA_paper", "range_map_fig", "ebird", "amwo_combined_2021_4326.shp")) %>%
+range_shp <- st_read(here("ebird", "amwo_combined_2021_4326.shp")) %>%
   mutate(season = recode(season, 
                          "Spring Migratory Range" = "Migratory Range",
                          "Fall Migratory Range" = "Migratory Range",
@@ -25,7 +25,7 @@ range_shp <- st_read(here_file("Projects", "PA_paper", "range_map_fig", "ebird",
 
 Load a basemap
 ```{r}
-basemap_ras <- raster::stack(here_file("Data", "basemaps", "esri_lightgrey", "esri_lightgrey_36_48_4326.tif"))
+basemap_ras <- raster::stack(there::here_file("Data", "basemaps", "esri_lightgrey", "esri_lightgrey_36_48_4326.tif"))
 ```
 
 Plot the range map using the color scheme from Girl with a Pearl Earring
@@ -47,7 +47,7 @@ range_map_ggplot
 Retrieve movement data
 ```{r}
 amwo_sf <- getMovebankData(study = "American Woodcock Migration Ecology in Eastern North America", 
-                             login = movebankLogin(username = "acfish", password="EPvzvNSUJ8"), 
+                             login = movebankLogin(username = "LA_Berigan", password = "33szcNUtv4iyPGU"), 
                              removeDuplicatedTimestamps=TRUE) %>% 
   as.data.frame() %>%
   st_as_sf(crs = 4326, coords = c("location_long", "location_lat"), remove = FALSE)
@@ -59,7 +59,7 @@ amwo_tracks_sf <- amwo_sf %>%
   arrange(timestamp) %>%
   group_by(local_identifier) %>%
   tally() %>% #summarize, but also add an n column
-  filter(n > 1) %>%
+  filter(n > 1) %>% #can't make a line without at least two points
   st_cast("LINESTRING")
 ```
 
@@ -67,9 +67,9 @@ Plot the lines over the basemap from before
 ```{r fig.height=15, fig.width=15}
 set.seed(8) 
 amwo_tracks_sf %>% 
-  sample_n(size = 75) %>%
+  #sample_n(size = 75) %>%
   ggplot() +
-  geom_sf(size = 0.001) +
+  geom_sf(size = 0.001, alpha = 0.4) +
   lims(x = c(-100, -60), y = c(25, 55)) ->
   migration_map_ggplot
 
@@ -80,7 +80,7 @@ migration_map_ggplot
 ```
 
 Merge into the same plot
-```{r}
+```{r fig.height=4.5, fig.width=7.5}
 range_migration_combined <- ggarrange(range_map_ggplot, migration_map_ggplot,
                legend = "bottom",
                common.legend = TRUE,
@@ -89,5 +89,7 @@ range_migration_combined <- ggarrange(range_map_ggplot, migration_map_ggplot,
                vjust = 2.0,
                font.label = list(size = 12))
 range_migration_combined
+
+ggsave("rangemap_multipanel_11_7_2022.tiff", dp = 600, height=4.5, width=7.5)
 ```
 
