@@ -1,0 +1,2 @@
+# AMWO-seasonal-weighted-SDM
+ 
