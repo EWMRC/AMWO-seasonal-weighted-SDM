@@ -20,7 +20,21 @@ range_shp <- st_read(here("ebird", "amwo_combined_2021_4326.shp")) %>%
                          "Nonbreeding Range" = "Wintering Range")) %>%
   group_by(season) %>%
   summarise(geometry = sf::st_union(geometry)) %>%
-  ungroup()
+  ungroup() %>% 
+  filter(season != "Migratory Range") #remove the migratory range from the figure
+```
+
+Load hypothesized migratory routes and PA boundary
+```{r}
+routes <- st_read(here("range_map_fig/moore_hypothesized_mig_routes.shp")) %>% 
+  dplyr::select(-Id) %>% 
+  mutate(linetype = recode(route, 
+                           "Eastern" = "31", #dashed
+                           "Central" = "solid",
+                           "Western" = "11"))#dotted
+
+boundary_pa <- st_read(there::here_file("Data", "Govt_boundaries", "pennsylvania_5070.shp")) %>% 
+  st_transform(4326)
 ```
 
 Load a basemap
@@ -32,64 +46,65 @@ Plot the range map using the color scheme from Girl with a Pearl Earring
 ```{r}
 ggplot(range_shp) +
   geom_sf(aes(fill = season), alpha = 0.75) +
+  #geom_sf(data = boundary_pa, alpha = 0, lwd = 0.5, color = "black") +
+  geom_sf(data = routes, linetype = "solid", size = 1.5, color = "white") + 
+  geom_sf(data = routes, linetype = routes$linetype, size = 1) +
   lims(x = c(-100, -60), y = c(25, 55)) +
   labs(fill = NULL) +
-  scale_fill_discrete(type = paletteer::paletteer_d("dutchmasters::pearl_earring")) -> range_map_ggplot
+  #scale_fill_discrete(type = paletteer::paletteer_d("dutchmasters::pearl_earring")) 
+  scale_fill_manual(values = c("#A65141FF", "#80A0C7FF", "#394165FF")) ->
+  range_map_ggplot
 
 range_map_ggplot %>%
   gginnards::append_layers(ggspatial::layer_spatial(data = basemap_ras, lazy = TRUE, dpi = 150), position = "bottom") ->
   range_map_ggplot
+
 range_map_ggplot
 ```
 
-# Next plot: woodcock migratory movements
+# Next plot: Pennsylvania zoom-in
 
-Retrieve movement data
 ```{r}
-amwo_sf <- getMovebankData(study = "American Woodcock Migration Ecology in Eastern North America", 
-                             login = movebankLogin(username = "LA_Berigan", password = "33szcNUtv4iyPGU"), 
-                             removeDuplicatedTimestamps=TRUE) %>% 
-  as.data.frame() %>%
-  st_as_sf(crs = 4326, coords = c("location_long", "location_lat"), remove = FALSE)
-```
+range_shp_pa <- range_shp %>% 
+  st_crop(c(st_bbox(boundary_pa)$ymin-0.25, 
+            st_bbox(boundary_pa)$ymax+0.25, 
+            st_bbox(boundary_pa)$xmin-0.25, 
+            st_bbox(boundary_pa)$xmax+0.25)) #clip to dimensions of the map, otherwise it won't display correctly
 
-Make a line object that shows the tracks for all birds, and then sample down to a reasonable subset
-```{r}
-amwo_tracks_sf <- amwo_sf %>%
-  arrange(timestamp) %>%
-  group_by(local_identifier) %>%
-  tally() %>% #summarize, but also add an n column
-  filter(n > 1) %>% #can't make a line without at least two points
-  st_cast("LINESTRING")
-```
+pa_map_ggplot <- ggplot(range_shp_pa) +
+  geom_sf(aes(fill = season), alpha = 0.75) +
+  geom_sf(data = boundary_pa, alpha = 0, lwd = 1, color = "black") + 
+  geom_sf(data = routes, linetype = "solid", size = 2, color = "white") + 
+  geom_sf(data = routes, linetype = routes$linetype, size = 1) +
+  labs(fill = NULL) +
+  scale_fill_manual(values = c("#A65141FF", "#80A0C7FF", "#394165FF"))
 
-Plot the lines over the basemap from before
-```{r fig.height=15, fig.width=15}
-set.seed(8) 
-amwo_tracks_sf %>% 
-  #sample_n(size = 75) %>%
-  ggplot() +
-  geom_sf(size = 0.001, alpha = 0.4) +
-  lims(x = c(-100, -60), y = c(25, 55)) ->
-  migration_map_ggplot
-
-migration_map_ggplot %>%
+pa_map_ggplot %>%
   gginnards::append_layers(ggspatial::layer_spatial(data = basemap_ras, lazy = TRUE, dpi = 150), position = "bottom") ->
-  migration_map_ggplot
-migration_map_ggplot
+  pa_map_ggplot
+
+pa_map_ggplot <- pa_map_ggplot +
+  coord_sf(xlim = c(st_bbox(boundary_pa)$xmin-0.25, st_bbox(boundary_pa)$xmax+0.25),
+           ylim = c(st_bbox(boundary_pa)$ymin-0.25, st_bbox(boundary_pa)$ymax+0.25),
+           expand = FALSE)
+
+pa_map_ggplot
+
 ```
+
+
 
 Merge into the same plot
 ```{r fig.height=4.5, fig.width=7.5}
-range_migration_combined <- ggarrange(range_map_ggplot, migration_map_ggplot,
+range_migration_combined <- ggarrange(range_map_ggplot, pa_map_ggplot,
                legend = "bottom",
                common.legend = TRUE,
-               labels = c("Seasonal ranges", "Migration paths"),
+               labels = c("A", "B"),
                hjust = -0.35,
                vjust = 2.0,
                font.label = list(size = 12))
 range_migration_combined
 
-ggsave("rangemap_multipanel_11_7_2022.tiff", dp = 600, height=4.5, width=7.5)
+ggsave("rangemap_multipanel_11_10_2022.tiff", dp = 600, height=4.5, width=7.5)
 ```
 
