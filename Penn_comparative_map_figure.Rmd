@@ -66,6 +66,9 @@ leaflet(options = leafletOptions(zoomControl = FALSE,attributionControl=FALSE)) 
 iterated_leaflet %>%
   mapview::mapshot(file = "m10r0_nolegend.jpg", vwidth = 575, vheight = 375, remove_controls = NULL)
 
+iterated_leaflet %>%
+  mapview::mapshot(file = "m10r0_nolegend_highres.png", vwidth = 575, vheight = 375, remove_controls = NULL, zoom = 6)
+
 ```
 
 And the residential layer
@@ -109,6 +112,9 @@ leaflet(options = leafletOptions(zoomControl = FALSE, attributionControl=FALSE))
 iterated_leaflet %>%
   mapview::mapshot(file = "m0r10_nolegend.jpg", vwidth = 575, vheight = 375, remove_controls = NULL) #700
 
+iterated_leaflet %>%
+  mapview::mapshot(file = "m0r10_nolegend_highres.png", vwidth = 575, vheight = 375, remove_controls = NULL, zoom = 6)
+
 ```
 
 
@@ -123,6 +129,9 @@ leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
 
 iterated_leaflet %>%
   mapview::mapshot(file = "legendonly.png", vwidth =700, vheight = 375, remove_controls = NULL)
+
+iterated_leaflet %>%
+  mapview::mapshot(file = "legendonly_highres.png", vwidth =700, vheight = 375, remove_controls = NULL, zoom = 1)
 ```
 
 

@@ -156,5 +156,5 @@ ggdraw(range_map_ggplot) +
             width = 0.3,
             height = 0.3)
 
-ggsave("test9.tiff", dp = 300, height = 7, width = 7)
+ggsave("figure_inset_12_7_22.tiff", dp = 300, height = 7, width = 7)
 ```
