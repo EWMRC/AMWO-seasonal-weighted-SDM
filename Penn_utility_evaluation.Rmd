@@ -254,7 +254,7 @@ point_values_longer %>%
   ylab("Habitat suitability") +
   xlab("Percent forest (5 km)") +
   scale_x_continuous(labels = scales::percent) +
-  scale_fill_gradientn(colours=r, limits = c(1,65), trans = "log", labels = round) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
   labs(fill = "Count")
 
 ggsave(filename = "covariate_graphs_figure/pland_5km_12_8_22.jpg", height = 4, width = 7)
@@ -289,7 +289,7 @@ point_values_longer %>%
   facet_wrap(~season) +
   ylab("Habitat suitability") +
   xlab("Aggregation index (10 km)") +
-  scale_fill_gradientn(colours=r, limits = c(1,65), trans = "log", labels = round) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
   labs(fill="Count")
 ggsave(filename = "covariate_graphs_figure/ai_10km_12_8_22.jpg", height = 4, width = 7)
 ```
@@ -315,7 +315,7 @@ point_values_longer %>%
   ylab("Habitat suitability") +
   xlab("Percent agricultural (10 km)") +
   scale_x_continuous(labels = scales::percent) +
-  scale_fill_gradientn(colours=r, limits = c(1,65), trans = "log", labels = round) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
   labs(fill="Count")
 
 ggsave(filename = "covariate_graphs_figure/agri_10km_12_8_22.jpg", height = 4, width = 7)
@@ -333,7 +333,7 @@ point_values_longer %>%
   ylab("Habitat suitability") +
   xlab("Percent developed (10 km)") +
   scale_x_continuous(labels = scales::percent) +
-  scale_fill_gradientn(colours=r, limits = c(1,65), trans = "log", labels = round) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) + 
   labs(fill="Count")
 
 ggsave(filename = "covariate_graphs_figure/dev_10km_12_8_22.jpg", height = 4, width = 7)
@@ -465,6 +465,6 @@ ggdraw() +
    draw_plot(ecoregion_bw_plot, x = 0, y = 0.5, width = 1, height = .5) +
    draw_plot(ecoregion_map_plot, x = 0, y = 0, width = 1, height = .5)
 
-ggsave(filename = "pa_comparative_ecoregion_cbfriendly.jpg", width = 8, height = 7, dpi = 320)
+ggsave(filename = "pa_comparative_ecoregion_cbfriendly_12_10_22.tif", width = 8, height = 7, dpi = 320, device = "tiff")
 ```
 
