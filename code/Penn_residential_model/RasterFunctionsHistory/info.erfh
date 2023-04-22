@@ -1,0 +1,35 @@
+{
+  "version" : 1,
+  "name" : "Raster Functions History",
+  "historyItems" : [
+    {
+      "id" : "{A9F0239E-A2AA-4BCE-9775-E8BDA75C1749}",
+      "type" : 1,
+      "status" : 2,
+      "name" : "Merge Rasters",
+      "description" : "Merges a collection of rasters on the fly.",
+      "rftPath" : "Merge Rasters_{A9F0239E-A2AA-4BCE-9775-E8BDA75C1749}.rft.xml",
+      "startTime" : "637538312490000000",
+      "endTime" : "637538312500000000",
+      "remoteJobStateInfo" : {
+        "ID" : "_lcljob",
+        "Status" : 5,
+        "ReturnValue" : "",
+        "Messages" : [
+          {
+            "Text" : "Submitted.",
+            "Type" : 0
+          },
+          {
+            "Text" : "Executing...",
+            "Type" : 0
+          },
+          {
+            "Text" : "Succeeded.",
+            "Type" : 0
+          }
+        ]
+      }
+    }
+  ]
+}

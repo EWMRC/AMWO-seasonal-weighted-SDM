@@ -1,0 +1,25 @@
+[general]
+creator=R package 'raster'
+created=2021-06-08 13:48:12
+[georeference]
+nrows=251
+ncols=307
+xmin=1708215
+ymin=2267355
+xmax=1735845
+ymax=2289945
+projection=+proj=aea +lat_0=23 +lon_0=-96 +lat_1=29.5 +lat_2=45.5 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=12
+bandorder=BIL
+minvalue=0:98.6154937744141:0.20314909517765:0.0288324877619743:0.000580832536797971:90.8076629638672:99.5254821777344:0.0791227594017982:0.00508418632671237:710.874572753906:2:0
+maxvalue=0.49338373541832:99.8098602294922:0.740686655044556:0.217677131295204:0.00771747343242168:94.3182601928711:99.8707427978516:0.175090000033379:0.011335801333189:1605.11096191406:4:0
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=lsm_agri_90m_1km_5070:lsm_cohesion_90m_5km_5070:lsm_pland_90m_5km_5070:lsm_agri_90m_5km_5070:lsm_dev_90m_5km_5070:lsm_ai_90m_10km_5070:lsm_cohesion_90m_10km_5070:lsm_agri_90m_10km_5070:lsm_dev_90m_10km_5070:DEM_PA_30m:level_iii_ecoregions_pa:survey_type

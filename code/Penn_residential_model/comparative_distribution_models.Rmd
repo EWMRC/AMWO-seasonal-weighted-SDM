@@ -1,0 +1,527 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(sp)
+library(raster)
+library(tidyverse)
+library(there)
+library(sf)
+library(stars)
+library(SDMtune)
+library(parallel)
+library(pbapply)
+```
+
+
+Reading in the predictor datasets
+```{r}
+#500m
+lsm_500m_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_ai_30m_500m_5070.tif"))
+lsm_500m_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_cohesion_30m_500m_5070.tif"))
+lsm_500m_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_ed_30m_500m_5070.tif"))
+lsm_500m_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_pland_30m_500m_5070.tif"))
+lsm_500m_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_agri_30m_500m_5070.tif"))
+lsm_500m_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_dev_30m_500m_5070.tif"))
+
+#1km
+lsm_1km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_ai_90m_1km_5070.tif"))
+lsm_1km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_cohesion_90m_1km_5070.tif"))
+lsm_1km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_ed_90m_1km_5070.tif"))
+lsm_1km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_pland_90m_1km_5070.tif"))
+lsm_1km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_agri_90m_1km_5070.tif"))
+lsm_1km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_dev_90m_1km_5070.tif"))
+
+#5km
+lsm_5km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_ai_90m_5km_5070.tif"))
+lsm_5km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_cohesion_90m_5km_5070.tif"))
+lsm_5km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_ed_90m_5km_5070.tif"))
+lsm_5km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_pland_90m_5km_5070.tif"))
+lsm_5km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_agri_90m_5km_5070.tif"))
+lsm_5km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_dev_90m_5km_5070.tif"))
+
+#10km
+lsm_10km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_ai_90m_10km_5070.tif"))
+lsm_10km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km_5070.tif"))
+lsm_10km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_ed_90m_10km_5070.tif"))
+lsm_10km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_pland_90m_10km_5070.tif"))
+lsm_10km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif"))
+lsm_10km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif"))
+
+#landcover: set background values to NA
+forest_30m <- here_file("Projects", "Penn_migration_model", "nlcd2016_forestpatches.tif") %>% raster() 
+forest_30m[forest_30m == 128] <- NA
+
+#terrain
+elev_30m <- here_file("Data", "DEM", "DEM_PA_30m.tif") %>% raster()
+
+slope_30m <- here_file("Projects", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30slope.tif") %>% raster()
+
+#moisture: replace NAs with the mean value
+soil_drainage_30m <- here_file("Data", "SoilDrainage", "soil_drainage_5070.tif") %>% raster()
+
+soil_drainage_30m %>% 
+  values() %>%
+  mean(na.rm = TRUE) ->
+  soil_drainage_30m[is.na(soil_drainage_30m)]
+
+twi_30m <- here_file("Projects", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30m_twi.tif") %>% raster()
+
+#level 3 ecoregions
+ecoregions <- here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.tif") %>% raster()
+
+#succession classes
+sclass <- here_file("Data", "Landfire_products", "US_200SCLASS", "us_200sclass_pa.tif") %>% raster()
+```
+
+Using resample to get all of the rasters on matching extents and resolutions before I put them in a rasterstack
+```{r}
+# federal data only #
+#full variables
+#predictor_list <- c(lsm_500m_ai, lsm_500m_cohesion, lsm_500m_ed, lsm_500m_pland, lsm_500m_agri, lsm_500m_dev, lsm_1km_ai, lsm_1km_cohesion, lsm_1km_ed, lsm_1km_pland, lsm_1km_agri, lsm_1km_dev, lsm_5km_ai, lsm_5km_cohesion, lsm_5km_ed, lsm_5km_pland, lsm_5km_agri, lsm_5km_dev, lsm_10km_ai, lsm_10km_cohesion, lsm_10km_ed, lsm_10km_pland, lsm_10km_agri, lsm_10km_dev, forest_30m, elev_30m, slope_30m, soil_drainage_30m, twi_30m, ecoregions, sclass)
+
+#threshold variables
+#predictor_list <- c(elev_30m, lsm_10km_dev, lsm_5km_cohesion, lsm_5km_agri, lsm_5km_ed, lsm_5km_ai, lsm_10km_agri, ecoregions, lsm_5km_dev, lsm_5km_pland, lsm_10km_cohesion, lsm_10km_ai, lsm_10km_ed, lsm_500m_agri, lsm_1km_ai, lsm_1km_agri, lsm_500m_ai, lsm_10km_pland, lsm_500m_pland, lsm_1km_cohesion, lsm_1km_ed, lsm_1km_pland, lsm_500m_cohesion, lsm_500m_ed, lsm_500m_dev, slope_30m, twi_30m, soil_drainage_30m, lsm_1km_dev, sclass)
+
+#interpretation variables
+#predictor_list <- c(elev_30m, lsm_10km_dev, lsm_5km_cohesion, lsm_5km_agri, lsm_5km_ed, lsm_5km_ai, lsm_10km_agri, ecoregions, lsm_5km_dev)
+
+#prediction variables
+#predictor_list <- c(elev_30m, lsm_10km_dev, lsm_5km_cohesion, lsm_5km_agri, lsm_5km_ed, lsm_10km_agri, ecoregions, lsm_5km_dev)
+
+# federal and state data #
+#full variables/threshold variables (same) Don't forget to add survey_type for prediction!
+#predictor_list <- c(lsm_10km_dev, ecoregions, lsm_10km_agri, elev_30m, lsm_5km_cohesion, lsm_5km_pland, lsm_5km_agri, lsm_5km_dev, lsm_10km_cohesion, lsm_10km_ai, lsm_5km_ai, lsm_10km_pland, lsm_5km_ed, lsm_1km_agri, lsm_1km_cohesion, lsm_10km_ed, lsm_1km_pland, lsm_1km_ai, lsm_500m_ai, lsm_500m_agri, lsm_500m_pland, lsm_500m_cohesion, lsm_1km_ed, lsm_500m_ed, lsm_500m_dev, slope_30m, soil_drainage_30m, lsm_1km_dev, twi_30m, sclass, forest_30m)
+
+#interpretation variables
+predictor_list <- c(lsm_1km_agri, lsm_5km_cohesion, lsm_5km_pland, lsm_5km_agri, lsm_5km_dev, lsm_10km_ai, lsm_10km_cohesion, lsm_10km_agri, lsm_10km_dev, elev_30m, ecoregions)
+
+#prediction variables
+#predictor_list <- c(lsm_5km_cohesion, lsm_5km_pland, lsm_5km_agri, lsm_5km_dev, lsm_10km_cohesion, ecoregions)
+
+cl <- parallel::makeCluster(10)
+parallel::clusterExport(cl, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass", "predictor_list"))
+
+parallel::clusterEvalQ(cl, library(tidyverse))
+parallel::clusterEvalQ(cl, library(sp))
+parallel::clusterEvalQ(cl, library(sf))
+parallel::clusterEvalQ(cl, library(raster))
+
+predictor_list <- pbapply::pblapply(X = predictor_list, cl = cl, FUN = function(x){
+  resample(x, forest_30m)
+})
+
+predictor_stack <- do.call(what = raster::stack, args = c(predictor_list, quick = FALSE))
+
+#stackSave(predictor_stack, "predictor_stack_interpretation_residential.stk")
+#predictor_stack <- stackOpen("predictor_stack_interpretation_residential.stk")
+
+#stopCluster(cl)
+```
+
+Reading in the SGS used and available data, separate into used and available, and transform to match the predictor stack
+```{r}
+pa_sgs_pres_abs <- read_csv("pa_sgs_pres_abs.csv") %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 0) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+  #group_by(Route) %>%
+  #sample_n(1)
+
+state_surveys <- read_csv("pa_statesurveys_pres_abs.csv") %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 1) %>%
+  mutate(Stop = as.character(Stop)) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+
+surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+
+used <- surveys_all %>%
+  filter(pres_abs == 1) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  as_Spatial() %>%
+  spTransform(crs(predictor_stack))
+
+avail <- surveys_all %>%
+  filter(pres_abs == 0) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  as_Spatial() %>%
+  spTransform(crs(predictor_stack))
+```
+
+
+Prepping dataset for the model runs. Also creates data for k-fold training and testing
+```{r}
+swd <- prepareSWD(species = "Scolopax minor", 
+           env = predictor_stack, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords))# categorical = c("nlcd2016_forestpatches") 
+
+#add survey type, which can allows us to account for bias in survey methodology
+survey_intermediate <- surveys_all %>%
+  dplyr::select(Longitude, Latitude, survey_type) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = crs(predictor_stack))
+
+survey_intermediate <- cbind(as.data.frame(st_coordinates(survey_intermediate)), st_drop_geometry(survey_intermediate))
+
+swd@data$survey_type  <- left_join(swd@coords, survey_intermediate) %>% 
+  pull(survey_type)
+```
+
+creating custom folds to ensure that we're never validating with the same routes that were in the training dataset
+Step 1: draw random routes for each k-fold
+```{r}
+all_routes <- bind_rows(st_as_sf(avail), st_as_sf(used)) %>%
+  pull(Route) %>%
+  unique()
+
+set.seed(1); all_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_1
+
+shorter_routes <- all_routes[!all_routes %in% routes_test_1]
+
+set.seed(2); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_2
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_2]
+
+set.seed(3); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_3
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_3]
+
+set.seed(4); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_4
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_4]
+
+set.seed(5); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_5
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_5]
+
+set.seed(6); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_6
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_6]
+
+set.seed(7); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_7
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_7]
+
+set.seed(8); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_8
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_8]
+
+set.seed(9); shorter_routes %>%
+  sample(. , floor(length(all_routes)/10)) ->
+  routes_test_9
+
+shorter_routes <- shorter_routes[!shorter_routes %in% routes_test_9]
+
+set.seed(10); shorter_routes %>%
+  sample(. , (length(all_routes)- length(routes_test_1)*9)) ->
+  routes_test_10
+```
+
+Step 2: Create a matrix for the test and training datasets
+```{r}
+test <- bind_rows(st_as_sf(avail), st_as_sf(used)) %>%
+  cbind(., st_coordinates(.)) %>% 
+  st_drop_geometry %>% 
+  left_join(swd@coords, .) %>%
+  mutate(fold_1 = Route %in% routes_test_1) %>%
+  mutate(fold_2 = Route %in% routes_test_2) %>%
+  mutate(fold_3 = Route %in% routes_test_3) %>%
+  mutate(fold_4 = Route %in% routes_test_4) %>%
+  mutate(fold_5 = Route %in% routes_test_5) %>%
+  mutate(fold_6 = Route %in% routes_test_6) %>%
+  mutate(fold_7 = Route %in% routes_test_7) %>%
+  mutate(fold_8 = Route %in% routes_test_8) %>%
+  mutate(fold_9 = Route %in% routes_test_9) %>%
+  mutate(fold_10 = Route %in% routes_test_10) %>%
+  dplyr::select(fold_1, fold_2, fold_3, fold_4, fold_5, fold_6, fold_7, fold_8, fold_9, fold_10) %>%
+  as.matrix()
+
+train <- bind_rows(st_as_sf(avail), st_as_sf(used)) %>%
+  cbind(., st_coordinates(.)) %>% 
+  st_drop_geometry %>% 
+  left_join(swd@coords, .) %>%
+  mutate(fold_1 = !Route %in% routes_test_1) %>%
+  mutate(fold_2 = !Route %in% routes_test_2) %>%
+  mutate(fold_3 = !Route %in% routes_test_3) %>%
+  mutate(fold_4 = !Route %in% routes_test_4) %>%
+  mutate(fold_5 = !Route %in% routes_test_5) %>%
+  mutate(fold_6 = !Route %in% routes_test_6) %>%
+  mutate(fold_7 = !Route %in% routes_test_7) %>%
+  mutate(fold_8 = !Route %in% routes_test_8) %>%
+  mutate(fold_9 = !Route %in% routes_test_9) %>%
+  mutate(fold_10 = !Route %in% routes_test_10) %>%
+  dplyr::select(fold_1, fold_2, fold_3, fold_4, fold_5, fold_6, fold_7, fold_8, fold_9, fold_10) %>%
+  as.matrix()
+  
+swd_folds_custom <- list(train = train, test = test)
+attr(swd_folds_custom$train, "dimnames") <- NULL
+attr(swd_folds_custom$test, "dimnames") <- NULL
+```
+
+
+Running and evaluating the comparative models
+```{r}
+#Maxent
+maxent <- train(method = "Maxent", data = swd, swd_folds_custom) 
+
+auc(maxent, test = TRUE) #0.6835748 -> 0.6692682
+
+#Random Forest
+rf <- train(method = "RF", data = swd, swd_folds_custom)
+
+auc(rf, test = TRUE) #0.6807499 -> 0.6927534
+
+#Boosted Regression Trees
+brt <- train(method = "BRT", data = swd, swd_folds_custom)
+
+auc(brt, test = TRUE) #0.6967293 -> 0.7223324
+
+```
+
+Predict woodcock stopover locations
+```{r}
+#rf_map <- predict(rf, data = predictor_stack, type = "cloglog")
+#writeRaster(rf_map, "rf_4_8_21.tif")
+```
+
+Training the models 
+```{r}
+#Loading the functions to iterate through random forests and predict the output. These are unpublished functions from the MixRF package (looks like development stalled).
+source('MixRFb.r')
+source("anon_functions_SDMTune.R")
+
+#Creating a vector of routes that can be used as a random effect and embedding them into a modified swd
+swd_modified <- swd
+swd_modified@data$route <- bind_rows(st_as_sf(avail), st_as_sf(used)) %>%
+  cbind(., st_coordinates(.)) %>% 
+  st_drop_geometry %>%
+  left_join(swd@coords, .) %>%
+  pull(Route)
+
+#iterate through folds 
+folds <- .convert_folds(swd_folds_custom, swd_modified)
+k <- ncol(folds[[1]])
+
+models <- vector("list", length = k)
+
+#stopCluster(cl)
+new_cl <- parallel::makeCluster(10)
+parallel::clusterExport(new_cl, c("swd_modified", "folds"))
+
+parallel::clusterEvalQ(new_cl, library(tidyverse))
+parallel::clusterEvalQ(new_cl, library(sp))
+parallel::clusterEvalQ(new_cl, library(sf))
+parallel::clusterEvalQ(new_cl, library(raster))
+parallel::clusterEvalQ(new_cl, source('D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_residential_model/MixRFb.r'))
+parallel::clusterEvalQ(new_cl, source("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_residential_model/anon_functions_SDMTune.R"))
+
+models <- pbapply::pblapply(X = 1:k, cl = new_cl, FUN = function(j){
+  print(paste("Running model: ", j))
+  train <- .subset_swd(swd_modified, folds$train[, j])
+  MixRFb(Y = train$pa, x = "lsm_agri_90m_1km_5070 + lsm_cohesion_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070+ lsm_dev_90m_5km_5070 + lsm_ai_90m_10km_5070 + lsm_cohesion_90m_10km_5070 + lsm_agri_90m_10km_5070 + lsm_dev_90m_10km_5070 + DEM_PA_30m + level_iii_ecoregions_pa + survey_type"  , random='(1|route)', data = train$data, initialRandomEffects=0, ErrorTolerance=1, MaxIterations=200, ErrorTolerance0=0.3, MaxIterations0=5, verbose=T) %>% 
+    return()
+})
+
+
+#train models
+# for (j in 1:k) {
+#   print(paste("Running model: ", j))
+#   train <- .subset_swd(swd_modified, folds$train[, j])
+#   models[[j]] <- MixRFb(Y = train$pa, x = "lsm_dev_90m_10km_5070 + level_iii_ecoregions_pa + lsm_agri_90m_10km_5070 + DEM_PA_30m + lsm_cohesion_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_dev_90m_5km_5070 + lsm_cohesion_90m_10km_5070 + lsm_ai_90m_10km_5070 + lsm_ai_90m_5km_5070 + lsm_pland_90m_10km_5070 + lsm_ed_90m_5km_5070 + lsm_agri_90m_1km_5070 + lsm_cohesion_90m_1km_5070 + lsm_ed_90m_10km_5070 + lsm_pland_90m_1km_5070 + lsm_ai_90m_1km_5070 + lsm_ai_30m_500m_5070 + lsm_agri_30m_500m_5070 + lsm_pland_30m_500m_5070 + lsm_cohesion_30m_500m_5070 + lsm_ed_90m_1km_5070 + lsm_ed_30m_500m_5070 + lsm_dev_30m_500m_5070 + DEM_PA_30slope + layer.1 + lsm_dev_90m_1km_5070 + DEM_PA_30m_twi + us_200sclass_pa + layer.2 + survey_type", random='(1|route)', data = train$data, initialRandomEffects=0, ErrorTolerance=1, MaxIterations=200, ErrorTolerance0=0.3, MaxIterations0=5, verbose=T)
+# }
+
+# federal data only #
+# old
+# "pland_200m_1k_30m_5070 + ai_200m_1k_30m_5070 + cohesion_200m_1k_30m_5070 + ed_200m_1k_30m_5070 + pland_1k_5k_30m_5070 + ai_1k_5k_30m_5070 + cohesion_1k_5k_30m_5070 + ed_1k_5k_30m_5070 + factor(layer.1) + DEM_PA_30m + DEM_PA_30slope + layer.2 + DEM_PA_30m_twi"
+# full x
+#"lsm_ai_30m_500m_5070 + lsm_cohesion_30m_500m_5070 + lsm_ed_30m_500m_5070 + lsm_pland_30m_500m_5070 + lsm_agri_30m_500m_5070 + lsm_dev_30m_500m_5070 + lsm_ai_90m_1km_5070 + lsm_cohesion_90m_1km_5070 + lsm_ed_90m_1km_5070 + lsm_pland_90m_1km_5070 + lsm_agri_90m_1km_5070 + lsm_dev_90m_1km_5070 + lsm_ai_90m_5km_5070 + lsm_cohesion_90m_5km_5070 + lsm_ed_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_dev_90m_5km_5070 + lsm_ai_90m_10km_5070 + lsm_cohesion_90m_10km_5070 + lsm_ed_90m_10km_5070 + lsm_pland_90m_10km_5070 + lsm_agri_90m_10km_5070 + lsm_dev_90m_10km_5070 + layer.1 + DEM_PA_30m + DEM_PA_30slope + layer.2 + DEM_PA_30m_twi + level_iii_ecoregions_pa + us_200sclass_pa"
+
+# threshold x
+#"lsm_ai_30m_500m_5070 + lsm_cohesion_30m_500m_5070 + lsm_ed_30m_500m_5070 + lsm_pland_30m_500m_5070 + lsm_agri_30m_500m_5070 + lsm_dev_30m_500m_5070 + lsm_ai_90m_1km_5070 + lsm_cohesion_90m_1km_5070 + lsm_ed_90m_1km_5070 + lsm_pland_90m_1km_5070 + lsm_agri_90m_1km_5070 + lsm_dev_90m_1km_5070 + lsm_ai_90m_5km_5070 + lsm_cohesion_90m_5km_5070 + lsm_ed_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_dev_90m_5km_5070 + lsm_ai_90m_10km_5070 + lsm_cohesion_90m_10km_5070 + lsm_ed_90m_10km_5070 + lsm_pland_90m_10km_5070 + lsm_agri_90m_10km_5070 + lsm_dev_90m_10km_5070 + DEM_PA_30m + DEM_PA_30slope + layer + DEM_PA_30m_twi + level_iii_ecoregions_pa + us_200sclass_pa"
+
+# interpretation x
+# "DEM_PA_30m + lsm_dev_90m_10km_5070 + lsm_cohesion_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_ed_90m_5km_5070 + lsm_ai_90m_5km_5070 + lsm_agri_90m_10km_5070 + level_iii_ecoregions_pa + lsm_dev_90m_5km_5070"
+
+# prediction x
+# "DEM_PA_30m + lsm_dev_90m_10km_5070 + lsm_cohesion_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_ed_90m_5km_5070 + lsm_agri_90m_10km_5070 + level_iii_ecoregions_pa + lsm_dev_90m_5km_5070"
+#test models
+
+# federal and state data #
+#threshold/full
+# "lsm_dev_90m_10km_5070 + level_iii_ecoregions_pa + lsm_agri_90m_10km_5070 + DEM_PA_30m + lsm_cohesion_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_dev_90m_5km_5070 + lsm_cohesion_90m_10km_5070 + lsm_ai_90m_10km_5070 + lsm_ai_90m_5km_5070 + lsm_pland_90m_10km_5070 + lsm_ed_90m_5km_5070 + lsm_agri_90m_1km_5070 + lsm_cohesion_90m_1km_5070 + lsm_ed_90m_10km_5070 + lsm_pland_90m_1km_5070 + lsm_ai_90m_1km_5070 + lsm_ai_30m_500m_5070 + lsm_agri_30m_500m_5070 + lsm_pland_30m_500m_5070 + lsm_cohesion_30m_500m_5070 + lsm_ed_90m_1km_5070 + lsm_ed_30m_500m_5070 + lsm_dev_30m_500m_5070 + DEM_PA_30slope + layer.1 + lsm_dev_90m_1km_5070 + DEM_PA_30m_twi + us_200sclass_pa + layer.2 + survey_type"
+#interpretation
+# lsm_agri_90m_1km_5070 + lsm_cohesion_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070+ lsm_dev_90m_5km_5070 + lsm_ai_90m_10km_5070 + lsm_cohesion_90m_10km_5070 + lsm_agri_90m_10km_5070 + lsm_dev_90m_10km_5070 + DEM_PA_30m + level_iii_ecoregions_pa + survey_type
+#prediction
+#  "lsm_cohesion_90m_5km_5070 + lsm_pland_90m_5km_5070 + lsm_agri_90m_5km_5070 + lsm_dev_90m_5km_5070 + lsm_cohesion_90m_10km_5070 + level_iii_ecoregions_pa + survey_type"
+
+aucs <- vector("list", length = k)
+
+for (j in 1:10){ #should be 1 through 10, there's a bug with 10
+  test <- .subset_swd(swd_modified, folds$test[, j]) #
+  pred1 <- predict.MixRF(models[[j]], test$data, EstimateRE=FALSE)
+  n_p <- sum(test$pa == 1)
+  n_a <- sum(test$pa == 0)
+  Rp <- sum(rank(pred1)[1:n_p]) # Sum of rank of positive cases
+  Up <- Rp - (n_p * (n_p + 1) / 2)  # U test for positive cases
+  aucs[[j]] <- Up / (n_p * n_a)
+} 
+aucs %>% 
+  as.numeric() %>% 
+  mean() #0.6436686 -> 0.6529721
+# federal data only #
+#full 
+# 0.6219016
+#threshold
+# 0.6147176
+#interpretation
+# 0.7370665 # When juiced to 2000 trees (from 500) reached 0.7266775 AUC. Not worth it in the future
+#prediction
+# 0.7360167
+
+# federal and state data #
+# full/threshold
+# 0.8391018
+# interpretation
+# 0.8492858
+# prediction
+# 0.8435402
+```
+
+First: create a predictorstack w/ a zero variable for the survey_type, and split it into sections
+```{r}
+survey_type <- elev_30m
+names(survey_type) <- "survey_type"
+survey_type[survey_type] <- 0
+survey_type <- resample(survey_type, forest_30m)
+predictor_list[length(predictor_list)+1] <- survey_type
+
+predictor_stack <- do.call(what = raster::stack, args = c(predictor_list, quick = FALSE))
+names(predictor_stack)[length(predictor_list)] <- "survey_type"
+
+writeRaster(predictor_stack, "predictor_stack_adv.grd", format = "raster", bylayer = FALSE)
+
+```
+
+```{r}
+predictor_stack <- stack("predictor_stack_adv.grd")
+fishnet <- st_read("pa_fishnet_300.shp") %>%
+  st_transform(crs(predictor_stack))
+
+for(i in 1:nrow(fishnet)){
+  temp_extent <- fishnet[i,] %>% as_Spatial() %>% extent()
+  crop(x = predictor_stack, y = temp_extent, 
+       filename = paste0("predictor_stack_adv/predictor_stack_adv_smol_",i,".grd")) 
+}
+```
+
+Using the models to predict occupany
+Note: the link function for these predicted values is  y = 1/(1+exp(-x))
+```{r}
+#create predictive layers (predict using each of the models and average the results)
+#by iterating through the predictor stack, divided into seperate stacks for each PA county
+
+
+for (i in 1:305){ #0:59 There are technically 980 layers, but 971:980 are empty
+  print(paste("Running slice: ",i))
+  predictor_spdf <- as(raster::stack(paste0("predictor_stack_adv/predictor_stack_adv_smol_", i, ".grd")), 'SpatialPixelsDataFrame')
+  
+  #there's  a raster issue that's creating 0.5 cells during the split: setting these all to zero
+  #predictor_spdf@data <- predictor_spdf@data %>%
+  #  mutate(layer.1 = as.numeric(recode(as.character(layer.1), "0.5" = "0")))
+  
+  
+  predictor_spdf_data <- predictor_spdf@data
+  
+  #cutting out all observations with at least one NA value to save processing time. I'll automatically designate these as NA predictions after
+  #numCores <- 10
+  #cl <- makeCluster(numCores)
+  #clusterExport(cl, "predictor_spdf_data")
+  all_predictor_nas <- pblapply(1:nrow(predictor_spdf_data), function(x){any(is.na(predictor_spdf_data[x,]))})#, cl = cl
+  #stopCluster(cl)
+  
+  
+  predictor_spdf_data_no_nas <- predictor_spdf_data[(all_predictor_nas==FALSE),]
+  
+# library(sp)
+# library(raster)
+# library(tidyverse)
+# library(there)
+# library(sf)
+# library(stars)
+# library(SDMtune)
+# source(here_file("Projects", "Penn_residential_model", "MixRFb.r"))
+#   
+  
+  #prediction_outputs <- matrix(nrow = nrow(predictor_spdf), ncol = k)
+  
+  numCores <- 8
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(sp)
+    library(raster)
+    library(tidyverse)
+    library(there)
+    library(sf)
+    library(stars)
+    library(SDMtune)
+    source(here_file("Projects", "Penn_residential_model", "MixRFb.r"))
+  })
+  clusterExport(cl, "predictor_spdf_data_no_nas")
+  #clusterExport(cl, "models")
+
+#parLapplyLB(X = 1:k, fun = function(j){predict.MixRF(models[[j]], predictor_spdf_data_no_nas, EstimateRE=FALSE)}, cl = cl) -> prediction_outputs
+
+pblapply(X = models, FUN = function(j){predict.MixRF(j, predictor_spdf_data_no_nas, EstimateRE=FALSE)}, cl = cl) -> prediction_outputs
+
+# prediction_outputs <- vector(length = k)
+# 
+# foreach::foreach(j=1:k) %do%
+#   predict.MixRF(models[[j]], predictor_spdf_data_no_nas, EstimateRE=FALSE) -> prediction_outputs[k]
+
+prediction_outputs %>% 
+  map(unlist) %>% 
+  do.call(cbind,.) ->
+  prediction_outputs
+ 
+  stopCluster(cl)
+
+  #setting values with at least one na predictor to NA, and setting the rest to their correct value
+  predicted_values <- vector(length = nrow(predictor_spdf_data))
+  predicted_values[which(unlist(all_predictor_nas))] <- NA
+  predicted_values[which(unlist(all_predictor_nas) == FALSE)] <- rowMeans(prediction_outputs, na.rm = TRUE)
+  
+  #creating an spdf to turn into a raster and save
+  predicted_layer <- tibble(x = predictor_spdf@coords[,1], y = predictor_spdf@coords[,2], value = predicted_values) %>%
+    mutate(across(.fns = as.numeric))
+  
+  coordinates(predicted_layer) <- ~ x + y
+  gridded(predicted_layer) <- TRUE
+  
+  predicted_layer <- raster(predicted_layer)
+  projection(predicted_layer) <- CRS("+init=epsg:5070")
+  
+  writeRaster(predicted_layer, paste0("random_effect_tiles_adv/rf_random_effects_adv_6_8_2021_", i,".tif", overwrite = TRUE))
+}
+```
+

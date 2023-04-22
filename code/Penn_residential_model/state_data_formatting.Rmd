@@ -1,0 +1,28 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+state_surveys <- read_csv("PA_state_surveys/PA_state_surveys_all.csv")
+```
+
+
+```{r}
+state_surveys %>%
+  rowwise() %>%
+  transmute(route_id = paste0(SGL, "_", ROUTE, "_", STOP),
+            sightings = sum(VALUE_16, VALUE_17, VALUE_18, VALUE_19, VALUE_20, na.rm = TRUE),
+            pres_abs = if_else(VALUE_16 > 0 | VALUE_17 > 0 | VALUE_18 > 0 | VALUE_19 > 0 | VALUE_20 > 0, 1, 0, missing = 0),
+            Latitude = LAT,
+            Longitude = LONG,
+            Route = paste0(SGL, "_", ROUTE),
+            Stop = STOP) ->
+  state_surveys
+
+
+write.csv(state_surveys, file = "pa_statesurveys_pres_abs.csv", row.names = FALSE)

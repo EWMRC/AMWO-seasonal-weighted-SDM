@@ -1,0 +1,26 @@
+[general]
+creator=R package 'raster'
+created=2021-06-09 23:30:11
+[georeference]
+nrows=252
+ncols=307
+xmin=1441725
+ymin=2085735
+xmax=1469355
+ymax=2108415
+projection=+proj=aea +lat_0=23 +lon_0=-96 +lat_1=29.5 +lat_2=45.5 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=-4.45840075339123
+maxvalue=-1.26005916938484
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=value
