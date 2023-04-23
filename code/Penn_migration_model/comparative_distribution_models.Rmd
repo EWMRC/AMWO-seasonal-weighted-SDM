@@ -161,11 +161,15 @@ Using resample to get all of the rasters on matching extents and resolutions bef
 # 
 # predictor_stack_full <- do.call(what = raster::stack, args = c(predictor_list_full, quick = FALSE))
 # 
+# names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+# 
 # predictor_stack_interpretation <- predictor_stack_full %>%
-#   raster::stack(layers = c("lsm_500m_cohesion", "lsm_500m_pland", "lsm_1km_cohesion", "lsm_1km_pland", "lsm_5km_cohesion", "lsm_5km_pland"))
+#   subset(subset = c("lsm_500m_cohesion", "lsm_500m_pland", "lsm_1km_cohesion", "lsm_1km_pland", "lsm_5km_cohesion", "lsm_5km_pland"))
+# 
 # 
 # predictor_stack_prediction <- predictor_stack_full %>%
-#   raster::stack(layers = c("lsm_500m_pland"))
+#   subset(subset = c("lsm_500m_pland")) %>%
+#   raster::stack()
 # 
 # stackSave(predictor_stack_full, "predictor_stack_full_mig.stk")
 # stackSave(predictor_stack_interpretation, "predictor_stack_interp_mig.stk")
@@ -202,6 +206,9 @@ swd_full_folds <- randomFolds(swd_full, k = 5, only_presence = TRUE, seed = 8)
 rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 2000)
 
 auc(rf_full, test = TRUE) #0.7834553
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(rf_full, test = TRUE) #0.478331
+variable_importance_full <- varImp(rf_full) #Haven't gotten this to run successfully yet
 ```
 
 Interpretation
@@ -215,21 +222,21 @@ swd_interpretation_folds <- randomFolds(swd_interpretation, k = 5, only_presence
 
 rf_interpretation <- train(method = "RF", data = swd_interpretation, swd_interpretation_folds, ntree = 2000)
 
-auc(rf_interpretation, test = TRUE) #0.7834553
+auc(rf_interpretation, test = TRUE) #0.6475625
 ```
 
-Prediction
+Prediction- single variable in the prediction dataset, so I can't run this
 ```{r}
-swd_prediction <- prepareSWD(species = "Scolopax minor", 
-           env = terra::rast(predictor_stack_prediction), 
-           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
-           a = as.data.frame(avail_unbiased@coords))
-
-swd_prediction_folds <- randomFolds(swd_prediction, k = 5, only_presence = TRUE, seed = 8)
-
-rf_prediction <- train(method = "RF", data = swd_prediction, swd_prediction_folds, ntree = 2000)
-
-auc(rf_prediction, test = TRUE) #0.7834553
+# swd_prediction <- prepareSWD(species = "Scolopax minor", 
+#            env = terra::rast(predictor_stack_prediction), 
+#            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+#            a = as.data.frame(avail_unbiased@coords))
+# 
+# swd_prediction_folds <- randomFolds(swd_prediction, k = 5, only_presence = TRUE, seed = 8)
+# 
+# rf_prediction <- train(method = "RF", data = swd_prediction, swd_prediction_folds, ntree = 2000)
+# 
+# auc(rf_prediction, test = TRUE) #0.7834553
 ```
 
 Old code: Running and evaluating MaxEnt and BRT models
