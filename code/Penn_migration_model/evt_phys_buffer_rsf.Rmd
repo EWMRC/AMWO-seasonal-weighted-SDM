@@ -1,0 +1,118 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(raster)
+library(stars)
+library(sf)
+library(there)
+library(mapview)
+```
+
+```{r}
+landcov_stars <- read_stars(here_file("Projects", "Penn_migration_model", "evt200_phys_pa.tif")) 
+
+used_mig_pa <- st_read(here_file("Data", "Movebank_locations"), "migratory_points_pa_8_3_2020") %>%
+  st_transform(st_crs(landcov_stars)) %>%
+  transmute(ID = ID, time = time, type = "Used")
+
+landcov_raster <- raster(here_file("Projects", "Penn_migration_model", "evt200_phys_pa.tif")) 
+```
+Generating random points
+```{r}
+map(1:nrow(used_mig_pa), function(x){
+  used_mig_pa[x,] %>%
+    pull(geometry) %>%
+    st_buffer(5000) %>%
+    st_sample(1) ->
+    new_geom
+  
+  used_mig_pa[x,] %>%
+    pull(ID) ->
+    new_ID
+  
+  used_mig_pa[x,] %>%
+    pull(time) ->
+    new_time
+  
+  tibble(ID = new_ID, time = new_time, type = "Available", geometry = new_geom)
+}) -> available_mig_pa
+  
+available_mig_pa <- exec(bind_rows, available_mig_pa)
+```
+
+
+```{r}
+points_mig_pa <- bind_rows(used_mig_pa, available_mig_pa)
+```
+
+
+```{r}
+points_mig_pa %>%
+  st_buffer(60) ->
+  buffer_mig_pa
+```
+
+
+```{r include=FALSE}
+map(1:nrow(buffer_mig_pa), function(i){
+  buffer_mig_pa[i,] %>%
+    as_Spatial() %>% 
+    raster::extract(x = landcov_raster, y = .)
+}) -> proportion_results
+```
+
+
+```{r}
+pct_count <- function(x, r){
+  a <- unlist(x)
+  b <- a == r
+  sum(b)*100/length(b)
+}
+
+proportion_results %>%
+  map(function(x){
+    tibble(Grassland = pct_count(x = x, r = 1), 
+           Shrubland = pct_count(x = x, r = 2),
+           Conifer = pct_count(x = x, r = 3),
+           Hardwood = pct_count(x = x, r = 4),
+           `Conifer-Hardwood` = pct_count(x = x, r = 5),
+           `Open Water` = pct_count(x = x, r = 6),
+           Quarries = pct_count(x = x, r = 7),
+           `Developed-Low Intensity` = pct_count(x = x, r = 8),
+           `Developed-Medium Intensity` = pct_count(x = x, r = 9),
+           `Developed-High Intensity` = pct_count(x = x, r = 10),
+           `Developed-Roads` = pct_count(x = x, r = 11),
+           `Developed` = pct_count(x = x, r = 12),
+           Agricultural = pct_count(x = x, r = 13),
+           Riparian = pct_count(x = x, r = 14),
+           `Sparsely Vegetated` = pct_count(x = x, r = 15),
+           `Exotic Tree-Shrub` = pct_count(x = x, r = 16),
+           `Ruderal Wet Meadow and Marsh` = pct_count(x = x, r = 17),
+           `Exotic Herbaceous` = pct_count(x = x, r = 18))
+  }) %>%
+  exec(bind_rows, .) ->
+  proportion_results_df
+```
+
+
+```{r}
+points_mig_pa_results <- bind_cols(points_mig_pa, proportion_results_df)
+```
+
+
+```{r}
+points_mig_pa_results %>%
+  pivot_longer(cols = `Grassland`:`Exotic Herbaceous`, names_to = "landcov") ->
+  points_mig_pa_pivotresults
+```
+
+```{r}
+ggplot(data = points_mig_pa_pivotresults, mapping = aes(x = landcov, y = value, fill = type)) +
+  geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  #geom_bar(stat = "identity", position = "dodge")
+```

@@ -1,0 +1,558 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(tidyverse)
+library(landscapemetrics)
+library(raster)
+library(sf)
+library(stars)
+library(there)
+library(parallel)
+library(AICcmodavg)
+```
+
+lsm_c_cohesion #Patch cohesion index
+lsm_c_ai #Aggregation index
+lsm_c_pland #proportion of landscape
+
+```{r}
+forest_stars <- read_stars(here_file("Projects", "Penn_migration_model","nlcd2016_forestpatches.tif"))
+
+forest_raster <- raster(here_file("Projects", "Penn_migration_model","nlcd2016_forestpatches.tif"))
+
+data("augusta_nlcd")
+plot(augusta_nlcd)
+check_landscape(forest_stars)
+#lsm_l_contag(forest_stars)
+
+#lsm_c_cohesion(forest_stars)
+#lsm_c_ai(forest_stars)
+#lsm_c_pland(forest_stars)
+```
+
+
+```{r}
+used_mig_pa <- st_read(here_file("Data", "Movebank_locations"), "migratory_points_pa_8_3_2020") %>%
+  st_transform(st_crs(forest_stars)) %>%
+  transmute(ID = ID, time = time, type = "Used")
+```
+
+Generating random points
+```{r}
+map(1:nrow(used_mig_pa), function(x){
+  used_mig_pa[x,] %>%
+    pull(geometry) %>%
+    st_buffer(5000) %>%
+    st_sample(1) ->
+    new_geom
+  
+  used_mig_pa[x,] %>%
+    pull(ID) ->
+    new_ID
+  
+  used_mig_pa[x,] %>%
+    pull(time) ->
+    new_time
+  
+  tibble(ID = new_ID, time = new_time, type = "Available", geometry = new_geom)
+}) -> available_mig_pa
+  
+available_mig_pa <- exec(bind_rows, available_mig_pa)
+```
+
+```{r}
+points_mig_pa <- bind_rows(used_mig_pa, available_mig_pa)
+```
+
+
+This creates rectangular masks for each: that should be okay because we're trying to keep this simple and fast
+```{r}
+numCores <- 10
+cl <- makeCluster(numCores)
+clusterEvalQ(cl, { #preparing each new process to run our code
+  library(dplyr)
+  library(sf)
+  library(raster)
+})
+clusterExport(cl, c("forest_raster"))
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 100) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_100m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 200) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_200m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 300) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_300m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 400) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_400m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 500) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_500m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 600) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_600m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 700) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_700m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 800) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_800m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 900) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_900m
+
+points_mig_pa %>%
+  mutate(., row_num = 1:nrow(.)) %>%
+  st_buffer(dist = 1000) %>%
+  nest_by(row_num, .key = "buffer_list") %>%
+  pull(buffer_list) %>%
+  clusterApplyLB(cl = cl, x = ., fun = function(x){
+    x %>%
+      as_Spatial() %>%
+      extent() %>%
+      crop(x = forest_raster, y = .)
+  }) -> forest_masks_1000m
+
+stopCluster(cl)
+```
+
+Running patch cohesion index
+NA means no forest present
+```{r}
+forest_masks_100m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_100m #numeric 0 means no forest present
+
+forest_masks_200m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_200m
+
+forest_masks_300m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_300m
+
+forest_masks_400m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_400m
+
+forest_masks_500m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_500m
+
+forest_masks_600m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_600m
+
+forest_masks_700m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_700m
+
+forest_masks_800m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_800m
+
+forest_masks_900m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_900m
+
+forest_masks_1000m %>%
+  map(.f = function(x){
+    lsm_c_cohesion(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_cohesion_1000m
+```
+
+Running aggregation index
+```{r}
+forest_masks_100m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_100m 
+
+forest_masks_200m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_200m
+
+forest_masks_300m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_300m
+
+forest_masks_400m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_400m
+
+forest_masks_500m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_500m
+
+forest_masks_600m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_600m
+
+forest_masks_700m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_700m
+
+forest_masks_800m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_800m
+
+forest_masks_900m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_900m
+
+forest_masks_1000m %>%
+  map(.f = function(x){
+    lsm_c_ai(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = NA, no = .)
+  }) -> forest_ai_1000m
+```
+
+Running percent landscape
+```{r}
+forest_masks_100m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_100m 
+
+forest_masks_200m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_200m
+
+forest_masks_300m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_300m
+
+forest_masks_400m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_400m
+
+forest_masks_500m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_500m
+
+forest_masks_600m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_600m
+
+forest_masks_700m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_700m
+
+forest_masks_800m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_800m
+
+forest_masks_900m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_900m
+
+forest_masks_1000m %>%
+  map(.f = function(x){
+    lsm_c_pland(x) %>%
+      filter(class == 1) %>%
+      pull(value) %>%
+      ifelse(length(.) == 0, yes = 0, no = .)
+  }) -> forest_pland_1000m
+```
+
+RSF for patch cohesion index
+```{r}
+points_mig_pa_cohesion <- points_mig_pa %>%
+  mutate(type_num = recode(type, "Used" = 1, "Available" = 0))
+
+points_mig_pa_cohesion$cohesion_100m <- forest_cohesion_100m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_200m <- forest_cohesion_200m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_300m <- forest_cohesion_300m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_400m <- forest_cohesion_400m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_500m <- forest_cohesion_500m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_600m <- forest_cohesion_600m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_700m <- forest_cohesion_700m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_800m <- forest_cohesion_800m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_900m <- forest_cohesion_900m %>% as.numeric()
+points_mig_pa_cohesion$cohesion_1000m <- forest_cohesion_1000m %>% as.numeric()
+
+candidate.set <- list()
+candidate.set[[1]] <- glm(type_num ~ 1, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[2]] <- glm(type_num ~ cohesion_100m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[3]] <- glm(type_num ~ cohesion_200m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[4]] <- glm(type_num ~ cohesion_300m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[5]] <- glm(type_num ~ cohesion_400m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[6]] <- glm(type_num ~ cohesion_500m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[7]] <- glm(type_num ~ cohesion_600m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[8]] <- glm(type_num ~ cohesion_700m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[9]] <- glm(type_num ~ cohesion_800m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[10]] <- glm(type_num ~ cohesion_900m, data = points_mig_pa_cohesion, family = "binomial")
+candidate.set[[11]] <- glm(type_num ~ cohesion_1000m, data = points_mig_pa_cohesion, family = "binomial")
+
+candidate.names <- c("null", "cohesion_100m","cohesion_200m","cohesion_300m","cohesion_400m","cohesion_500m","cohesion_600m","cohesion_700m", "cohesion_800m", "cohesion_900m", "cohesion_1000m")
+
+aictab(cand.set = candidate.set, modnames = candidate.names)
+```
+
+RSF for aggregation index
+```{r}
+points_mig_pa_ai <- points_mig_pa %>%
+  mutate(type_num = recode(type, "Used" = 1, "Available" = 0))
+
+points_mig_pa_ai$ai_100m <- forest_ai_100m %>% as.numeric()
+points_mig_pa_ai$ai_200m <- forest_ai_200m %>% as.numeric()
+points_mig_pa_ai$ai_300m <- forest_ai_300m %>% as.numeric()
+points_mig_pa_ai$ai_400m <- forest_ai_400m %>% as.numeric()
+points_mig_pa_ai$ai_500m <- forest_ai_500m %>% as.numeric()
+points_mig_pa_ai$ai_600m <- forest_ai_600m %>% as.numeric()
+points_mig_pa_ai$ai_700m <- forest_ai_700m %>% as.numeric()
+points_mig_pa_ai$ai_800m <- forest_ai_800m %>% as.numeric()
+points_mig_pa_ai$ai_900m <- forest_ai_900m %>% as.numeric()
+points_mig_pa_ai$ai_1000m <- forest_ai_1000m %>% as.numeric()
+
+candidate.set <- list()
+candidate.set[[1]] <- glm(type_num ~ 1, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[2]] <- glm(type_num ~ ai_100m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[3]] <- glm(type_num ~ ai_200m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[4]] <- glm(type_num ~ ai_300m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[5]] <- glm(type_num ~ ai_400m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[6]] <- glm(type_num ~ ai_500m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[7]] <- glm(type_num ~ ai_600m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[8]] <- glm(type_num ~ ai_700m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[9]] <- glm(type_num ~ ai_800m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[10]] <- glm(type_num ~ ai_900m, data = points_mig_pa_ai, family = "binomial")
+candidate.set[[11]] <- glm(type_num ~ ai_1000m, data = points_mig_pa_ai, family = "binomial")
+
+candidate.names <- c("null", "ai_100m","ai_200m","ai_300m","ai_400m","ai_500m","ai_600m","ai_700m", "ai_800m", "ai_900m", "ai_1000m")
+
+aictab(cand.set = candidate.set, modnames = candidate.names)
+```
+
+
+RSF for percent of landscape that is forested
+```{r}
+points_mig_pa_pland <- points_mig_pa %>%
+  mutate(type_num = recode(type, "Used" = 1, "Available" = 0))
+
+points_mig_pa_pland$pland_100m <- forest_pland_100m %>% as.numeric()
+points_mig_pa_pland$pland_200m <- forest_pland_200m %>% as.numeric()
+points_mig_pa_pland$pland_300m <- forest_pland_300m %>% as.numeric()
+points_mig_pa_pland$pland_400m <- forest_pland_400m %>% as.numeric()
+points_mig_pa_pland$pland_500m <- forest_pland_500m %>% as.numeric()
+points_mig_pa_pland$pland_600m <- forest_pland_600m %>% as.numeric()
+points_mig_pa_pland$pland_700m <- forest_pland_700m %>% as.numeric()
+points_mig_pa_pland$pland_800m <- forest_pland_800m %>% as.numeric()
+points_mig_pa_pland$pland_900m <- forest_pland_900m %>% as.numeric()
+points_mig_pa_pland$pland_1000m <- forest_pland_1000m %>% as.numeric()
+
+candidate.set <- list()
+candidate.set[[1]] <- glm(type_num ~ 1, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[2]] <- glm(type_num ~ pland_100m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[3]] <- glm(type_num ~ pland_200m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[4]] <- glm(type_num ~ pland_300m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[5]] <- glm(type_num ~ pland_400m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[6]] <- glm(type_num ~ pland_500m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[7]] <- glm(type_num ~ pland_600m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[8]] <- glm(type_num ~ pland_700m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[9]] <- glm(type_num ~ pland_800m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[10]] <- glm(type_num ~ pland_900m, data = points_mig_pa_pland, family = "binomial")
+candidate.set[[11]] <- glm(type_num ~ pland_1000m, data = points_mig_pa_pland, family = "binomial")
+
+candidate.names <- c("null", "pland_100m","pland_200m","pland_300m","pland_400m","pland_500m","pland_600m","pland_700m", "pland_800m", "pland_900m", "pland_1000m")
+
+aictab(cand.set = candidate.set, modnames = candidate.names)
+```

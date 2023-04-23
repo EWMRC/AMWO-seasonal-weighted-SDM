@@ -1,0 +1,322 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(landscapemetrics)
+library(raster)
+library(sf)
+library(stars)
+library(there)
+library(parallel)
+library(pbapply)
+```
+
+Read in the list of files
+```{r}
+file_list <- list.files("D:/heavy_files/Penn_migration_model/split_rasters_1km")
+
+file_list %>%
+  stringr::str_detect(".TIF$") -> file_boolean
+
+tif_list <- file_list[file_boolean]
+
+raster_dataframe <- tibble(tif_name = tif_list)
+```
+
+
+Chunking for faster processing
+```{r}
+tif_list_all <- raster_dataframe$tif_name
+rm(tif_list)
+
+chunk <- function(x,n) split(x, factor(sort(rank(x)%%n)))
+
+tif_chunks <- chunk(tif_list_all, 30)
+```
+
+
+Determine which rasters are full and limit to only those rasters for operations
+Note: would be faster if parallel processing was implemented
+```{r}
+eval_raster_size <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  iterated_raster@ncols + iterated_raster@nrows
+}
+
+for(i in 1:length(tif_chunks)){
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+  })
+  clusterExport(cl, "tif_list")
+  
+  raster_dataframe_it <- tibble(tif_name = tif_list)
+  raster_dataframe_it$size <- pblapply(X = 1:nrow(raster_dataframe_it), FUN = eval_raster_size, cl = cl)
+  
+  stopCluster(cl)
+  
+  raster_dataframe_it %>% filter(size == max(unlist(raster_dataframe_it$size))) -> raster_dataframe_it
+  
+  saveRDS(raster_dataframe_it, paste0("raster_dataframe_1km_1_",i,".rds"))
+}
+```
+
+Reading back in the newly trimmed tif_chunks
+```{r}
+rm(raster_dataframe)
+rm(tif_chunks)
+paste0("raster_dataframe_1km_1_",1:30,".rds") %>%
+  map(readRDS) %>%
+  map(function(x){
+    return(x$tif_name)
+  }) ->
+  tif_chunks
+```
+
+
+Next: finding the coordinates to use when projecting each
+```{r}
+eval_raster_coords <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  
+  list(x = (iterated_raster@extent@xmin + iterated_raster@extent@xmax)/2, y = (iterated_raster@extent@ymin + iterated_raster@extent@ymax)/2) %>% 
+    return()
+}
+
+for(i in 1:length(tif_chunks)){
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+  })
+  clusterExport(cl, "tif_list")
+
+  raster_coords <- pblapply(X = 1:length(tif_list), FUN = eval_raster_coords, cl = cl) 
+  
+  stopCluster(cl)
+  
+  #extract coordinates
+  raster_x <- map(.x = raster_coords, .f = function(x){
+    x$x
+  })
+  
+  raster_y <- map(.x = raster_coords, .f = function(x){
+    x$y
+  })
+  
+  raster_xy <- tibble(x = raster_x, y = raster_y )
+  
+  saveRDS(raster_xy, paste0("raster_dataframe_1km_2_",i,".rds"))
+}
+
+```
+
+
+Proportion of landcover as forest, aggregation index, and cohesion index
+```{r}
+eval_pland <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  lsm_c_pland(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_ai <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  lsm_c_ai(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_cohesion <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  lsm_c_cohesion(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_ed <- function(n){
+  iterated_raster <- raster(paste0("D:/heavy_files/Penn_migration_model/split_rasters_1km/", tif_list[n]))
+  lsm_l_ed(iterated_raster) %>%
+    pull(value) %>%
+    return()
+}
+
+for(i in 1:length(tif_chunks)){
+  print(i)
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+    library(landscapemetrics)
+  })
+  clusterExport(cl, "tif_list")
+  
+  raster_pland <- pblapply(X = 1:length(tif_list), FUN = eval_pland, cl = cl)
+  saveRDS(raster_pland, paste0("raster_dataframe_1km_pland_",i,".rds"))
+  stopCluster(cl)
+}
+
+for(i in 1:length(tif_chunks)){
+  print(i)
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+    library(landscapemetrics)
+  })
+  clusterExport(cl, "tif_list")
+  
+  raster_ai <- pblapply(X = 1:length(tif_list), FUN = eval_ai, cl = cl)
+  saveRDS(raster_ai, paste0("raster_dataframe_1km_ai_",i,".rds"))
+  stopCluster(cl)
+}
+
+for(i in 1:length(tif_chunks)){
+  print(i)
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+    library(landscapemetrics)
+  })
+  clusterExport(cl, "tif_list")
+  
+  raster_cohesion <- pblapply(X = 1:length(tif_list), FUN = eval_cohesion, cl = cl)
+  saveRDS(raster_cohesion, paste0("raster_dataframe_1km_cohesion_",i,".rds"))
+  stopCluster(cl)
+}
+
+for(i in 1:length(tif_chunks)){
+  print(i)
+  tif_list <- tif_chunks[[i]]
+  
+  numCores <- 10
+  cl <- makeCluster(numCores)
+  clusterEvalQ(cl, { #preparing each new process to run our code
+    library(tidyverse)
+    library(raster)
+    library(landscapemetrics)
+  })
+  clusterExport(cl, "tif_list")
+  
+  raster_ed <- pblapply(X = 1:length(tif_list), FUN = eval_ed, cl = cl)
+  saveRDS(raster_ed, paste0("raster_dataframe_1km_ed_",i,".rds"))
+  stopCluster(cl)
+}
+
+
+```
+
+
+Now converting to rasters
+```{r}
+#coordinates
+raster_dataframe_1km_coordinates <- list()
+for(i in 1:length(tif_chunks)){
+  raster_dataframe_1km_coordinates[[i]] <- readRDS(paste0("raster_dataframe_1km_2_",i,".rds"))
+}
+raster_dataframe_1km_coordinates <- do.call(bind_rows, raster_dataframe_1km_coordinates)
+
+
+
+#pland
+raster_dataframe_1km_pland <- list()
+for(i in 1:length(tif_chunks)){
+  raster_dataframe_1km_pland[[i]] <- readRDS(paste0("raster_dataframe_1km_pland_",i,".rds")) %>% as.numeric()
+}
+raster_dataframe_1km_pland <- tibble(x = raster_dataframe_1km_coordinates$x, y = raster_dataframe_1km_coordinates$y, value = do.call(c, raster_dataframe_1km_pland))
+
+raster_dataframe_1km_pland <- raster_dataframe_1km_pland %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_dataframe_1km_pland) <- ~ x + y
+gridded(raster_dataframe_1km_pland) <- TRUE
+
+raster_dataframe_1km_pland <- raster(raster_dataframe_1km_pland)
+projection(raster_dataframe_1km_pland) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_dataframe_1km_pland, "pland_200m_1k.tif")
+
+#ai
+raster_dataframe_1km_ai <- list()
+for(i in 1:length(tif_chunks)){
+  raster_dataframe_1km_ai[[i]] <- readRDS(paste0("raster_dataframe_1km_ai_",i,".rds")) %>% as.numeric()
+}
+raster_dataframe_1km_ai <- tibble(x = raster_dataframe_1km_coordinates$x, y = raster_dataframe_1km_coordinates$y, value = do.call(c, raster_dataframe_1km_ai))
+
+raster_dataframe_1km_ai <- raster_dataframe_1km_ai %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_dataframe_1km_ai) <- ~ x + y
+gridded(raster_dataframe_1km_ai) <- TRUE
+
+raster_dataframe_1km_ai <- raster(raster_dataframe_1km_ai)
+projection(raster_dataframe_1km_ai) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_dataframe_1km_ai, "ai_200m_1k.tif")
+
+#cohesion
+raster_dataframe_1km_cohesion <- list()
+for(i in 1:length(tif_chunks)){
+  raster_dataframe_1km_cohesion[[i]] <- readRDS(paste0("raster_dataframe_1km_cohesion_",i,".rds")) %>% as.numeric()
+}
+raster_dataframe_1km_cohesion <- tibble(x = raster_dataframe_1km_coordinates$x, y = raster_dataframe_1km_coordinates$y, value = do.call(c, raster_dataframe_1km_cohesion))
+
+raster_dataframe_1km_cohesion <- raster_dataframe_1km_cohesion %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_dataframe_1km_cohesion) <- ~ x + y
+gridded(raster_dataframe_1km_cohesion) <- TRUE
+
+raster_dataframe_1km_cohesion <- raster(raster_dataframe_1km_cohesion)
+projection(raster_dataframe_1km_cohesion) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_dataframe_1km_cohesion, "cohesion_200m_1k.tif")
+
+#edge density
+raster_dataframe_1km_ed <- list()
+for(i in 1:length(tif_chunks)){
+  raster_dataframe_1km_ed[[i]] <- readRDS(paste0("raster_dataframe_1km_ed_",i,".rds")) %>% as.numeric()
+}
+raster_dataframe_1km_ed <- tibble(x = raster_dataframe_1km_coordinates$x, y = raster_dataframe_1km_coordinates$y, value = do.call(c, raster_dataframe_1km_ed))
+
+raster_dataframe_1km_ed <- raster_dataframe_1km_ed %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_dataframe_1km_ed) <- ~ x + y
+gridded(raster_dataframe_1km_ed) <- TRUE
+
+raster_dataframe_1km_ed <- raster(raster_dataframe_1km_ed)
+projection(raster_dataframe_1km_ed) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_dataframe_1km_ed, "ed_200m_1k.tif")
+```
+
+
+lsm_l_area_mn #mean patch area
+lsm_l_ed #edge density
+lsm_l_shei #shannon's eveness index
+lsm_l_ta #total area. experimental to see if I can design my own class functions

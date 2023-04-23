@@ -1,0 +1,630 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(there)
+library(arcgisbinding)
+arc.check_product()
+library(sf)
+library(raster)
+library(stars)
+library(AICcmodavg)
+```
+
+```{r}
+forest_edge_50m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_50m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_100m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_100m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_200m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_200m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_300m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_300m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_400m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_400m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_500m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_500m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+used_mig_pa <- st_read(here_file("Data", "Movebank_locations"), "migratory_points_pa_8_3_2020") %>%
+  st_transform(st_crs(forest_edge_200m)) %>%
+  transmute(ID = ID, time = time, type = "Used")
+```
+
+Generating random points
+```{r}
+map(1:nrow(used_mig_pa), function(x){
+  used_mig_pa[x,] %>%
+    pull(geometry) %>%
+    st_buffer(5000) %>%
+    st_sample(1) ->
+    new_geom
+  
+  used_mig_pa[x,] %>%
+    pull(ID) ->
+    new_ID
+  
+  used_mig_pa[x,] %>%
+    pull(time) ->
+    new_time
+  
+  tibble(ID = new_ID, time = new_time, type = "Available", geometry = new_geom)
+}) -> available_mig_pa
+  
+available_mig_pa <- exec(bind_rows, available_mig_pa)
+```
+
+
+```{r}
+points_mig_pa <- bind_rows(used_mig_pa, available_mig_pa)
+```
+
+Batch 1
+```{r}
+points_mig_pa %>%
+  mutate(., forest_edge_50m = raster::extract(forest_edge_50m,.)) %>%
+  mutate(., forest_edge_100m = raster::extract(forest_edge_100m,.)) %>%
+  mutate(., forest_edge_200m = raster::extract(forest_edge_200m,.)) %>%
+  mutate(., forest_edge_300m = raster::extract(forest_edge_300m,.)) %>%
+  mutate(., forest_edge_400m = raster::extract(forest_edge_400m,.)) %>%
+  mutate(., forest_edge_500m = raster::extract(forest_edge_500m,.)) ->
+  points_mig_pa
+
+rm(forest_edge_50m)
+rm(forest_edge_100m)
+rm(forest_edge_200m)
+rm(forest_edge_300m)
+rm(forest_edge_400m)
+rm(forest_edge_500m)
+```
+
+
+```{r}
+forest_edge_600m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_600m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_700m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_700m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_800m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_800m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_900m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_900m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_edge_1000m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_edge_1000m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., forest_edge_600m = raster::extract(forest_edge_600m,.)) %>%
+  mutate(., forest_edge_700m = raster::extract(forest_edge_700m,.)) %>%
+  mutate(., forest_edge_800m = raster::extract(forest_edge_800m,.)) %>%
+  mutate(., forest_edge_900m = raster::extract(forest_edge_900m,.)) %>%
+  mutate(., forest_edge_1000m = raster::extract(forest_edge_1000m,.)) ->
+  points_mig_pa
+
+rm(forest_edge_600m)
+rm(forest_edge_700m)
+rm(forest_edge_800m)
+rm(forest_edge_900m)
+rm(forest_edge_1000m)
+```
+
+
+```{r}
+agri_edge_50m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_50m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_100m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_100m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_200m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_200m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_300m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_300m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_400m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_400m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_500m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_500m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., agri_edge_50m = raster::extract(agri_edge_50m,.)) %>%
+  mutate(., agri_edge_100m = raster::extract(agri_edge_100m,.)) %>%
+  mutate(., agri_edge_200m = raster::extract(agri_edge_200m,.)) %>%
+  mutate(., agri_edge_300m = raster::extract(agri_edge_300m,.)) %>%
+  mutate(., agri_edge_400m = raster::extract(agri_edge_400m,.)) %>%
+  mutate(., agri_edge_500m = raster::extract(agri_edge_500m,.)) ->
+  points_mig_pa 
+
+rm(agri_edge_50m)
+rm(agri_edge_100m)
+rm(agri_edge_200m)
+rm(agri_edge_300m)
+rm(agri_edge_400m)
+rm(agri_edge_500m)
+```
+
+
+```{r}
+agri_edge_600m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_600m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_700m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_700m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_800m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_800m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_900m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_900m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+agri_edge_1000m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "agri_edge_1000m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., agri_edge_600m = raster::extract(agri_edge_600m,.)) %>%
+  mutate(., agri_edge_700m = raster::extract(agri_edge_700m,.)) %>%
+  mutate(., agri_edge_800m = raster::extract(agri_edge_800m,.)) %>%
+  mutate(., agri_edge_900m = raster::extract(agri_edge_900m,.)) %>%
+  mutate(., agri_edge_1000m = raster::extract(agri_edge_1000m,.)) ->
+  points_mig_pa 
+
+rm(agri_edge_600m)
+rm(agri_edge_700m)
+rm(agri_edge_800m)
+rm(agri_edge_900m)
+rm(agri_edge_1000m)
+```
+
+
+```{r}
+open_edge_50m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_50m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_100m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_100m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_200m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_200m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_300m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_300m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_400m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_400m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_500m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_500m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., open_edge_50m = raster::extract(open_edge_50m,.)) %>%
+  mutate(., open_edge_100m = raster::extract(open_edge_100m,.)) %>%
+  mutate(., open_edge_200m = raster::extract(open_edge_200m,.)) %>%
+  mutate(., open_edge_300m = raster::extract(open_edge_300m,.)) %>%
+  mutate(., open_edge_400m = raster::extract(open_edge_400m,.)) %>%
+  mutate(., open_edge_500m = raster::extract(open_edge_500m,.)) ->
+  points_mig_pa 
+
+rm(open_edge_50m)
+rm(open_edge_100m)
+rm(open_edge_200m)
+rm(open_edge_300m)
+rm(open_edge_400m)
+rm(open_edge_500m)
+```
+
+
+```{r}
+open_edge_600m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_600m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_700m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_700m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_800m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_800m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_900m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_900m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+open_edge_1000m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "open_edge_1000m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., open_edge_600m = raster::extract(open_edge_600m,.)) %>%
+  mutate(., open_edge_700m = raster::extract(open_edge_700m,.)) %>%
+  mutate(., open_edge_800m = raster::extract(open_edge_800m,.)) %>%
+  mutate(., open_edge_900m = raster::extract(open_edge_900m,.)) %>%
+  mutate(., open_edge_1000m = raster::extract(open_edge_1000m,.)) ->
+  points_mig_pa 
+
+rm(open_edge_600m)
+rm(open_edge_700m)
+rm(open_edge_800m)
+rm(open_edge_900m)
+rm(open_edge_1000m)
+```
+
+
+```{r}
+forest_agri_edge_50m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_50m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_100m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_100m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_200m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_200m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_300m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_300m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_400m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_400m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_500m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_500m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., forest_agri_edge_50m = raster::extract(forest_agri_edge_50m,.)) %>%
+  mutate(., forest_agri_edge_100m = raster::extract(forest_agri_edge_100m,.)) %>%
+  mutate(., forest_agri_edge_200m = raster::extract(forest_agri_edge_200m,.)) %>%
+  mutate(., forest_agri_edge_300m = raster::extract(forest_agri_edge_300m,.)) %>%
+  mutate(., forest_agri_edge_400m = raster::extract(forest_agri_edge_400m,.)) %>%
+  mutate(., forest_agri_edge_500m = raster::extract(forest_agri_edge_500m,.)) ->
+  points_mig_pa 
+
+rm(forest_agri_edge_50m)
+rm(forest_agri_edge_100m)
+rm(forest_agri_edge_200m)
+rm(forest_agri_edge_300m)
+rm(forest_agri_edge_400m)
+rm(forest_agri_edge_500m)
+```
+
+
+```{r}
+forest_agri_edge_600m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_600m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_700m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_700m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_800m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_800m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_900m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_900m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_agri_edge_1000m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_agri_edge_1000m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., forest_agri_edge_600m = raster::extract(forest_agri_edge_600m,.)) %>%
+  mutate(., forest_agri_edge_700m = raster::extract(forest_agri_edge_700m,.)) %>%
+  mutate(., forest_agri_edge_800m = raster::extract(forest_agri_edge_800m,.)) %>%
+  mutate(., forest_agri_edge_900m = raster::extract(forest_agri_edge_900m,.)) %>%
+  mutate(., forest_agri_edge_1000m = raster::extract(forest_agri_edge_1000m,.)) ->
+  points_mig_pa
+
+rm(forest_agri_edge_600m)
+rm(forest_agri_edge_700m)
+rm(forest_agri_edge_800m)
+rm(forest_agri_edge_900m)
+rm(forest_agri_edge_1000m)
+```
+
+
+```{r}
+forest_open_edge_50m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_50m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_100m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_100m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_200m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_200m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_300m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_300m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_400m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_400m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_500m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_500m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., forest_open_edge_50m = raster::extract(forest_open_edge_50m,.)) %>%
+  mutate(., forest_open_edge_100m = raster::extract(forest_open_edge_100m,.)) %>%
+  mutate(., forest_open_edge_200m = raster::extract(forest_open_edge_200m,.)) %>%
+  mutate(., forest_open_edge_300m = raster::extract(forest_open_edge_300m,.)) %>%
+  mutate(., forest_open_edge_400m = raster::extract(forest_open_edge_400m,.)) %>%
+  mutate(., forest_open_edge_500m = raster::extract(forest_open_edge_500m,.)) ->
+  points_mig_pa 
+
+rm(forest_open_edge_50m)
+rm(forest_open_edge_100m)
+rm(forest_open_edge_200m)
+rm(forest_open_edge_300m)
+rm(forest_open_edge_400m)
+rm(forest_open_edge_500m)
+```
+
+
+```{r}
+forest_open_edge_600m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_600m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_700m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_700m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_800m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_800m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_900m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_900m")) %>%
+  arc.raster() %>%
+  as.raster()
+
+forest_open_edge_1000m <- arc.open(here_file("Projects", "Penn_migration_model","Default.gdb", "forest_open_edge_1000m")) %>%
+  arc.raster() %>%
+  as.raster()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(., forest_open_edge_600m = raster::extract(forest_open_edge_600m,.)) %>%
+  mutate(., forest_open_edge_700m = raster::extract(forest_open_edge_700m,.)) %>%
+  mutate(., forest_open_edge_800m = raster::extract(forest_open_edge_800m,.)) %>%
+  mutate(., forest_open_edge_900m = raster::extract(forest_open_edge_900m,.)) %>%
+  mutate(., forest_open_edge_1000m = raster::extract(forest_open_edge_1000m,.)) -> 
+  points_mig_pa 
+
+rm(forest_open_edge_600m)
+rm(forest_open_edge_700m)
+rm(forest_open_edge_800m)
+rm(forest_open_edge_900m)
+rm(forest_open_edge_1000m)
+```
+
+
+```{r}
+ggplot(points_mig_pa, aes(x = type, y = forest_edge_200m)) +
+  geom_boxplot()
+
+ggplot(points_mig_pa, aes(x = type, y = forest_agri_edge_200m)) +
+  geom_boxplot()
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(type_num = recode(type, "Used" = 1, "Available" = 0)) ->
+  points_mig_pa
+```
+
+
+```{r}
+candidate.set <- list()
+candidate.set[[1]] <- glm(type_num ~ 1, data = points_mig_pa, family = "binomial")
+candidate.set[[2]] <- glm(type_num ~ forest_edge_50m, data = points_mig_pa, family = "binomial")
+candidate.set[[3]] <- glm(type_num ~ forest_edge_100m, data = points_mig_pa, family = "binomial")
+candidate.set[[4]] <- glm(type_num ~ forest_edge_200m, data = points_mig_pa, family = "binomial")
+candidate.set[[5]] <- glm(type_num ~ forest_edge_300m, data = points_mig_pa, family = "binomial")
+candidate.set[[6]] <- glm(type_num ~ forest_edge_400m, data = points_mig_pa, family = "binomial")
+candidate.set[[7]] <- glm(type_num ~ forest_edge_500m, data = points_mig_pa, family = "binomial")
+candidate.set[[8]] <- glm(type_num ~ forest_edge_600m, data = points_mig_pa, family = "binomial")
+candidate.set[[9]] <- glm(type_num ~ forest_edge_700m, data = points_mig_pa, family = "binomial")
+candidate.set[[10]] <- glm(type_num ~ forest_edge_800m, data = points_mig_pa, family = "binomial")
+candidate.set[[11]] <- glm(type_num ~ forest_edge_900m, data = points_mig_pa, family = "binomial")
+candidate.set[[12]] <- glm(type_num ~ forest_edge_1000m, data = points_mig_pa, family = "binomial")
+
+candidate.set[[13]] <- glm(type_num ~ agri_edge_50m, data = points_mig_pa, family = "binomial")
+candidate.set[[14]] <- glm(type_num ~ agri_edge_100m, data = points_mig_pa, family = "binomial")
+candidate.set[[15]] <- glm(type_num ~ agri_edge_200m, data = points_mig_pa, family = "binomial")
+candidate.set[[16]] <- glm(type_num ~ agri_edge_300m, data = points_mig_pa, family = "binomial")
+candidate.set[[17]] <- glm(type_num ~ agri_edge_400m, data = points_mig_pa, family = "binomial")
+candidate.set[[18]] <- glm(type_num ~ agri_edge_500m, data = points_mig_pa, family = "binomial")
+candidate.set[[19]] <- glm(type_num ~ agri_edge_600m, data = points_mig_pa, family = "binomial")
+candidate.set[[20]] <- glm(type_num ~ agri_edge_700m, data = points_mig_pa, family = "binomial")
+candidate.set[[21]] <- glm(type_num ~ agri_edge_800m, data = points_mig_pa, family = "binomial")
+candidate.set[[22]] <- glm(type_num ~ agri_edge_900m, data = points_mig_pa, family = "binomial")
+candidate.set[[23]] <- glm(type_num ~ agri_edge_1000m, data = points_mig_pa, family = "binomial")
+
+candidate.set[[24]] <- glm(type_num ~ open_edge_50m, data = points_mig_pa, family = "binomial")
+candidate.set[[25]] <- glm(type_num ~ open_edge_100m, data = points_mig_pa, family = "binomial")
+candidate.set[[26]] <- glm(type_num ~ open_edge_200m, data = points_mig_pa, family = "binomial")
+candidate.set[[27]] <- glm(type_num ~ open_edge_300m, data = points_mig_pa, family = "binomial")
+candidate.set[[28]] <- glm(type_num ~ open_edge_400m, data = points_mig_pa, family = "binomial")
+candidate.set[[29]] <- glm(type_num ~ open_edge_500m, data = points_mig_pa, family = "binomial")
+candidate.set[[30]] <- glm(type_num ~ open_edge_600m, data = points_mig_pa, family = "binomial")
+candidate.set[[31]] <- glm(type_num ~ open_edge_700m, data = points_mig_pa, family = "binomial")
+candidate.set[[32]] <- glm(type_num ~ open_edge_800m, data = points_mig_pa, family = "binomial")
+candidate.set[[33]] <- glm(type_num ~ open_edge_900m, data = points_mig_pa, family = "binomial")
+candidate.set[[34]] <- glm(type_num ~ open_edge_1000m, data = points_mig_pa, family = "binomial")
+
+candidate.set[[35]] <- glm(type_num ~ forest_agri_edge_50m, data = points_mig_pa, family = "binomial")
+candidate.set[[36]] <- glm(type_num ~ forest_agri_edge_100m, data = points_mig_pa, family = "binomial")
+candidate.set[[37]] <- glm(type_num ~ forest_agri_edge_200m, data = points_mig_pa, family = "binomial")
+candidate.set[[38]] <- glm(type_num ~ forest_agri_edge_300m, data = points_mig_pa, family = "binomial")
+candidate.set[[39]] <- glm(type_num ~ forest_agri_edge_400m, data = points_mig_pa, family = "binomial")
+candidate.set[[40]] <- glm(type_num ~ forest_agri_edge_500m, data = points_mig_pa, family = "binomial")
+candidate.set[[41]] <- glm(type_num ~ forest_agri_edge_600m, data = points_mig_pa, family = "binomial")
+candidate.set[[42]] <- glm(type_num ~ forest_agri_edge_700m, data = points_mig_pa, family = "binomial")
+candidate.set[[43]] <- glm(type_num ~ forest_agri_edge_800m, data = points_mig_pa, family = "binomial")
+candidate.set[[44]] <- glm(type_num ~ forest_agri_edge_900m, data = points_mig_pa, family = "binomial")
+candidate.set[[45]] <- glm(type_num ~ forest_agri_edge_1000m, data = points_mig_pa, family = "binomial")
+
+candidate.set[[46]] <- glm(type_num ~ forest_open_edge_50m, data = points_mig_pa, family = "binomial")
+candidate.set[[47]] <- glm(type_num ~ forest_open_edge_100m, data = points_mig_pa, family = "binomial")
+candidate.set[[48]] <- glm(type_num ~ forest_open_edge_200m, data = points_mig_pa, family = "binomial")
+candidate.set[[49]] <- glm(type_num ~ forest_open_edge_300m, data = points_mig_pa, family = "binomial")
+candidate.set[[50]] <- glm(type_num ~ forest_open_edge_400m, data = points_mig_pa, family = "binomial")
+candidate.set[[51]] <- glm(type_num ~ forest_open_edge_500m, data = points_mig_pa, family = "binomial")
+candidate.set[[52]] <- glm(type_num ~ forest_open_edge_600m, data = points_mig_pa, family = "binomial")
+candidate.set[[53]] <- glm(type_num ~ forest_open_edge_700m, data = points_mig_pa, family = "binomial")
+candidate.set[[54]] <- glm(type_num ~ forest_open_edge_800m, data = points_mig_pa, family = "binomial")
+candidate.set[[55]] <- glm(type_num ~ forest_open_edge_900m, data = points_mig_pa, family = "binomial")
+candidate.set[[56]] <- glm(type_num ~ forest_open_edge_1000m, data = points_mig_pa, family = "binomial")
+
+
+candidate.names <- c("null", "forest_edge_50m", "forest_edge_100m", "forest_edge_200m", "forest_edge_300m", "forest_edge_400m", "forest_edge_500m", "forest_edge_600m", "forest_edge_700m", "forest_edge_800m", "forest_edge_900m", "forest_edge_1000m", "agri_edge_50m", "agri_edge_100m", "agri_edge_200m", "agri_edge_300m", "agri_edge_400m", "agri_edge_500m", "agri_edge_600m", "agri_edge_700m", "agri_edge_800m", "agri_edge_900m", "agri_edge_1000m", "open_edge_50m", "open_edge_100m", "open_edge_200m", "open_edge_300m", "open_edge_400m", "open_edge_500m", "open_edge_600m", "open_edge_700m", "open_edge_800m", "open_edge_900m", "open_edge_1000m", "forest_agri_edge_50m", "forest_agri_edge_100m", "forest_agri_edge_200m", "forest_agri_edge_300m", "forest_agri_edge_400m", "forest_agri_edge_500m", "forest_agri_edge_600m", "forest_agri_edge_700m", "forest_agri_edge_800m", "forest_agri_edge_900m", "forest_agri_edge_1000m", "forest_open_edge_50m", "forest_open_edge_100m", "forest_open_edge_200m", "forest_open_edge_300m", "forest_open_edge_400m", "forest_open_edge_500m", "forest_open_edge_600m", "forest_open_edge_700m", "forest_open_edge_800m", "forest_open_edge_900m", "forest_open_edge_1000m")
+```
+
+
+Model selection based on AICc:
+
+                       K   AICc Delta_AICc AICcWt Cum.Wt      LL
+forest_edge_200m       2 643.28       0.00   0.79   0.79 -319.63
+forest_edge_300m       2 646.53       3.25   0.15   0.94 -321.25
+forest_edge_100m       2 649.69       6.41   0.03   0.97 -322.83
+forest_edge_50m        2 651.15       7.87   0.02   0.99 -323.56
+forest_edge_400m       2 651.91       8.63   0.01   1.00 -323.94
+forest_edge_500m       2 657.99      14.71   0.00   1.00 -326.98
+forest_open_edge_200m  2 661.57      18.29   0.00   1.00 -328.77
+forest_edge_600m       2 662.94      19.66   0.00   1.00 -329.46
+forest_open_edge_300m  2 663.01      19.73   0.00   1.00 -329.49
+forest_edge_700m       2 666.50      23.22   0.00   1.00 -331.24
+forest_open_edge_400m  2 668.99      25.71   0.00   1.00 -332.48
+open_edge_200m         2 669.11      25.83   0.00   1.00 -332.54
+forest_edge_800m       2 669.18      25.90   0.00   1.00 -332.58
+open_edge_300m         2 669.46      26.18   0.00   1.00 -332.72
+forest_open_edge_100m  2 670.77      27.49   0.00   1.00 -333.37
+forest_edge_900m       2 671.41      28.13   0.00   1.00 -333.69
+open_edge_400m         2 672.17      28.89   0.00   1.00 -334.07
+forest_edge_1000m      2 673.27      29.99   0.00   1.00 -334.62
+forest_open_edge_500m  2 673.65      30.37   0.00   1.00 -334.81
+forest_agri_edge_300m  2 674.08      30.80   0.00   1.00 -335.03
+open_edge_100m         2 674.30      31.02   0.00   1.00 -335.14
+forest_agri_edge_400m  2 674.43      31.15   0.00   1.00 -335.20
+open_edge_500m         2 674.63      31.35   0.00   1.00 -335.30
+forest_agri_edge_500m  2 674.82      31.54   0.00   1.00 -335.40
+forest_agri_edge_50m   2 675.49      32.21   0.00   1.00 -335.73
+forest_agri_edge_600m  2 675.49      32.21   0.00   1.00 -335.73
+forest_agri_edge_100m  2 675.52      32.24   0.00   1.00 -335.75
+forest_agri_edge_200m  2 675.86      32.58   0.00   1.00 -335.92
+forest_open_edge_600m  2 676.28      33.00   0.00   1.00 -336.13
+forest_agri_edge_700m  2 676.40      33.12   0.00   1.00 -336.19
+open_edge_600m         2 676.41      33.13   0.00   1.00 -336.19
+forest_agri_edge_800m  2 677.31      34.03   0.00   1.00 -336.64
+open_edge_700m         2 677.70      34.42   0.00   1.00 -336.84
+forest_open_edge_50m   2 677.74      34.46   0.00   1.00 -336.86
+forest_open_edge_700m  2 677.77      34.49   0.00   1.00 -336.87
+agri_edge_300m         2 678.07      34.80   0.00   1.00 -337.02
+forest_agri_edge_900m  2 678.17      34.89   0.00   1.00 -337.07
+agri_edge_400m         2 678.25      34.97   0.00   1.00 -337.11
+agri_edge_500m         2 678.28      35.00   0.00   1.00 -337.13
+agri_edge_600m         2 678.43      35.15   0.00   1.00 -337.20
+open_edge_800m         2 678.51      35.23   0.00   1.00 -337.24
+forest_open_edge_800m  2 678.58      35.30   0.00   1.00 -337.28
+agri_edge_200m         2 678.82      35.54   0.00   1.00 -337.40
+agri_edge_700m         2 678.83      35.55   0.00   1.00 -337.40
+forest_agri_edge_1000m 2 678.98      35.71   0.00   1.00 -337.48
+open_edge_900m         2 679.00      35.72   0.00   1.00 -337.49
+forest_open_edge_900m  2 679.00      35.73   0.00   1.00 -337.49
+forest_open_edge_1000m 2 679.28      36.00   0.00   1.00 -337.63
+open_edge_1000m        2 679.30      36.02   0.00   1.00 -337.64
+agri_edge_800m         2 679.32      36.04   0.00   1.00 -337.65
+open_edge_50m          2 679.61      36.33   0.00   1.00 -337.79
+agri_edge_900m         2 679.80      36.52   0.00   1.00 -337.89
+agri_edge_100m         2 680.22      36.94   0.00   1.00 -338.10
+agri_edge_1000m        2 680.27      37.00   0.00   1.00 -338.13
+agri_edge_50m          2 680.94      37.66   0.00   1.00 -338.46
+null                   1 686.84      43.56   0.00   1.00 -342.41
+
+```{r}
+aictab(cand.set = candidate.set, modnames = candidate.names)
+```

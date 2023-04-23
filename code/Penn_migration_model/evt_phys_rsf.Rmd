@@ -1,0 +1,111 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(raster)
+library(stars)
+library(sf)
+library(there)
+library(mapview)
+library(AICcmodavg)
+```
+
+```{r}
+landcov_stars <- read_stars(here_file("Projects", "Penn_migration_model", "evt200_phys_pa.tif")) 
+
+used_mig_pa <- st_read(here_file("Data", "Movebank_locations"), "migratory_points_pa_8_3_2020") %>%
+  st_transform(st_crs(landcov_stars)) %>%
+  transmute(ID = ID, time = time, type = "Used")
+
+landcov_raster <- raster(here_file("Projects", "Penn_migration_model", "evt200_phys_pa.tif")) 
+```
+Generating random points
+```{r}
+map(1:nrow(used_mig_pa), function(x){
+  used_mig_pa[x,] %>%
+    pull(geometry) %>%
+    st_buffer(5000) %>%
+    st_sample(1) ->
+    new_geom
+  
+  used_mig_pa[x,] %>%
+    pull(ID) ->
+    new_ID
+  
+  used_mig_pa[x,] %>%
+    pull(time) ->
+    new_time
+  
+  tibble(ID = new_ID, time = new_time, type = "Available", geometry = new_geom)
+}) -> available_mig_pa
+  
+available_mig_pa <- exec(bind_rows, available_mig_pa)
+```
+
+
+```{r}
+points_mig_pa <- bind_rows(used_mig_pa, available_mig_pa)
+```
+
+
+```{r include=FALSE}
+points_mig_pa %>%
+    as_Spatial() %>% 
+    raster::extract(x = landcov_raster, y = .) ->
+  points_mig_pa$landcov
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(landcov = recode(landcov,
+                          `1` = "Grassland",
+                          `2` = "Shrubland",
+                          `3` = "Conifer",
+                          `4` = "Hardwood",
+                          `5` = "Conifer-Hardwood",
+                          `6` = "Open Water",
+                          `7` = "Quarries",
+                          `8` = "Developed-Low Intensity",
+                          `9` = "Developed-Medium Intensity",
+                          `10` = "Developed-High Intensity",
+                          `11` = "Developed-Roads",
+                          `12` = "Developed",
+                          `13` = "Agricultural",
+                          `14` = "Riparian",
+                          `15` = "Sparsely Vegetated",
+                          `16` = "Exotic Tree-Shrub",
+                          `17` = "Ruderal Wet Meadow and Marsh",
+                          `18` = "Exotic Herbaceous",
+                          .default = "Other")) ->
+  points_mig_pa
+```
+
+
+```{r}
+ggplot(data = points_mig_pa, mapping = aes(x = landcov, fill = type)) +
+  geom_histogram(stat="count", position = "dodge") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+```{r}
+points_mig_pa %>%
+  mutate(type_num = recode(type, "Used" = 1, "Available" = 0)) ->
+  points_mig_pa
+
+candidate.set <- list()
+candidate.set[[1]] <- glm(type_num ~ 1, data = points_mig_pa, family = "binomial")
+candidate.set[[2]] <- glm(type_num ~ landcov, data = points_mig_pa, family = "binomial")
+
+candidate.names <- c("null", "landcov")
+```
+
+
+```{r}
+aictab(cand.set = candidate.set, modnames = candidate.names)
+```
+

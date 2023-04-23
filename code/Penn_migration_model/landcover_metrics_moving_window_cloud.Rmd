@@ -1,0 +1,145 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#setwd("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model")
+library(tidyverse)
+library(sf)
+# Modified version of the spatial.tools package, built to allow focal_hpc to use Azure Batch as a parallel backend. Note that I've only tested this on moving window approaches and not pixel-based calculations. Major changes: 
+# 1) bringing the writeMapply function outside of the foreach loop (as workers can't write their own results to disk when they're in the cloud). 
+# 2) maxTaskRetryCount increased from 3 to 30 to compensate for this house's crappy internet connection. If you're still getting curl errors, try setting this higher. 
+# 3) Imported functions from the doAzureParallel package (although not documentation). See the doAzureParallel package documentation for an excellent description of how to get Azure Batch working as a parallel backend for the foreach package. 
+library(spatial.tools) #remotes::install_github("LiamABerigan/spatial.tools") 
+library(landscapemetrics)
+library(there) #Modified version of the here package for file referencing. Replace here_file with the path of your choice
+library(raster)
+```
+
+```{r}
+nlcd_forest_binary <- raster(here_file("Projects", "Penn_migration_model", "nlcd2016_forestpatches_90m.tif"))
+
+# For each window, focal_hpc gives the function an array representing the values of the raster. You can either turn the array back into a raster (brick(x) %>% raster::subset(1)) or run your function on the array directly. Focal_hpc expects the function to return a single, numeric value. It will throw an error if that value is NA.
+
+landscaper_ed <- function(x){
+  if(all(is.na(x[,,1]))){ #if all values in the array are NA, return the numeric NA value
+    return(999)
+  } else{
+    tryCatch({
+      metrics_pland <- brick(x) %>%
+        raster::subset(1) %>%
+        lsm_c_ed() %>%
+        filter(class == 1) %>% 
+        pull(value)
+      
+      metrics_pland <- if_else(is.na(metrics_pland),999,metrics_pland)
+      metrics_pland <- ifelse(length(metrics_pland)==0,0,metrics_pland)#this is 0 for ed, 100 for ai and cohesion
+
+      
+      return(metrics_pland)
+      
+    }, error = function(cond){
+      return(999)
+    }
+  )
+  }
+}
+
+landscaper_ai <- function(x){
+  if(all(is.na(x[,,1]))){ #if all values in the array are NA, return the numeric NA value
+    return(999)
+  } else{
+    tryCatch({
+      metrics_pland <- brick(x) %>%
+        raster::subset(1) %>%
+        lsm_c_ai() %>%
+        filter(class == 1) %>% 
+        pull(value)
+      
+      metrics_pland <- if_else(is.na(metrics_pland),999,metrics_pland)
+      metrics_pland <- ifelse(length(metrics_pland)==0,100,metrics_pland)#this is 0 for ed, 100 for ai and cohesion
+
+      
+      return(metrics_pland)
+      
+    }, error = function(cond){
+      return(999)
+    }
+  )
+  }
+}
+
+landscaper_cohesion <- function(x){
+  if(all(is.na(x[,,1]))){ #if all values in the array are NA, return the numeric NA value
+    return(999)
+  } else{
+    tryCatch({
+      metrics_pland <- brick(x) %>%
+        raster::subset(1) %>%
+        lsm_c_cohesion() %>%
+        filter(class == 1) %>% 
+        pull(value)
+      
+      metrics_pland <- if_else(is.na(metrics_pland),999,metrics_pland)
+      metrics_pland <- ifelse(length(metrics_pland)==0,100,metrics_pland)#this is 0 for ed, 100 for ai and cohesion
+
+      
+      return(metrics_pland)
+      
+    }, error = function(cond){
+      return(999)
+    }
+  )
+  }
+}
+
+landscaper_pland <- function(x){
+  if(all(is.na(x[,,1]))){ #if all values in the array are NA, return the numeric NA value
+    return(999)
+  } else{
+    tryCatch({
+      metrics_pland <- length(which(x[,,1]==1))/length(which(!is.na(x[,,1])))
+      
+      metrics_pland <- if_else(is.na(metrics_pland),999,metrics_pland)
+      metrics_pland <- ifelse(length(metrics_pland)==0,0,metrics_pland)#this is 0 for ed, 100 for ai and cohesion
+
+      
+      return(metrics_pland)
+      
+    }, error = function(cond){
+      return(999)
+    }
+  )
+  }
+}
+
+#alternative code for determining pland (2x as fast as landscapemetrics)
+#length(which(x[,,1]==1))/length(which(!is.na(x[,,1])))
+
+#sfQuickInit(cpus = 10) #spatial.tools default backend for local parallel processing
+
+spatial.tools::setCredentials("credentials.json") # see doAzureParallel documentation for explanation on how to write these and set up an Azure Batch account. I had to set up a Pay-As-You-Go subscription and submit a request to have the low priority vCPU quota on the batch account increased. The request was approved within 2 hours.
+cluster <- spatial.tools::makeCluster("cluster.json")
+spatial.tools::registerDoAzureParallel(cluster)
+spatial.tools::getDoParWorkers()
+
+Sys.time()
+
+q <- rasterEngine(x = nlcd_forest_binary, #Goal is to run statewide layers at 90m resolution for less than $5 per layer
+             fun = landscaper_cohesion, 
+             window_dims = c(223,223), #1km: 23 cells at 90m resolution (2km per side), 5km: 111 cells at 90m resolution (2km per side), 10km: 223 cells at 90m resolution (20km per side) 500m: 33 cells at 30m resolution (1km per side)
+             .packages = c("tidyverse", "landscapemetrics"),
+             verbose = TRUE,
+             filename = here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km"),
+             overwrite = TRUE,
+             start_iter = 7, # start_iter parameter should be set to the most recent iteration value upon failure, or NULL
+             minblocks = 50); Sys.time(); doAzureParallel::stopCluster(cluster)
+
+
+#sfQuickStop() 
+             
+values(q)[values(q) == 999] <- NA #focal_hpc gets angry if you try to write NA to pixels, so I use 999 instead and then change them to NA afterward
+
+writeRaster(q, here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km.tif"))
+
+```

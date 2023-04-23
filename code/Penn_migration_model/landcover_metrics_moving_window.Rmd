@@ -1,0 +1,199 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(landscapemetrics)
+library(raster)
+library(sf)
+library(stars)
+library(there)
+library(parallel)
+library(pbapply)
+```
+
+Read in the list of files
+```{r}
+file_list <- list.files("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km")
+
+file_list %>%
+  stringr::str_detect(".TIF$") -> file_boolean
+
+tif_list <- file_list[file_boolean]
+
+raster_dataframe <- tibble(tif_name = tif_list)
+```
+
+Determine which rasters are full and limit to only those rasters for operations
+Note: would be faster if parallel processing was implemented
+```{r}
+eval_raster_size <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  iterated_raster@ncols + iterated_raster@nrows
+}
+
+raster_dataframe$size <- pblapply(X = 1:nrow(raster_dataframe), FUN = eval_raster_size)
+
+raster_dataframe %>% filter(size == max(unlist(raster_dataframe$size))) -> raster_dataframe
+
+saveRDS(raster_dataframe, "raster_dataframe_1.rds")
+```
+
+
+```{r}
+tif_list <- raster_dataframe$tif_name
+```
+
+
+Next: finding the coordinates to use when projecting each
+```{r}
+eval_raster_coords <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  
+  list(x = (iterated_raster@extent@xmin + iterated_raster@extent@xmax)/2, y = (iterated_raster@extent@ymin + iterated_raster@extent@ymax)/2) %>% 
+    return()
+}
+
+numCores <- 10
+cl <- makeCluster(numCores)
+clusterEvalQ(cl, { #preparing each new process to run our code
+  library(tidyverse)
+  library(raster)
+})
+clusterExport(cl, "tif_list")
+
+
+raster_dataframe$coords <- pblapply(X = 1:nrow(raster_dataframe), FUN = eval_raster_coords, cl = cl) 
+
+stopCluster(cl)
+
+#extract coordinates
+raster_dataframe$x <- map(.x = raster_dataframe$coords, .f = function(x){
+  x$x
+})
+
+raster_dataframe$y <- map(.x = raster_dataframe$coords, .f = function(x){
+  x$y
+})
+
+saveRDS(raster_dataframe, "raster_dataframe_2.rds")
+```
+
+
+Proportion of landcover as forest, aggregation index, and cohesion index
+```{r}
+numCores <- 10
+cl <- makeCluster(numCores)
+clusterEvalQ(cl, { #preparing each new process to run our code
+  library(tidyverse)
+  library(raster)
+  library(landscapemetrics)
+})
+clusterExport(cl, "tif_list")
+
+eval_pland <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  lsm_c_pland(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_ai <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  lsm_c_ai(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_cohesion <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  lsm_c_cohesion(iterated_raster) %>%
+    filter(class == 1) %>% 
+    pull(value) %>%
+    return()
+}
+
+eval_ed <- function(n){
+  iterated_raster <- raster(paste0("D:/OneDrive - University of Maine System/MaineAnalysis/Projects/Penn_migration_model/split_rasters_5km/", tif_list[n]))
+  lsm_l_ed(iterated_raster) %>%
+    pull(value) %>%
+    return()
+}
+
+raster_dataframe$pland <- pblapply(X = 1:length(tif_list), FUN = eval_pland, cl = cl)
+raster_dataframe$ai <- pblapply(X = 1:length(tif_list), FUN = eval_ai, cl = cl)
+raster_dataframe$cohesion <- pblapply(X = 1:length(tif_list), FUN = eval_cohesion, cl = cl)
+raster_dataframe$ed <- pblapply(X = 1:length(tif_list), FUN = eval_ed, cl = cl)
+
+stopCluster(cl)
+```
+
+
+Now converting to rasters
+```{r}
+#pland
+raster_pland <- raster_dataframe %>%
+  dplyr::select(x, y, pland) %>%
+  rename(value = pland) %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_pland) <- ~ x + y
+gridded(raster_pland) <- TRUE
+
+raster_pland <- raster(raster_pland)
+projection(raster_pland) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_pland, "pland_1k_5k.tif")
+
+#ai
+raster_ai <- raster_dataframe %>%
+  dplyr::select(x, y, ai) %>%
+  rename(value = ai) %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_ai) <- ~ x + y
+gridded(raster_ai) <- TRUE
+
+raster_ai <- raster(raster_ai)
+projection(raster_ai) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_ai, "ai_1k_5k.tif")
+
+#cohesion
+raster_cohesion <- raster_dataframe %>%
+  dplyr::select(x, y, cohesion) %>%
+  rename(value = cohesion) %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_cohesion) <- ~ x + y
+gridded(raster_cohesion) <- TRUE
+
+raster_cohesion <- raster(raster_cohesion)
+projection(raster_cohesion) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_cohesion, "cohesion_1k_5k.tif")
+
+#edge density
+raster_ed <- raster_dataframe %>%
+  dplyr::select(x, y, ed) %>%
+  rename(value = ed) %>%
+  mutate(across(.fns = as.numeric))
+
+coordinates(raster_ed) <- ~ x + y
+gridded(raster_ed) <- TRUE
+
+raster_ed <- raster(raster_ed)
+projection(raster_ed) <- CRS("+init=epsg:5070")
+
+writeRaster(raster_ed, "ed_1k_5k.tif")
+```
+
+
+lsm_l_area_mn #mean patch area
+lsm_l_ed #edge density
+lsm_l_shei #shannon's eveness index
+lsm_l_ta #total area. experimental to see if I can design my own class functions
