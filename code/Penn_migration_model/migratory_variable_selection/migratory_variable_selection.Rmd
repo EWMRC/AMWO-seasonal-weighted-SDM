@@ -70,15 +70,13 @@ ecoregions <- here_file("Data", "physiographic_provinces", "level_iii_ecoregions
 sclass <- here_file("Data", "Landfire_products", "US_200SCLASS", "us_200sclass_pa.tif") %>% raster()
 ```
 
-
-
 Read in used and create available points
 ```{r}
 used <- st_read(dsn = here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
   as_Spatial() %>%
   spTransform(crs(forest_30m))
 
-avail <- enmSdm::sampleRast(x = projectRaster(forest_30m, crs = crs("+init=epsg:4326")), n = 10000, replace = TRUE, prob = FALSE) %>%
+avail <- enmSdmX::sampleRast(x = projectRaster(forest_30m, crs = crs("+init=epsg:4326")), n = 10000, replace = TRUE, prob = FALSE) %>%
   as.data.frame()
 
 coordinates(avail) <- ~ x + y
