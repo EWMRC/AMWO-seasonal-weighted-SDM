@@ -2,7 +2,7 @@
 title: "R Notebook"
 output: html_notebook
 ---
-Runs in 4.0.5
+Runs in 4.2.2, image stored in "Penn_utility_evaluation.RData"
 ```{r}
 library(tidyverse)
 library(sf)
@@ -380,7 +380,8 @@ ecoregion_bw_plot <- point_values_longer %>%
   scale_pattern_density_discrete(range = c(0.01, 0)) +
   guides(pattern = FALSE, fill = FALSE) +
   scale_fill_manual(values = c("Northeastern Highlands" = "#65013f", "Northern Allegheny Plateau" = "#009F81", "Erie Drift Plain" = "#FF5AAF", "North Central Appalachians" = "#8400CD", "Middle Atlantic Coastal Plain" = "#00FCCF", "Northern Piedmont" = "#00C2F9", "Blue Ridge" = "#FFB2FD", "Ridge and Valley" = "#A40122", "Central Appalachians" = "#E29134", "Western Allegheny Plateau" = "#FF6E3A", "Eastern Great Lakes Lowlands" = "#FFC33B"), guide = guide_legend(override.aes = list(pattern = "none"))) +
-  theme(axis.text.x=element_blank())
+  theme(axis.text.x=element_blank()) +
+  ggtitle("5B")
   #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) #If I need axis labels, rotate them
 
 ecoregion_bw_plot
@@ -443,7 +444,8 @@ ecoregion_map_plot <- pa_ecoregions %>%
   theme_bw() +
   labs(fill = "Ecoregion") + 
   theme(plot.margin = unit(c(0, 0, 0, 0.3), "cm")) + ##9F0162
-  scale_fill_manual(values = c("Northeastern Highlands" = "#65013f", "Northern Allegheny Plateau" = "#009F81", "Erie Drift Plain" = "#FF5AAF", "North Central Appalachians" = "#8400CD", "Middle Atlantic Coastal Plain" = "#00FCCF", "Northern Piedmont" = "#00C2F9", "Blue Ridge" = "#FFB2FD", "Ridge and Valley" = "#A40122", "Central Appalachians" = "#E29134", "Western Allegheny Plateau" = "#FF6E3A", "Eastern Great Lakes Lowlands" = "#FFC33B"))
+  scale_fill_manual(values = c("Northeastern Highlands" = "#65013f", "Northern Allegheny Plateau" = "#009F81", "Erie Drift Plain" = "#FF5AAF", "North Central Appalachians" = "#8400CD", "Middle Atlantic Coastal Plain" = "#00FCCF", "Northern Piedmont" = "#00C2F9", "Blue Ridge" = "#FFB2FD", "Ridge and Valley" = "#A40122", "Central Appalachians" = "#E29134", "Western Allegheny Plateau" = "#FF6E3A", "Eastern Great Lakes Lowlands" = "#FFC33B")) +
+  ggtitle("5A")
 
 ecoregion_map_plot
 # t <- leaflet(data = pa_ecoregions, options = leafletOptions(zoomControl = FALSE, attributionControl=FALSE)) %>%
@@ -462,9 +464,10 @@ dev.new()
 dev.off()
 
 ggdraw() +
-   draw_plot(ecoregion_bw_plot, x = 0, y = 0.5, width = 1, height = .5) +
-   draw_plot(ecoregion_map_plot, x = 0, y = 0, width = 1, height = .5)
+   draw_plot(ecoregion_map_plot, x = 0, y = 0.5, width = 1, height = .5) +
+   draw_plot(ecoregion_bw_plot, x = 0, y = 0, width = 1, height = .5)
 
-ggsave(filename = "pa_comparative_ecoregion_cbfriendly_12_10_22.tif", width = 8, height = 7, dpi = 320, device = "tiff")
+ggsave(filename = "pa_comparative_ecoregion_cbfriendly_6_29_23.tif", width = 8, height = 7, dpi = 320, device = "tiff", 
+       type = "cairo", bg = "white")
 ```
 
