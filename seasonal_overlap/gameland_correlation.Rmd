@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(there)
+library(sf)
+```
+
+Retrieve the gameland rankings from the app
+```{r}
+gamelands <- here_file("Projects", "AMWO-seasonal-weighted-SDM", "code", "penn_shiny_app", "woodcock_weighted_habitat", "gamelands.rds") %>% 
+  readRDS()
+```
+
+Include only relevant columns
+```{r}
+gamelands <- gamelands %>% 
+  st_drop_geometry() %>% 
+  dplyr::select(name, m10r0_si, m0r10_si)
+```
+
+Measure the Pearson correlation between the migratory and breeding total habitat
+```{r}
+cor(x = gamelands$m10r0_si, y = gamelands$m0r10_si, method = "pearson")
+```
+
+Old code:
+
+Retrieve the top 5 gamelands by breeding season ranking
+```{r}
+# top_5 <- gamelands %>% 
+#   arrange(desc(m0r10_si)) %>% 
+#   head(5) %>% 
+#   pull(name)
+```
+
+Migratory habitat rankings for the top 5 breeding gamelands
+```{r}
+# gamelands_ranked <- gamelands %>% 
+#   arrange(desc(m10r0_si))
+# 
+# gamelands_ranked$rank <- 1:nrow(gamelands_ranked)
+# 
+# gamelands_ranked %>% 
+#   filter(name %in% top_5)
+```
+

@@ -34,6 +34,30 @@
       "Hash": "b2866e62bab9378c3cc9476a1954226b",
       "Requirements": []
     },
+    "DT": {
+      "Package": "DT",
+      "Version": "0.27",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "3444e6ed78763f9f13aaa39f2481eb34",
+      "Requirements": [
+        "crosstalk",
+        "htmltools",
+        "htmlwidgets",
+        "jquerylib",
+        "jsonlite",
+        "magrittr",
+        "promises"
+      ]
+    },
+    "FNN": {
+      "Package": "FNN",
+      "Version": "1.1.3.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e9e53a559ef99e0c02bc2f9a944f0bee",
+      "Requirements": []
+    },
     "KernSmooth": {
       "Package": "KernSmooth",
       "Version": "2.23-20",
@@ -58,6 +82,18 @@
       "Hash": "539dc0c0c05636812f1080f473d2c177",
       "Requirements": [
         "lattice"
+      ]
+    },
+    "MuMIn": {
+      "Package": "MuMIn",
+      "Version": "1.47.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "76720a11cd43c0ddeb428a4b24dc2ed1",
+      "Requirements": [
+        "Matrix",
+        "insight",
+        "nlme"
       ]
     },
     "R6": {
@@ -638,6 +674,32 @@
         "rlang"
       ]
     },
+    "enmSdmX": {
+      "Package": "enmSdmX",
+      "Version": "1.0.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5d4e4391ed5330306d1101bd26be377e",
+      "Requirements": [
+        "DT",
+        "MuMIn",
+        "boot",
+        "dismo",
+        "doParallel",
+        "foreach",
+        "gbm",
+        "ks",
+        "maxnet",
+        "mgcv",
+        "omnibus",
+        "rJava",
+        "randomForest",
+        "scales",
+        "sf",
+        "shiny",
+        "terra"
+      ]
+    },
     "evaluate": {
       "Package": "evaluate",
       "Version": "0.20",
@@ -775,6 +837,17 @@
       "Hash": "09604531daa57d9c3884b7a15488bab9",
       "Requirements": [
         "Rcpp"
+      ]
+    },
+    "geosphere": {
+      "Package": "geosphere",
+      "Version": "1.5-18",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "45aa4def70a402e7d20efde490c13ecb",
+      "Requirements": [
+        "Rcpp",
+        "sp"
       ]
     },
     "gert": {
@@ -1064,6 +1137,14 @@
       "Hash": "6154ec2223172bce8162d4153cda21f7",
       "Requirements": []
     },
+    "insight": {
+      "Package": "insight",
+      "Version": "0.19.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b7a721ab3228268ed3a4ac3d585a09bf",
+      "Requirements": []
+    },
     "isoband": {
       "Package": "isoband",
       "Version": "0.2.7",
@@ -1109,6 +1190,14 @@
       "Hash": "a4269a09a9b865579b2635c77e572374",
       "Requirements": []
     },
+    "kernlab": {
+      "Package": "kernlab",
+      "Version": "0.9-32",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d7d6a7cb690ac73eeced99e1ed9d6cdb",
+      "Requirements": []
+    },
     "knitr": {
       "Package": "knitr",
       "Version": "1.42",
@@ -1120,6 +1209,25 @@
         "highr",
         "xfun",
         "yaml"
+      ]
+    },
+    "ks": {
+      "Package": "ks",
+      "Version": "1.14.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "662b0f3d88c78b3f58b687c0b4f9817a",
+      "Requirements": [
+        "FNN",
+        "KernSmooth",
+        "Matrix",
+        "kernlab",
+        "mclust",
+        "mgcv",
+        "multicool",
+        "mvtnorm",
+        "plot3D",
+        "pracma"
       ]
     },
     "labeling": {
@@ -1342,6 +1450,14 @@
         "glmnet"
       ]
     },
+    "mclust": {
+      "Package": "mclust",
+      "Version": "6.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a42d1a95e400fcd75294b1464d1a84ac",
+      "Requirements": []
+    },
     "memoise": {
       "Package": "memoise",
       "Version": "2.0.1",
@@ -1393,6 +1509,14 @@
         "Rcpp"
       ]
     },
+    "misc3d": {
+      "Package": "misc3d",
+      "Version": "0.9-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c075218a4fc802bab009a7f5e01bb686",
+      "Requirements": []
+    },
     "modelr": {
       "Package": "modelr",
       "Version": "0.1.11",
@@ -1410,6 +1534,33 @@
         "vctrs"
       ]
     },
+    "move": {
+      "Package": "move",
+      "Version": "4.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "2b9575bf29b9289fe6769823bc9a5842",
+      "Requirements": [
+        "Rcpp",
+        "geosphere",
+        "httr",
+        "memoise",
+        "raster",
+        "sp",
+        "terra",
+        "xml2"
+      ]
+    },
+    "multicool": {
+      "Package": "multicool",
+      "Version": "0.1-12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d6b51bd5b30b1c58052fd70488f318e6",
+      "Requirements": [
+        "Rcpp"
+      ]
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
@@ -1419,6 +1570,14 @@
       "Requirements": [
         "colorspace"
       ]
+    },
+    "mvtnorm": {
+      "Package": "mvtnorm",
+      "Version": "1.1-3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7a7541cc284cb2ba3ba7eae645892af5",
+      "Requirements": []
     },
     "nlme": {
       "Package": "nlme",
@@ -1446,6 +1605,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "170da2130d5332bea7d6ede01875ba1d",
+      "Requirements": []
+    },
+    "omnibus": {
+      "Package": "omnibus",
+      "Version": "1.1.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "92eb0a46148547b39b7cf49975537925",
       "Requirements": []
     },
     "openssl": {
@@ -1554,6 +1721,16 @@
         "withr"
       ]
     },
+    "plot3D": {
+      "Package": "plot3D",
+      "Version": "1.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "092e8bfd36dc747184cb56e4686f0cd3",
+      "Requirements": [
+        "misc3d"
+      ]
+    },
     "plyr": {
       "Package": "plyr",
       "Version": "1.8.8",
@@ -1570,6 +1747,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bd54ba8a0a5faded999a7aab6e46b374",
+      "Requirements": []
+    },
+    "pracma": {
+      "Package": "pracma",
+      "Version": "2.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "69f905ec128691ff7108de88fc5a4964",
       "Requirements": []
     },
     "praise": {
@@ -1666,6 +1851,14 @@
         "rlang",
         "vctrs"
       ]
+    },
+    "rJava": {
+      "Package": "rJava",
+      "Version": "1.0-6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0415819f6baa75d86d52483f7292b623",
+      "Requirements": []
     },
     "ragg": {
       "Package": "ragg",

@@ -1,0 +1,23 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(move)
+```
+
+```{r}
+amwo <- getMovebankData(study = "American Woodcock Migration Ecology in Eastern North America", login = readRDS("movebank_credentials.rds"), timestamp_start = "20170801000000000", timestamp_end = "20210602000000000", removeDuplicatedTimestamps=TRUE) %>% as.data.frame()
+```
+
+Count the # of birds with at least one mig track
+```{r}
+amwo_filtered_ids <- amwo %>% 
+  filter(migration_stage %in% c("Step state: Migratory (spring)", "Step state: Migratory (fall)")) %>% 
+  pull(local_identifier) %>% 
+  unique
+#328 unique migrating birds in this timeframe
+```
+
