@@ -105,3 +105,7 @@ ed_200m_1k_30m_5070.tif
 evt200_phys_pa.tif
 nlcd2016_forestpatches.shp
 pland_200m_1k_30m_5070.tif
+
+/methods/Penn_residential_model/predictor_stack_adv
+/methods/Penn_residential_model/random_effect_tiles
+/methods/Penn_residential_model/random_effect_tiles_adv

@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+pa_sgs <- readxl::read_excel("Woodcock Habitat Suitability data 2011-2020 ALL ROUTES.xlsx")
+```
+
+
+```{r}
+pa_sgs %>%
+  mutate(route_id = paste(Route, Stop),
+         value_binary = recode(Value, "Occ" = 1, "H-Occ" = 1, .missing = 0)) %>%
+  filter(Notes != "Route not run" | is.na(Notes)) %>%
+  filter(Notes != "Data sheet not found" | is.na(Notes)) %>%
+  filter(Notes != "Data not available" | is.na(Notes)) %>%
+  filter(Year > 2015) ->
+  pa_sgs
+
+#Creating a spatial location key to join
+pa_sgs %>%
+  dplyr::select(route_id, Latitude, Longitude, Route, Stop) %>%
+  distinct() ->
+  pa_sgs_coords
+
+
+#join data
+pa_sgs %>%
+  group_by(route_id) %>%
+  summarise(sightings = sum(value_binary), num_obs = n()) %>%
+  mutate(pres_abs = if_else(sightings > 0, 1, 0)) %>%
+  left_join(pa_sgs_coords) ->
+  pa_sgs_pres_abs
+
+write.csv(pa_sgs_pres_abs, file = "pa_sgs_pres_abs.csv", row.names = FALSE)
+
+#View data with fewer than 5 observations
+pa_sgs_pres_abs %>%
+  filter(num_obs < 5) %>%
+  View()
+
+pa_sgs_pres_abs %>%
+  nrow()
+
+pa_sgs_pres_abs %>%
+  filter(num_obs < 5) %>%
+  nrow()
+```
+

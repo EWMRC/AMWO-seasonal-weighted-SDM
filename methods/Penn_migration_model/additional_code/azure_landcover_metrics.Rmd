@@ -1,0 +1,55 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+devtools::install_github("Azure/rAzureBatch")
+devtools::install_github("Azure/doAzureParallel")
+```
+
+```{r}
+library(tidyverse)
+library(landscapemetrics)
+library(raster)
+library(doAzureParallel)
+```
+
+```{r}
+#generateCredentialsConfig("credentials.json")
+#generateClusterConfig("cluster.json")
+```
+```{r}
+setCredentials("credentials.json")
+```
+
+```{r}
+# 4. Register the pool. This will create a new pool if your pool hasn't already been provisioned.
+cluster <- makeCluster("cluster.json")
+
+# 5. Register the pool as your parallel backend
+registerDoAzureParallel(cluster)
+
+# 6. Check that your parallel backend has been registered
+getDoParWorkers()
+```
+
+```{r}
+number_of_iterations <- 10
+results <- foreach(i = 1:number_of_iterations) %dopar% {
+  # This code is executed, in parallel, across your cluster.
+  i + 1
+}
+
+stopCluster(cluster)
+```
+
+```{r}
+containers <- listStorageContainers()
+
+t <- rAzureBatch::createBlobUrl()
+  
+  BlobOperations
+  downloadBlob("1kmraster", "split_200m_1km1000096.TIF")
+```
+

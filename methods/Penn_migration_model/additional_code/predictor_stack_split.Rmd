@@ -1,0 +1,52 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(there)
+library(raster)
+library(pbapply)
+```
+
+
+
+```{r}
+band_size <- (predictor_stack@extent@ymax - predictor_stack@extent@ymin)/60
+for(i in 0:59){
+ paste("Running band:", i) %>% print()
+  extent(matrix(c(1268295, (1962615 + (i*band_size)), 1781835, (1962615 + ((i+1)*band_size))), nrow=2)) %>%
+  raster::crop(x = predictor_stack, y = .) %>%
+  raster::trim() %>%
+  #stackSave(paste0("predictor_stack_",i,".stk"))
+  writeRaster(paste0(here_file("Projects", "Penn_residential_model"),"/predictor_stack_",i,".grd"), format = "raster", overwrite = TRUE)
+}
+
+```
+
+```{r}
+setwd(here_file("Projects", "Penn_residential_model"))
+
+j <- 0
+
+for(x in 0:59){ #11:59 0:59
+  predictor_stack <- raster::stack(paste0(here_file("Projects", "Penn_residential_model"),"/predictor_stack_", x, ".grd"))
+  
+  band_size <- (predictor_stack@extent@ymax - predictor_stack@extent@ymin)/5
+  for(i in 0:4){
+    paste("Running band:", i) %>% print()
+    j <- j + 1
+    extent(matrix(c(predictor_stack@extent@xmin, (predictor_stack@extent@ymin + (i*band_size)), predictor_stack@extent@xmax, (predictor_stack@extent@ymin + ((i+1)*band_size))), nrow=2)) %>%
+      raster::crop(x = predictor_stack, y = .) %>%
+      raster::trim() %>%
+      raster::aggregate(fact = 3, fun = median) %>%
+      #stackSave(paste0("predictor_stack_",i,".stk"))
+      writeRaster(paste0(here_file("Projects", "Penn_residential_model"),"/predictor_stack_smol_90m_",j,".grd"), format = "raster", overwrite = TRUE)
+
+    print(j)
+  }
+}
+
+
+```
+
