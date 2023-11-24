@@ -1,7 +1,0 @@
-Files I've integrated into the master csv so far...
-NER
-NWR
-SCR
-NCR
-SER
-SWR (this makes all 6)

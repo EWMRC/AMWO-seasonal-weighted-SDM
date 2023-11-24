@@ -1,2 +1,0 @@
-125663.6 square meters within a 200m radius
-expected max: 139.626 points

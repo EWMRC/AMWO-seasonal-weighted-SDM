@@ -1,0 +1,473 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Runs in 4.2.2, image stored in "Penn_utility_evaluation.RData"
+```{r}
+library(tidyverse)
+library(sf)
+library(raster)
+library(there)
+library(stars)
+library(RColorBrewer)
+library(ggpattern)
+library(ggmap)
+library(leaflet)
+library(leaflet.providers)
+library(leaflet.esri)
+library(ggpubr)
+library(cowplot)
+library(viridis)
+
+rf <- colorRampPalette(rev(brewer.pal(11,'Spectral')))
+r <- rf(32)
+```
+
+```{r}
+#predictive
+ras_res <- raster(here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) 
+ras_mig <- raster(here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) 
+
+#landscape
+lsm_1km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_pland_90m_1km_5070.tif"))
+lsm_1km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_agri_90m_1km_5070.tif"))
+lsm_1km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_dev_90m_1km_5070.tif"))
+
+#level iii ecoregions
+ras_ecoregion <- here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.tif") %>% raster()
+
+#5km
+lsm_5km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_cohesion_90m_5km_5070.tif")) 
+lsm_5km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_pland_90m_5km_5070.tif")) 
+lsm_5km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_agri_90m_5km_5070.tif"))
+lsm_5km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_dev_90m_5km_5070.tif")) 
+
+#10km
+lsm_10km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_ai_90m_10km_5070.tif")) 
+lsm_10km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km_5070.tif")) 
+lsm_10km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif")) 
+lsm_10km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif")) 
+
+#terrain
+elev_30m <- here_file("Data", "DEM", "DEM_PA_30m.tif") %>% raster() 
+```
+
+Standardizing by quantile
+```{r}
+quantiles <- raster::quantile(ras_res, 1:100/100)
+intervals <- findInterval(getValues(ras_res), quantiles)
+ras_res <- setValues(ras_res, intervals)
+
+quantiles <- raster::quantile(ras_mig, 1:100/100)
+intervals <- findInterval(getValues(ras_mig), quantiles)
+ras_mig <- setValues(ras_mig, intervals)
+```
+
+
+Generate sample points
+```{r}
+#landcover: set background values to NA
+forest_30m <- here_file("Projects", "Penn_migration_model", "nlcd2016_forestpatches.tif") %>% raster() 
+forest_30m[forest_30m == 128] <- NA
+
+sample_points <- enmSdm::sampleRast(x = projectRaster(forest_30m, crs = crs("+init=epsg:4326")), n = 10000, replace = TRUE, prob = FALSE) %>%
+  as.data.frame()
+# avail_biased <- enmSdm::sampleRast(x = pa_mig_corridor_4326, n = 10000, replace = TRUE, prob = TRUE) %>%
+#   as.data.frame()
+
+coordinates(sample_points) <- ~ x + y
+# coordinates(avail_biased) <- ~ x + y
+
+proj4string(sample_points) <- CRS("+init=epsg:4326")
+
+sample_points <- st_as_sf(sample_points)
+
+sample_points %>%
+  st_transform(st_crs(5070)) ->
+  sample_points
+
+sample_points <- as_Spatial(sample_points)
+```
+
+Extract values at these points
+```{r}
+values_res <- ras_res %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_mig <- ras_mig %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_pland1km <- lsm_1km_pland %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_agri1km <- lsm_1km_agri %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_dev1km <- lsm_1km_dev %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_ecoregion <- ras_ecoregion %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_5km_cohesion <- lsm_5km_cohesion %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_5km_pland <- lsm_5km_pland %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_5km_agri <- lsm_5km_agri %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_5km_dev <- lsm_5km_dev %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_ai <- lsm_10km_ai %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_cohesion <- lsm_10km_cohesion %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_agri <- lsm_10km_agri %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_dev <- lsm_10km_dev %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_elev <- elev_30m %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+```
+
+```{r}
+point_values <- sample_points %>%
+  st_as_sf() %>%
+  mutate(
+    res = values_res,
+    mig = values_mig,
+    pland1km = values_pland1km,
+    agri1km = values_agri1km,
+    dev1km = values_dev1km,
+    ecoregion = values_ecoregion,
+    cohesion5km = values_5km_cohesion,
+    pland5km = values_5km_pland,
+    agri5km = values_5km_agri,
+    dev5km = values_5km_dev,
+    ai10km = values_10km_ai,
+    cohesion10km = values_10km_cohesion,
+    agri10km = values_10km_agri,
+    dev10km = values_10km_dev,
+    elev = values_elev
+  )
+```
+
+```{r}
+# point_values %>%
+#   sample_n(size = 1000) ->
+#   point_values_sampled
+
+point_values -> point_values_sampled
+```
+
+```{r}
+point_values_sampled %>%
+  ggplot(aes(x = mig, y = res, color = as_factor(round(ecoregion)))) +
+  geom_point() +
+  theme_bw()
+```
+
+
+```{r}
+point_values_sampled %>%
+  ggplot(aes(x = mig, y = res)) + #, color = pland5km
+  geom_point() +
+  theme_bw() +
+  ylab("Residential suitability") +
+  xlab("Migratory suitability")# +
+  #labs(color = "Percent forested") 
+  #geom_abline(slope = 1, intercept = 0, linetype = "dashed")
+```
+
+
+```{r}
+point_values_sampled %>%
+  ggplot(aes(x = mig, y = res, color = dev1km)) +
+  geom_point() +
+  theme_bw()
+```
+
+```{r}
+point_values_sampled %>%
+  ggplot(aes(x = mig, y = res, color = agri1km)) +
+  geom_point() +
+  theme_bw()
+```
+
+```{r}
+point_values_sampled %>%
+  pivot_longer(cols = c(mig, res), names_to = "season") ->
+  point_values_longer
+```
+
+Relationships with variables for each season
+
+Agri 1km
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = agri1km, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+Cohesion 5km
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = cohesion5km, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+Pland 5km
+```{r fig.height=4, fig.width=7}
+point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = pland5km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season) +
+  ylab("Habitat suitability") +
+  xlab("Percent forest (5 km)") +
+  scale_x_continuous(labels = scales::percent) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
+  labs(fill = "Count")
+
+ggsave(filename = "covariate_graphs_figure/pland_5km_12_8_22.jpg", height = 4, width = 7)
+```
+
+Agri 5km
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = agri5km, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+Dev 5km
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = dev5km, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+AI 10km
+```{r}
+point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = ai10km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season) +
+  ylab("Habitat suitability") +
+  xlab("Aggregation index (10 km)") +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
+  labs(fill="Count")
+ggsave(filename = "covariate_graphs_figure/ai_10km_12_8_22.jpg", height = 4, width = 7)
+```
+
+Cohesion 10km
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = cohesion10km, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+Agri 10km
+```{r}
+point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = agri10km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season)  +
+  ylab("Habitat suitability") +
+  xlab("Percent agricultural (10 km)") +
+  scale_x_continuous(labels = scales::percent) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
+  labs(fill="Count")
+
+ggsave(filename = "covariate_graphs_figure/agri_10km_12_8_22.jpg", height = 4, width = 7)
+```
+
+dev 10km (good one to show tolerance for developed landscapes among migratory birds)
+```{r}
+point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = dev10km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season) +
+  ylab("Habitat suitability") +
+  xlab("Percent developed (10 km)") +
+  scale_x_continuous(labels = scales::percent) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) + 
+  labs(fill="Count")
+
+ggsave(filename = "covariate_graphs_figure/dev_10km_12_8_22.jpg", height = 4, width = 7)
+```
+
+Elev
+```{r}
+point_values_longer %>%
+  ggplot(aes(x = elev, y = value)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~season)
+```
+
+Ecoregion
+```{r fig.height=5, fig.width=7}
+ecoregion_bw_plot <- point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding")) %>%
+  filter(!is.na(ecoregion)) %>%
+  mutate(index = as_factor(recode(as.factor(round(ecoregion)), 
+                        "1" = "Northeastern Highlands",
+                        "2" = "Northern Allegheny Plateau",
+                        "3" = "Erie Drift Plain",
+                        "4" = "North Central Appalachians",
+                        "5" = "Middle Atlantic Coastal Plain",
+                        "6" = "Northern Piedmont",
+                        "7" = "Blue Ridge",
+                        "8" = "Ridge and Valley",
+                        "9" = "Central Appalachians",
+                        "10" = "Western Allegheny Plateau",
+                        "11" = "Eastern Great Lakes Lowlands"))) %>%
+  ggplot(aes(x = index, y = value, fill = index, pattern = season)) +
+  geom_boxplot_pattern(aes(pattern_density = season),
+                       colour  = 'black',
+                       #pattern = 'stripe',
+                       pattern_fill = "black") +
+  theme_bw() +
+  ylab("Habitat Suitability") +
+  xlab("Ecoregion") +
+  #ylim(0,105) + #leave room for asterisks
+  labs(fill = "Ecoregion", pattern_density = "Season") +
+  coord_fixed(ratio = 1/20) +
+  scale_pattern_discrete(choices = c("stripe", "crosshatch")) +
+  scale_pattern_density_discrete(range = c(0.01, 0)) +
+  guides(pattern = FALSE, fill = FALSE) +
+  scale_fill_manual(values = c("Northeastern Highlands" = "#65013f", "Northern Allegheny Plateau" = "#009F81", "Erie Drift Plain" = "#FF5AAF", "North Central Appalachians" = "#8400CD", "Middle Atlantic Coastal Plain" = "#00FCCF", "Northern Piedmont" = "#00C2F9", "Blue Ridge" = "#FFB2FD", "Ridge and Valley" = "#A40122", "Central Appalachians" = "#E29134", "Western Allegheny Plateau" = "#FF6E3A", "Eastern Great Lakes Lowlands" = "#FFC33B"), guide = guide_legend(override.aes = list(pattern = "none"))) +
+  theme(axis.text.x=element_blank()) +
+  ggtitle("5B")
+  #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) #If I need axis labels, rotate them
+
+ecoregion_bw_plot
+
+# +
+  #facet_wrap(~season)
+```
+
+scale_fill_manual(values = c("Northeastern Highlands" = "#a6cee3", "Northern Allegheny Plateau" = "#1f78b4", "Erie Drift Plain" = "#b2df8a", "North Central Appalachians" = "#33a02c", "Middle Atlantic Coastal Plain" = "#fb9a99", "Northern Piedmont" = "#e31a1c", "Blue Ridge" = "#fdbf6f", "Ridge and Valley" = "#ff7f00", "Central Appalachians" = "#cab2d6", "Western Allegheny Plateau" = "#6a3d9a", "Eastern Great Lakes Lowlands" = "#ffff99")
+
+Creating an ecoregion map with a corresponding color scheme 
+```{r fig.height=5, fig.width=8}
+#Read and dissolve ecoregions
+pa_ecoregions <- st_read(here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.shp"))
+
+pa_ecoregions %>% 
+  group_by(US_L3CODE) %>%
+  nest ->
+  pa_ecoregions_nested
+
+pa_ecoregions_nested %>%
+  mutate(data = map(data, function(x){
+    x %>%
+      st_union() %>%
+      st_sf() %>%
+      return()
+  })) ->
+  pa_ecoregions_nested
+
+pa_ecoregions_nested %>%
+  unnest(cols = c(data)) %>%
+  st_sf() %>%
+  st_transform(4326) ->
+  pa_ecoregions
+
+
+#bbox <- c(-80.6, 39.7, -74.7, 42.3)
+
+#basemap <- get_map(location = bbox, source = "google", maptype = "roadmap")
+register_google(key = "AIzaSyB1iOfMzu6DuJuoXb4FoUL8ZxOh_SiwlXw")
+basemap <- get_googlemap(center = c(lon = -77.66, lat = 40.85), source="google", maptype = "hybrid", color="bw", zoom = 6)
+
+ggmap(basemap)
+
+ecoregion_map_plot <- pa_ecoregions %>%
+  mutate(index = as_factor(recode(US_L3CODE, 
+                        "58" = "Northeastern Highlands",
+                        "60" = "Northern Allegheny Plateau",
+                        "61" = "Erie Drift Plain",
+                        "62" = "North Central Appalachians",
+                        "63" = "Middle Atlantic Coastal Plain",
+                        "64" = "Northern Piedmont",
+                        "66" = "Blue Ridge",
+                        "67" = "Ridge and Valley",
+                        "69" = "Central Appalachians",
+                        "70" = "Western Allegheny Plateau",
+                        "83" = "Eastern Great Lakes Lowlands"))) %>%
+  ggplot(mapping = aes(fill = index)) +
+  geom_sf(color = "black") +
+  theme_bw() +
+  labs(fill = "Ecoregion") + 
+  theme(plot.margin = unit(c(0, 0, 0, 0.3), "cm")) + ##9F0162
+  scale_fill_manual(values = c("Northeastern Highlands" = "#65013f", "Northern Allegheny Plateau" = "#009F81", "Erie Drift Plain" = "#FF5AAF", "North Central Appalachians" = "#8400CD", "Middle Atlantic Coastal Plain" = "#00FCCF", "Northern Piedmont" = "#00C2F9", "Blue Ridge" = "#FFB2FD", "Ridge and Valley" = "#A40122", "Central Appalachians" = "#E29134", "Western Allegheny Plateau" = "#FF6E3A", "Eastern Great Lakes Lowlands" = "#FFC33B")) +
+  ggtitle("5A")
+
+ecoregion_map_plot
+# t <- leaflet(data = pa_ecoregions, options = leafletOptions(zoomControl = FALSE, attributionControl=FALSE)) %>%
+#   addEsriBasemapLayer(esriBasemapLayers$Topographic, autoLabels = TRUE, group = "Topographic map") %>%
+#   addPolygons(color = c("brown", "black"))
+```
+
+values = c("Northeastern Highlands" = "#a6cee3", "Northern Allegheny Plateau" = "#1f78b4", "Erie Drift Plain" = "#b2df8a", "North Central Appalachians" = "#33a02c", "Middle Atlantic Coastal Plain" = "#fb9a99", "Northern Piedmont" = "#e31a1c", "Blue Ridge" = "#fdbf6f", "Ridge and Valley" = "#ff7f00", "Central Appalachians" = "#cab2d6", "Western Allegheny Plateau" = "#6a3d9a", "Eastern Great Lakes Lowlands" = "#ffff99"))
+
+Combine plots
+```{r fig.height=7, fig.width=8}
+ecoregion_bw_plot
+ecoregion_map_plot
+dev.new()
+#ggarrange(ecoregion_bw_plot, ecoregion_map_plot, ncol = 1, nrow = 2, widths = c(5,10), heights = c(7,5))
+dev.off()
+
+ggdraw() +
+   draw_plot(ecoregion_map_plot, x = 0, y = 0.5, width = 1, height = .5) +
+   draw_plot(ecoregion_bw_plot, x = 0, y = 0, width = 1, height = .5)
+
+ggsave(filename = "pa_comparative_ecoregion_cbfriendly_6_29_23.tif", width = 8, height = 7, dpi = 320, device = "tiff", 
+       type = "cairo", bg = "white")
+```
+
