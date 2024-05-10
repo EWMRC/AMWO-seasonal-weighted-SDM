@@ -13,45 +13,45 @@ library(sf)
 Explanatory layers
 ```{r}
 #500m
-lsm_500m_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_ai_30m_500m_5070.tif"))
-lsm_500m_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_cohesion_30m_500m_5070.tif"))
-lsm_500m_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_ed_30m_500m_5070.tif"))
-lsm_500m_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_pland_30m_500m_5070.tif"))
-lsm_500m_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_agri_30m_500m_5070.tif"))
-lsm_500m_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_500m", "lsm_dev_30m_500m_5070.tif"))
+lsm_500m_ai <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_ai_30m_500m_5070.tif"))
+lsm_500m_cohesion <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_cohesion_30m_500m_5070.tif"))
+lsm_500m_ed <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_ed_30m_500m_5070.tif"))
+lsm_500m_pland <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_pland_30m_500m_5070.tif"))
+lsm_500m_agri <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_agri_30m_500m_5070.tif"))
+lsm_500m_dev <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_500m", "lsm_dev_30m_500m_5070.tif"))
 
 #1km
-lsm_1km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_ai_90m_1km_5070.tif"))
-lsm_1km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_cohesion_90m_1km_5070.tif"))
-lsm_1km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_ed_90m_1km_5070.tif"))
-lsm_1km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_pland_90m_1km_5070.tif"))
-lsm_1km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_agri_90m_1km_5070.tif"))
-lsm_1km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_1km", "lsm_dev_90m_1km_5070.tif"))
+lsm_1km_ai <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_ai_90m_1km_5070.tif"))
+lsm_1km_cohesion <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_cohesion_90m_1km_5070.tif"))
+lsm_1km_ed <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_ed_90m_1km_5070.tif"))
+lsm_1km_pland <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_pland_90m_1km_5070.tif"))
+lsm_1km_agri <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_agri_90m_1km_5070.tif"))
+lsm_1km_dev <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_1km", "lsm_dev_90m_1km_5070.tif"))
 
 #5km
-lsm_5km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_ai_90m_5km_5070.tif"))
-lsm_5km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_cohesion_90m_5km_5070.tif"))
-lsm_5km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_ed_90m_5km_5070.tif"))
-lsm_5km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_pland_90m_5km_5070.tif"))
-lsm_5km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_agri_90m_5km_5070.tif"))
-lsm_5km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_5km", "lsm_dev_90m_5km_5070.tif"))
+lsm_5km_ai <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_ai_90m_5km_5070.tif"))
+lsm_5km_cohesion <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_cohesion_90m_5km_5070.tif"))
+lsm_5km_ed <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_ed_90m_5km_5070.tif"))
+lsm_5km_pland <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_pland_90m_5km_5070.tif"))
+lsm_5km_agri <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_agri_90m_5km_5070.tif"))
+lsm_5km_dev <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_5km", "lsm_dev_90m_5km_5070.tif"))
 
 #10km
-lsm_10km_ai <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_ai_90m_10km_5070.tif"))
-lsm_10km_cohesion <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km_5070.tif"))
-lsm_10km_ed <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_ed_90m_10km_5070.tif"))
-lsm_10km_pland <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_pland_90m_10km_5070.tif"))
-lsm_10km_agri <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif"))
-lsm_10km_dev <- raster(here_file("Projects", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif"))
+lsm_10km_ai <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_ai_90m_10km_5070.tif"))
+lsm_10km_cohesion <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km_5070.tif"))
+lsm_10km_ed <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_ed_90m_10km_5070.tif"))
+lsm_10km_pland <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_pland_90m_10km_5070.tif"))
+lsm_10km_agri <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif"))
+lsm_10km_dev <- raster(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif"))
 
 #landcover: set background values to NA
-forest_30m <- here_file("Projects", "Penn_migration_model", "nlcd2016_forestpatches.tif") %>% raster() 
+forest_30m <- here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster() 
 forest_30m[forest_30m == 128] <- NA
 
 #terrain
 elev_30m <- here_file("Data", "DEM", "DEM_PA_30m.tif") %>% raster()
 
-slope_30m <- here_file("Projects", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30slope.tif") %>% raster()
+slope_30m <- here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30slope.tif") %>% raster()
 
 #moisture: replace NAs with the mean value
 soil_drainage_30m <- here_file("Data", "SoilDrainage", "soil_drainage_5070.tif") %>% raster()
@@ -61,7 +61,7 @@ soil_drainage_30m %>%
   mean(na.rm = TRUE) ->
   soil_drainage_30m[is.na(soil_drainage_30m)]
 
-twi_30m <- here_file("Projects", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30m_twi.tif") %>% raster()
+twi_30m <- here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30m_twi.tif") %>% raster()
 
 #level 3 ecoregions
 ecoregions <- here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.tif") %>% raster()
@@ -73,18 +73,20 @@ sclass <- here_file("Data", "Landfire_products", "US_200SCLASS", "us_200sclass_p
 
 Reading in the SGS used and available data, separate into used and available, and transform to match the predictor stack
 ```{r}
-pa_sgs_pres_abs <- read_csv("pa_sgs_pres_abs.csv") %>%
+pa_sgs_pres_abs <- read_csv(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_residential_model", "sgs", "pa_sgs_pres_abs.csv")) %>%
   filter(!is.na(Latitude)) %>%
   mutate(survey_type = 0) %>%
-  distinct(Latitude, Longitude, .keep_all = TRUE)
-  #group_by(Route) %>%
-  #sample_n(1)
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
 
-state_surveys <- read_csv("pa_statesurveys_pres_abs.csv") %>%
+state_surveys <- read_csv(here_file("Projects", "AMWO-seasonal-weighted-SDM", "methods", "Penn_residential_model", "PA_state_surveys", "pa_statesurveys_pres_abs.csv")) %>%
   filter(!is.na(Latitude)) %>%
   mutate(survey_type = 1) %>%
   mutate(Stop = as.character(Stop)) %>%
-  distinct(Latitude, Longitude, .keep_all = TRUE)
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
 
 surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
   distinct(Latitude, Longitude, .keep_all = TRUE)
