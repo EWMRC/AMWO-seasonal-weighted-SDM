@@ -1,0 +1,157 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Reading in the predictor datasets
+```{r}
+#500m
+lsm_500m_ai <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_ai_30m_500m_5070.tif"))
+names(lsm_500m_ai) <- "lsm_500m_ai"
+
+lsm_500m_cohesion <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_cohesion_30m_500m_5070.tif"))
+names(lsm_500m_cohesion) <- "lsm_500m_cohesion"
+
+lsm_500m_ed <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_ed_30m_500m_5070.tif"))
+names(lsm_500m_ed) <- "lsm_500m_ed"
+
+lsm_500m_pland <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_pland_30m_500m_5070.tif"))
+names(lsm_500m_pland) <- "lsm_500m_pland"
+
+lsm_500m_agri <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_agri_30m_500m_5070.tif"))
+names(lsm_500m_agri) <- "lsm_500m_agri"
+
+lsm_500m_dev <- raster(here("methods", "Penn_migration_model", "lsm_500m", "lsm_dev_30m_500m_5070.tif"))
+names(lsm_500m_dev) <- "lsm_500m_dev"
+
+#1km
+lsm_1km_ai <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_ai_90m_1km_5070.tif"))
+names(lsm_1km_ai) <- "lsm_1km_ai"
+
+lsm_1km_cohesion <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_cohesion_90m_1km_5070.tif"))
+names(lsm_1km_cohesion) <- "lsm_1km_cohesion"
+
+lsm_1km_ed <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_ed_90m_1km_5070.tif"))
+names(lsm_1km_ed) <- "lsm_1km_ed"
+
+lsm_1km_pland <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_pland_90m_1km_5070.tif"))
+names(lsm_1km_pland) <- "lsm_1km_pland"
+
+lsm_1km_agri <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_agri_90m_1km_5070.tif"))
+names(lsm_1km_agri) <- "lsm_1km_agri"
+
+lsm_1km_dev <- raster(here("methods", "Penn_migration_model", "lsm_1km", "lsm_dev_90m_1km_5070.tif"))
+names(lsm_1km_dev) <- "lsm_1km_dev"
+
+#5km
+lsm_5km_ai <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_ai_90m_5km_5070.tif"))
+names(lsm_5km_ai) <- "lsm_5km_ai"
+
+lsm_5km_cohesion <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_cohesion_90m_5km_5070.tif"))
+names(lsm_5km_cohesion) <- "lsm_5km_cohesion"
+
+lsm_5km_ed <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_ed_90m_5km_5070.tif"))
+names(lsm_5km_ed) <- "lsm_5km_ed"
+
+lsm_5km_pland <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_pland_90m_5km_5070.tif"))
+names(lsm_5km_pland) <- "lsm_5km_pland"
+
+lsm_5km_agri <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_agri_90m_5km_5070.tif"))
+names(lsm_5km_agri) <- "lsm_5km_agri"
+
+lsm_5km_dev <- raster(here("methods", "Penn_migration_model", "lsm_5km", "lsm_dev_90m_5km_5070.tif"))
+names(lsm_5km_dev) <- "lsm_5km_dev"
+
+#10km
+lsm_10km_ai <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_ai_90m_10km_5070.tif"))
+names(lsm_10km_ai) <- "lsm_10km_ai"
+
+lsm_10km_cohesion <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_cohesion_90m_10km_5070.tif"))
+names(lsm_10km_cohesion) <- "lsm_10km_cohesion"
+
+lsm_10km_ed <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_ed_90m_10km_5070.tif"))
+names(lsm_10km_ed) <- "lsm_10km_ed"
+
+lsm_10km_pland <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_pland_90m_10km_5070.tif"))
+names(lsm_10km_pland) <- "lsm_10km_pland"
+
+lsm_10km_agri <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif"))
+names(lsm_10km_agri) <- "lsm_10km_agri"
+
+lsm_10km_dev <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif"))
+names(lsm_10km_dev) <- "lsm_10km_dev"
+
+#landcover: set background values to NA
+forest_30m <- here("methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster()
+forest_30m[forest_30m == 128] <- NA
+names(forest_30m) <- "forest_30m"
+levels(forest_30m) <- data.frame(ID = c(0,1), forest_30m = c(0,1))
+
+#terrain
+elev_30m <- there::here_file("Data", "DEM", "DEM_PA_30m.tif") %>% raster()
+names(elev_30m) <- "elev_30m"
+
+slope_30m <- here("methods", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30slope.tif") %>% raster()
+names(slope_30m) <- "slope_30m"
+
+#moisture: replace NAs with the mean value
+soil_drainage_30m <- there::here_file("Data", "SoilDrainage", "soil_drainage_5070.tif") %>% raster()
+names(soil_drainage_30m) <- "soil_drainage_30m"
+
+soil_drainage_30m %>%
+  values() %>%
+  mean(na.rm = TRUE) ->
+  soil_drainage_30m[is.na(soil_drainage_30m)]
+
+twi_30m <- here("methods", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30m_twi.tif") %>% raster()
+names(twi_30m) <- "twi_30m"
+
+#level 3 ecoregions
+ecoregions <- there::here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.tif") %>% raster()
+names(ecoregions) <- "ecoregions"
+levels(ecoregions) <- data.frame(ID = 1:11, ecoregions = 1:11)
+
+#succession classes
+sclass <- there::here_file("Data", "Landfire_products", "US_200SCLASS", "us_200sclass_pa.tif") %>% raster()
+names(sclass) <- "sclass"
+levels(sclass) <- data.frame(ID = c(1, 2, 3, 4, 5, 6, 7, 111, 120, 132, 180), sclass = c(1, 2, 3, 4, 5, 6, 7, 111, 120, 132, 180))
+```
+
+Resampling to a shared resolution and placing in a predictorstack (which will be saved and used again later)
+```{r}
+predictor_list_full <- list("lsm_500m_ai" = lsm_500m_ai, "lsm_500m_cohesion" = lsm_500m_cohesion, "lsm_500m_ed" = lsm_500m_ed, "lsm_500m_pland" = lsm_500m_pland, "lsm_500m_agri" = lsm_500m_agri, "lsm_500m_dev" = lsm_500m_dev, "lsm_1km_ai" = lsm_1km_ai, "lsm_1km_cohesion" = lsm_1km_cohesion, "lsm_1km_ed" = lsm_1km_ed, "lsm_1km_pland" = lsm_1km_pland, "lsm_1km_agri" = lsm_1km_agri, "lsm_1km_dev" = lsm_1km_dev, "lsm_5km_ai" = lsm_5km_ai, "lsm_5km_cohesion" = lsm_5km_cohesion, "lsm_5km_ed" = lsm_5km_ed, "lsm_5km_pland" = lsm_5km_pland, "lsm_5km_agri" = lsm_5km_agri, "lsm_5km_dev" = lsm_5km_dev, "lsm_10km_ai" = lsm_10km_ai, "lsm_10km_cohesion" = lsm_10km_cohesion, "lsm_10km_ed" = lsm_10km_ed, "lsm_10km_pland" = lsm_10km_pland, "lsm_10km_agri" = lsm_10km_agri, "lsm_10km_dev" = lsm_10km_dev, "forest_30m" = forest_30m, "elev_30m" = elev_30m, "slope_30m" = slope_30m, "soil_drainage_30m" = soil_drainage_30m, "twi_30m" = twi_30m, "ecoregions" = ecoregions, "sclass" = sclass)
+
+cl <- parallel::makeCluster(4)
+parallel::clusterExport(cl, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")) #, "predictor_list_full"
+
+parallel::clusterEvalQ(cl, library(tidyverse))
+parallel::clusterEvalQ(cl, library(sp))
+parallel::clusterEvalQ(cl, library(sf))
+parallel::clusterEvalQ(cl, library(raster))
+parallel::clusterEvalQ(cl, library(here))
+
+predictor_list_full <- pbapply::pblapply(X = predictor_list_full, cl = cl, FUN = function(x){
+  if(names(x) %in% c("forest_30m", "ecoregions", "sclass")){ #if categorical
+    resample(x, forest_30m, filename = here("methods", "Penn_migration_model", "predictor_rasters_resampled", paste0(names(x), ".grd")), method = "ngb", overwrite = TRUE)
+  } else{
+    resample(x, forest_30m, filename = here("methods", "Penn_migration_model", "predictor_rasters_resampled", paste0(names(x), ".grd")), method = "bilinear", overwrite = TRUE)
+  }
+})
+
+parallel::stopCluster(cl)
+
+names(predictor_list_full) <- NULL
+predictor_stack_full <- do.call(what = raster::stack, args = c(predictor_list_full, quick = FALSE))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+stackSave(predictor_stack_full, here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+```

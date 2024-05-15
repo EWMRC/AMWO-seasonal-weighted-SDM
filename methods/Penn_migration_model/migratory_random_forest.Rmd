@@ -296,7 +296,14 @@ walk_results <- clusterApplyLB(cl = cl_new, x = 1:305, fun = function(i){
   rf_unbiased_map <- predict(rf_unbiased, data = predictor_stack_iter, type = "cloglog")
   writeRaster(rf_unbiased_map, paste0("mig_tiles_adv/rf_unbiased_6_15_21_",i,".tif"))
 })
+```
 
+
+```{r}
+```
+
+
+```{r}
 # walk_results <- pbapply::pblapply(cl = cl_new, X = 1:305, FUN = function(i){
 #   predictor_stack_iter <- raster::stack(paste0("predictor_stack_adv/predictor_stack_adv_30m_smol_", i, ".grd"))
 #   rf_unbiased_map <- predict(rf_unbiased, data = predictor_stack_iter, type = "cloglog")

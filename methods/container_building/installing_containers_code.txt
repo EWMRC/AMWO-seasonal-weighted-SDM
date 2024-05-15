@@ -1,0 +1,6 @@
+ssh grtx-1
+module load singularity
+cd /home/lberigan/SDM_mig/
+export TMPDIR=$XDG_RUNTIME_DIR
+singularity build --fakeroot sdm_container.simg *.def
+

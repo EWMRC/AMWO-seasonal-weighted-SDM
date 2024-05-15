@@ -1,0 +1,208 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiased.rds"))
+
+```
+
+Read in the used points
+```{r}
+used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  as_Spatial() 
+
+set.seed(8)
+
+avail_unbiased <- avail_unbiased %>%
+  st_as_sf() %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  slice_sample(n = 2000) %>% 
+  as_Spatial()
+```
+
+Run fully configured model
+```{r}
+env <- terra::rast(predictor_stack_full)
+
+env <- subset(env, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "sclass"))
+
+swd <- prepareSWD(species = "Scolopax minor", 
+                  env = env, 
+                  p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+                  a = as.data.frame(avail_unbiased@coords),
+                  categorical = c("sclass"))
+
+kfolds <- randomFolds(data = swd, k = 5, only_presence = TRUE, seed = 8)
+
+train_data_1 <- swd
+train_data_1@coords <- train_data_1@coords[kfolds$train[,1],]
+train_data_1@data <- train_data_1@data[kfolds$train[,1],]
+train_data_1@pa <- train_data_1@pa[kfolds$train[,1]]
+
+train_data_2 <- swd
+train_data_2@coords <- train_data_2@coords[kfolds$train[,2],]
+train_data_2@data <- train_data_2@data[kfolds$train[,2],]
+train_data_2@pa <- train_data_2@pa[kfolds$train[,2]]
+
+train_data_3 <- swd
+train_data_3@coords <- train_data_3@coords[kfolds$train[,3],]
+train_data_3@data <- train_data_3@data[kfolds$train[,3],]
+train_data_3@pa <- train_data_3@pa[kfolds$train[,3]]
+
+train_data_4 <- swd
+train_data_4@coords <- train_data_4@coords[kfolds$train[,4],]
+train_data_4@data <- train_data_4@data[kfolds$train[,4],]
+train_data_4@pa <- train_data_4@pa[kfolds$train[,4]]
+
+train_data_5 <- swd
+train_data_5@coords <- train_data_5@coords[kfolds$train[,5],]
+train_data_5@data <- train_data_5@data[kfolds$train[,5],]
+train_data_5@pa <- train_data_5@pa[kfolds$train[,5]]
+
+## Normal model (for evaluation)
+model <- train(method = "RF",
+               data = swd,
+               folds = kfolds,
+               mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+auc(model, test = TRUE) #0.8302482
+tss(model, test = TRUE) #0.5601317
+
+saveRDS(model, here("methods", "Penn_migration_model", "model_migratory.rds"))
+
+# individual models (for prediction on the cluster)
+
+model_1 <- train(method = "RF",
+               data = train_data_1, #training dataset
+               mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+model_2 <- train(method = "RF",
+               data = train_data_2, #training dataset
+               mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+model_3 <- train(method = "RF",
+               data = train_data_3, #training dataset
+              mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+model_4 <- train(method = "RF",
+               data = train_data_4, #training dataset
+               mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+model_5 <- train(method = "RF",
+               data = train_data_5, #training dataset
+               mtry = 2,
+               ntree = 3000,
+               nodesize = 9)
+
+saveRDS(model_1, here("methods", "Penn_migration_model", "model_migratory_1.rds"))
+saveRDS(model_2, here("methods", "Penn_migration_model", "model_migratory_2.rds"))
+saveRDS(model_3, here("methods", "Penn_migration_model", "model_migratory_3.rds"))
+saveRDS(model_4, here("methods", "Penn_migration_model", "model_migratory_4.rds"))
+saveRDS(model_5, here("methods", "Penn_migration_model", "model_migratory_5.rds"))
+
+# modelReport(model, here("methods", "Penn_migration_model", "report")) #not working
+# # use for a statistical report in another file
+# plotResponse(model, var = "lsm_1km_dev")
+# plotResponse(model, var = "lsm_10km_ed")
+# plotResponse(model, var = "lsm_10km_dev")
+# plotResponse(model, var = "elev_30m")
+# plotResponse(model, var = "slope_30m")
+# plotResponse(model, var = "soil_drainage_30m")
+# plotResponse(model, var = "twi_30m")
+# plotResponse(model, var = "sclass")
+# plotROC(model@models[[1]])
+
+# model_vi <- varImp(model) #calculates permutation importance, which comes from MaxEnt
+# model_vi
+# plotVarImp(model_vi)
+```
+
+# Making a prediction layer
+Cutting using a fishnet for parallel processing
+```{r}
+fishnet <- st_read(here("methods", "Penn_residential_model", "fishnet", "pa_fishnet_300.shp")) %>%
+  st_transform(crs(predictor_stack_full))
+
+for(i in 1:nrow(fishnet)){
+  temp_extent <- fishnet[i,] %>% as_Spatial() %>% extent()
+  crop(x = env, y = temp_extent, 
+       filename = here("methods", "Penn_migration_model", "predictor_stack_3", paste0("predictor_stack_3_30m_",i,".grd")), overwrite = TRUE) 
+}
+```
+
+Write a series of R scripts that can be used to run these predictions on the cluster
+```{r}
+for(index in 1:nrow(fishnet)){
+  sink(here("methods", "Penn_migration_model", "batch_files", paste0("predict_batch_", index, ".R")))
+  cat(paste0("
+library(tidyverse)
+library(SDMtune) # Needs version 1.1.6 to run: https://cran.r-project.org/src/contrib/Archive/SDMtune/SDMtune_1.1.6.tar.gz
+library(raster)
+library(sp)
+library(sf)
+library(randomForest)
+
+print('reading models')
+
+model_1 <- readRDS('/home/lberigan/SDM_mig/model_migratory_1.rds')
+model_2 <- readRDS('/home/lberigan/SDM_mig/model_migratory_2.rds')
+model_3 <- readRDS('/home/lberigan/SDM_mig/model_migratory_3.rds')
+model_4 <- readRDS('/home/lberigan/SDM_mig/model_migratory_4.rds')
+model_5 <- readRDS('/home/lberigan/SDM_mig/model_migratory_5.rds')
+
+print('reading raster')
+
+predictor_stack_iter <- brick('/home/lberigan/SDM_mig/predictor_stack_3/predictor_stack_3_30m_", index,".grd')
+predictor_stack_iter <- stack(predictor_stack_iter)
+
+print('predicting variables')
+
+f <- list(sclass = c(1,2,3,4,5,6,7,111,120,132,180))
+
+pred_1 <- predict(model_1, data = predictor_stack_iter, factors = f)
+pred_2 <- predict(model_2, data = predictor_stack_iter, factors = f)
+pred_3 <- predict(model_3, data = predictor_stack_iter, factors = f)
+pred_4 <- predict(model_4, data = predictor_stack_iter, factors = f)
+pred_5 <- predict(model_5, data = predictor_stack_iter, factors = f)
+
+print('stacking')
+
+pred_stack <- stack(pred_1, pred_2, pred_3, pred_4, pred_5)
+
+print('averaging')
+
+calc(pred_stack, fun = mean, filename = '/home/lberigan/SDM_mig/predict_output/predict_", index,".tif')
+
+print('done')
+             "))
+  sink()
+}
+
+```

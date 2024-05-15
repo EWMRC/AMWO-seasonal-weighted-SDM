@@ -109,3 +109,11 @@ pland_200m_1k_30m_5070.tif
 /methods/Penn_residential_model/predictor_stack_adv
 /methods/Penn_residential_model/random_effect_tiles
 /methods/Penn_residential_model/random_effect_tiles_adv
+
+/methods/Penn_migration_model/predictor_stack_3
+/methods/Penn_residential_model/predictor_stack_3
+
+/methods/Penn_migration_model/batch_files
+/methods/Penn_residential_model/batch_files
+/methods/Penn_migration_model/predictor_stack_3
+/methods/Penn_migration_model/batch_files
