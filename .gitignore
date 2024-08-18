@@ -117,3 +117,7 @@ pland_200m_1k_30m_5070.tif
 /methods/Penn_residential_model/batch_files
 /methods/Penn_migration_model/predictor_stack_3
 /methods/Penn_migration_model/batch_files
+methods/Penn_migration_model/output_layer/rf_mig_5_15_24.tif
+methods/Penn_migration_model/output_layer/rf_mig_5_15_24.tif
+methods/Penn_residential_model/output_layer/rf_res_5_15_24.tif
+methods/Penn_residential_model/output_layer/rf_res_5_15_24.tif

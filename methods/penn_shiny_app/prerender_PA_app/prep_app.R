@@ -1,5 +1,5 @@
 library(tidyverse)
-library(rgdal)
+#library(rgdal)
 library(raster)
 library(sf)
 library(parallel)

@@ -6,6 +6,7 @@ output: html_notebook
 ```{r}
 library(tidyverse)
 library(raster)
+library(here)
 library(there)
 library(sf)
 library(parallel)
@@ -19,13 +20,19 @@ library(leaflet.esri)
 
 270m resolution (needs to be small enough that leaflet can handle it)
 ```{r}
-prediction_migration <- raster(here_file("Projects", "Penn_migration_model", "rf_unbiased_6_16_21.tif")) %>% aggregate(9)
+prediction_migration <- raster(here("methods", "Penn_migration_model", "output_layer", "rf_mig_5_15_24.tif")) %>% aggregate(9)
 
-prediction_residential <- raster(here_file("Projects", "Penn_residential_model", "rf_random_effects_6_14_21_linktransformed.tif")) %>% 
-  projectRaster(crs = crs(prediction_migration)) %>%
-  raster::disaggregate(3) %>%
+# prediction_migration <- raster(here_file("Projects", "Penn_migration_model", "rf_unbiased_6_16_21.tif")) %>% aggregate(9)
+
+prediction_residential <- raster(here("methods", "Penn_residential_model", "output_layer", "rf_res_5_15_24.tif")) %>% 
   aggregate(9) %>%
   resample(prediction_migration)
+
+# prediction_residential <- raster(here_file("Projects", "Penn_residential_model", "rf_random_effects_6_14_21_linktransformed.tif")) %>% 
+#   projectRaster(crs = crs(prediction_migration)) %>%
+#   raster::disaggregate(3) %>%
+#   aggregate(9) %>%
+#   resample(prediction_migration)
 
 #Set missing values to NA, and then mask to state
 prediction_migration[is.na(values(prediction_migration))] <- 0
@@ -49,7 +56,7 @@ Combining with different weights, and rescaling from 0 to 100
 ```{r}
 weight_and_write <- function(weighted_raster, new_name){
   temp_ras <- ((weighted_raster - cellStats(weighted_raster, stat = 'min')) * (100 - 0) / (cellStats(weighted_raster, stat = 'max') - cellStats(weighted_raster, stat = 'min'))) + 0
-  writeRaster(temp_ras, filename = new_name, datatype = "INT1U", overwrite = TRUE)
+  writeRaster(temp_ras, filename = here("methods", "penn_shiny_app", "penn_shiny_prep", new_name), datatype = "INT1U", overwrite = TRUE)
 }
 
 weight_and_write(prediction_migration_scaled*100, "m10r0.tif")
@@ -67,17 +74,17 @@ weight_and_write(prediction_residential_scaled*100, "m0r10.tif")
 
 Loading them (not stored in memory or temp files)
 ```{r}
-m10r0 <- raster("m10r0.tif")
-m9r1 <- raster("m9r1.tif")
-m8r2 <- raster("m8r2.tif")
-m7r3 <- raster("m7r3.tif")
-m6r4 <- raster("m6r4.tif")
-m5r5 <- raster("m5r5.tif")
-m4r6 <- raster("m4r6.tif")
-m3r7 <- raster("m3r7.tif")
-m2r8 <- raster("m2r8.tif")
-m1r9 <- raster("m1r9.tif")
-m0r10 <- raster("m0r10.tif")
+m10r0 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m10r0.tif"))
+m9r1 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m9r1.tif")) 
+m8r2 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m8r2.tif")) 
+m7r3 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m7r3.tif")) 
+m6r4 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m6r4.tif"))
+m5r5 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m5r5.tif")) 
+m4r6 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m4r6.tif")) 
+m3r7 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m3r7.tif"))
+m2r8 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m2r8.tif")) 
+m1r9 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m1r9.tif"))
+m0r10 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m0r10.tif"))
 ```
 
 
@@ -87,7 +94,7 @@ gamelands <- st_read(here_file("Data", "Public_land", "PA_gameland", "PGC_StateG
   st_transform(crs = crs(prediction_migration)) %>% #note: this fixes the acreage bug from launch
   transmute(name = NAME)
 
-numCores <- 10
+numCores <- 3
   cl <- makeCluster(numCores)
   clusterEvalQ(cl, { #preparing each new process to run our code
     library(sf)
@@ -355,31 +362,30 @@ gamelands$m0r10_med <- pblapply(1:nrow(gamelands), function(i){
 stopCluster(cl)
 ```
 
-
 Saving gamelands to rds and shapefile, and migratory layers to the prerender folder
 ```{r}
 gamelands %>%
   st_transform(4326) %>%
-  saveRDS(here_file("Projects", "penn_shiny_app", "woodcock_weighted_habitat", "gamelands.rds"))
+  saveRDS(here("methods", "penn_shiny_app", "woodcock_weighted_habitat", "gamelands.rds"))
 
 gamelands %>%
   st_transform(4326) %>%
-  saveRDS(here_file("Projects", "penn_shiny_app", "prerender_PA_app", "gamelands.rds"))
+  saveRDS(here("methods", "penn_shiny_app", "prerender_PA_app", "gamelands.rds"))
 
 gamelands %>%
   st_transform(4326) %>%
-  st_write(here_file("Projects", "penn_shiny_app", "penn_shiny_prep", "gamelands_w_stats.shp"))
+  st_write(here("methods", "penn_shiny_app", "penn_shiny_prep", "gamelands_w_stats.shp"), append=FALSE)
 
-writeRaster(m10r0, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m10r0.tif"))
-writeRaster(m9r1, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m9r1.tif"))
-writeRaster(m8r2, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m8r2.tif"))
-writeRaster(m7r3, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m7r3.tif"))
-writeRaster(m6r4, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m6r4.tif"))
-writeRaster(m5r5, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m5r5.tif"))
-writeRaster(m4r6, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m4r6.tif"))
-writeRaster(m3r7, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m3r7.tif"))
-writeRaster(m2r8, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m2r8.tif"))
-writeRaster(m1r9, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m1r9.tif"))
-writeRaster(m0r10, here_file("Projects", "penn_shiny_app", "prerender_PA_app", "m0r10.tif"))
+writeRaster(m10r0, here("methods", "penn_shiny_app", "prerender_PA_app", "m10r0.tif"), overwrite=TRUE)
+writeRaster(m9r1, here("methods", "penn_shiny_app", "prerender_PA_app", "m9r1.tif"), overwrite=TRUE)
+writeRaster(m8r2, here("methods", "penn_shiny_app", "prerender_PA_app", "m8r2.tif"), overwrite=TRUE)
+writeRaster(m7r3, here("methods", "penn_shiny_app", "prerender_PA_app", "m7r3.tif"), overwrite=TRUE)
+writeRaster(m6r4, here("methods", "penn_shiny_app", "prerender_PA_app", "m6r4.tif"), overwrite=TRUE)
+writeRaster(m5r5, here("methods", "penn_shiny_app", "prerender_PA_app", "m5r5.tif"), overwrite=TRUE)
+writeRaster(m4r6, here("methods", "penn_shiny_app", "prerender_PA_app", "m4r6.tif"), overwrite=TRUE)
+writeRaster(m3r7, here("methods", "penn_shiny_app", "prerender_PA_app", "m3r7.tif"), overwrite=TRUE)
+writeRaster(m2r8, here("methods", "penn_shiny_app", "prerender_PA_app", "m2r8.tif"), overwrite=TRUE)
+writeRaster(m1r9, here("methods", "penn_shiny_app", "prerender_PA_app", "m1r9.tif"), overwrite=TRUE)
+writeRaster(m0r10, here("methods", "penn_shiny_app", "prerender_PA_app", "m0r10.tif"), overwrite=TRUE)
 ```
 
