@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+```{r}
+tile_names <- here("methods", "Penn_migration_model", "predict_output") %>%
+  list.files()
+
+tile_rasters <- map(tile_names, function(x){
+  here("methods", "Penn_migration_model", "predict_output", x)%>%
+    raster()
+})
+
+merged_rasters <- tile_rasters[[1]]
+
+for(i in 2:length(tile_rasters)){
+  merged_rasters <- raster::merge(merged_rasters, tile_rasters[[i]])
+}
+
+writeRaster(merged_rasters, here("methods", "Penn_migration_model", "rf_mig_5_15_24.tif"))
+```
+

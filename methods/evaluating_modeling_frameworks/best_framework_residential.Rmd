@@ -1,0 +1,99 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+```
+
+Read in the used points, and transform the used and available points to match the predictor stack
+```{r}
+set.seed(8)
+
+pa_sgs_pres_abs <- read_csv(here("methods", "Penn_residential_model", "sgs", "pa_sgs_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 0) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+set.seed(8)
+
+state_surveys <- read_csv(here("methods", "Penn_residential_model", "PA_state_surveys", "pa_statesurveys_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 1) %>%
+  mutate(Stop = as.character(Stop)) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+
+used <- surveys_all %>%
+  filter(pres_abs == 1) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>% 
+  filter(route_id != "BALD EAGLE_MAIN PARK_6") %>%
+  as_Spatial()
+
+avail <- surveys_all %>%
+  filter(pres_abs == 0) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>%
+  filter(route_id != "Route 059 Stop 4") %>% 
+  as_Spatial()
+```
+
+Prep SDMs
+```{r}
+swd_full <- prepareSWD(species = "Scolopax minor", 
+           env = terra::rast(predictor_stack_full), 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+#adding back in survey type manually
+swd_full@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+swd_full_folds <- randomFolds(swd_full, k = 5, seed = 8)
+```
+
+RF test
+```{r}
+rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 2000)
+
+auc(rf_full, test = TRUE) #0.7895173
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(rf_full, test = TRUE) #0.5544746
+```
+
+Maxnet test (think maxent but not in Java: https://cran.r-project.org/web/packages/maxnet/index.html)
+```{r}
+maxnet_full <- train(method = "Maxnet", data = swd_full, swd_full_folds, addsamplestobackground=T)
+
+auc(maxnet_full, test = TRUE) # did not converge
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(maxnet_full, test = TRUE) # did not converge
+```
+
+Boosted Regression Tree test
+```{r}
+brt_unbiased <- train(method = "BRT", data = swd_full, swd_full_folds)
+
+auc(brt_unbiased, test = TRUE) #0.7597536
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(brt_unbiased, test = TRUE) #0.5080694
+```

@@ -1,0 +1,206 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiased.rds"))
+
+```
+
+Read in the used points
+```{r}
+used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  as_Spatial() 
+
+set.seed(8)
+
+avail_unbiased <- avail_unbiased %>%
+  st_as_sf() %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  slice_sample(n = 2000) %>% 
+  as_Spatial()
+```
+
+Prep SDMs
+```{r}
+swd_full <- prepareSWD(species = "Scolopax minor", 
+           env = terra::rast(predictor_stack_full), 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail_unbiased@coords),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+# Split presence locations in training (80%) and testing (20%) datasets
+# datasets <- trainValTest(swd_full,
+#                          test = 0.2,
+#                          only_presence = FALSE,
+#                          seed = 8)
+# train <- datasets[[1]]
+# test <- datasets[[2]]
+kfolds <- randomFolds(data = swd_full, only_presence = TRUE, k = 5, seed = 8)
+```
+
+Training a basic, full model
+```{r}
+model <- train(method = "RF",
+               data = swd_full,
+               folds = kfolds,
+               ntree = 2000)
+
+auc(model, test = TRUE) #0.8587086
+tss(model, test = TRUE) #0.6246121
+```
+
+# Remove variables with high correlation
+
+```{r}
+bg <- prepareSWD(species = "Correlation test",
+                 a = avail_unbiased,
+                 env = terra::rast(predictor_stack_full),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+results_vs <- varSel(model,
+             metric = "auc",
+             bg4cor = bg,
+             #test = test,
+             cor_th = 0.7, #cite the SDMTune paper
+             permut = 10) #25 (see Geneur et al. 2015)
+results_vs
+```
+Keeping: 
+• Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m",
+"slope_30m", "soil_drainage_30m", and "twi_30m"
+• Categorical: "forest_30m", "ecoregions" and "sclass"
+
+# Tune hyperparameters
+```{r}
+env_hp <- terra::rast(predictor_stack_full)
+
+env_hp <- subset(env_hp, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m", "ecoregions", "sclass"))
+
+swd_hp <- prepareSWD(species = "Scolopax minor",
+           env = env_hp,
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2),
+           a = as.data.frame(avail_unbiased@coords),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+kfolds_hp <- randomFolds(data = swd_hp, k = 5, only_presence = TRUE, seed = 8)
+
+model_hp <- train(method = "RF",
+               data = swd_hp,
+               folds = kfolds_hp,
+               ntree = 2000)
+
+hypers <- list(mtry=1:8,
+              ntree = seq(from = 100, to = 3000, by = 100),
+              nodesize = 1:10)
+
+tuned_hypers <- optimizeModel(model = model_hp,
+                     hypers = hypers,
+                     metric = "auc",
+                     #test = test_hp,
+                     seed = 8)
+
+tuned_hypers@models[[1]] #use the hyperparameters from the best model going forward
+
+tuned_mtry_1 <- tuned_hypers@models[[1]]@models[[1]]@model@mtry
+tuned_ntree_1 <- tuned_hypers@models[[1]]@models[[1]]@model@ntree
+tuned_nodesize_1 <- tuned_hypers@models[[1]]@models[[1]]@model@nodesize
+```
+
+mtry: 1
+ntree: 2100
+nodesize: 8
+
+# Eliminate variables with small variable importance
+```{r}
+env_vi <- terra::rast(predictor_stack_full)
+
+#colnames(results_vi@data@data)
+
+env_vi <- subset(env_vi, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m", "ecoregions", "sclass"))
+
+swd_vi <- prepareSWD(species = "Scolopax minor", 
+           env = env_vi, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail_unbiased@coords),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+kfolds_vi <- randomFolds(data = swd_vi, k = 5, only_presence = TRUE, seed = 8)
+
+model_vi <- train(method = "RF",
+               data = swd_vi,
+               folds = kfolds_vi,
+               mtry = tuned_mtry_1,
+               ntree = tuned_ntree_1,
+               nodesize = tuned_nodesize_1)
+
+results_vi <- reduceVar(model = model_vi,
+          th = 2, #cite the SDMTune paper
+          #test = test_vi,
+          use_jk = TRUE,
+          metric = "auc",
+          permut = 10) #25 (see Geneur et al. 2015)
+
+results_vi
+auc(results_vi, test = TRUE) #0.8468433
+tss(results_vi, test = TRUE) #0.5967976
+```
+Final variables:
+• Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_dev", "elev_30m", "slope_30m",
+"soil_drainage_30m", and "twi_30m"
+• Categorical: "sclass"
+
+Retune hyperparameters for the final model (which is in a separate script)
+```{r}
+env_hp2 <- terra::rast(predictor_stack_full)
+
+env_hp2 <- subset(env_vi, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "sclass"))
+
+swd_hp2 <- prepareSWD(species = "Scolopax minor", 
+           env = env_hp2, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail_unbiased@coords),
+           categorical = c("sclass"))
+
+kfolds_hp2 <- randomFolds(data = swd_hp2, k = 5, only_presence = TRUE, seed = 8)
+
+model_hp2 <- train(method = "RF",
+               data = swd_hp2,
+               folds = kfolds_hp2,
+               mtry = tuned_mtry_1,
+               ntree = tuned_ntree_1,
+               nodesize = tuned_nodesize_1)
+
+hypers2 <- list(mtry=1:7,
+              ntree = seq(from = 100, to = 3000, by = 100),
+              nodesize = 1:10)
+
+tuned_hypers_2 <- optimizeModel(model = model_hp2,
+                     hypers = hypers2,
+                     metric = "auc",
+                     seed = 8)
+
+tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going forward
+tuned_hypers_2@models[[1]] %>% auc(test = TRUE) #0.8289564
+tuned_hypers_2@models[[1]] %>% tss(test = TRUE) #0.5575469
+```
+
+mtry: 2
+ntree: 3000
+nodesize: 9
+

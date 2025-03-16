@@ -1,0 +1,288 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+predictor_stack_full <- subset(predictor_stack_full, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m")) #remove "ecoregions", "sclass"
+```
+
+Read in the used points, and transform the used and available points to match the predictor stack
+```{r}
+set.seed(8)
+
+pa_sgs_pres_abs <- read_csv(here("methods", "Penn_residential_model", "sgs", "pa_sgs_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 0) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+set.seed(8)
+
+state_surveys <- read_csv(here("methods", "Penn_residential_model", "PA_state_surveys", "pa_statesurveys_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 1) %>%
+  mutate(Stop = as.character(Stop)) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+
+used <- surveys_all %>%
+  filter(pres_abs == 1) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>% 
+  filter(route_id != "BALD EAGLE_MAIN PARK_6") %>%
+  as_Spatial()
+
+avail <- surveys_all %>%
+  filter(pres_abs == 0) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>%
+  filter(route_id != "Route 059 Stop 4") %>% 
+  as_Spatial()
+```
+
+Check for NA values in avail
+```{r}
+# t <- extract(x = predictor_stack_full, y = used)
+# y <- extract(x = predictor_stack_full, y = avail)
+```
+
+
+Prep SDMs
+```{r}
+swd_full <- prepareSWD(species = "Scolopax minor", 
+           env = terra::rast(predictor_stack_full), 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords),
+           categorical = c("forest_30m")) #, "ecoregions", "sclass"
+
+#adding back in survey type manually: skipping for the correlation stage (as there's no associated raster layer), will incorporate later
+# swd_full@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+# Split presence locations in training (80%) and testing (20%) datasets
+# datasets <- trainValTest(swd_full,
+#                          test = 0.2,
+#                          only_presence = FALSE,
+#                          seed = 8)
+# train <- datasets[[1]]
+# test <- datasets[[2]]
+kfolds <- randomFolds(data = swd_full, k = 5, seed = 8)
+```
+
+Training a basic, full model
+```{r}
+model <- train(method = "RF",
+               data = swd_full,
+               folds = kfolds,
+               ntree = 2000)
+
+auc(model, test = TRUE) #0.726965 0.7171841
+tss(model, test = TRUE) #0.4666164 0.4525138
+```
+
+# Remove variables with high correlation
+
+Generate background coordinates, which can be used to assess correlation between predictor variables
+```{r}
+avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiased.rds"))
+
+set.seed(8)
+
+bg_coords <- avail_unbiased %>%
+  st_as_sf() %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  slice_sample(n = 2000) %>% 
+  as_Spatial()
+```
+
+```{r}
+bg <- prepareSWD(species = "Correlation test",
+                 a = bg_coords,
+                 env = terra::rast(predictor_stack_full),
+           categorical = c("forest_30m")) #, "ecoregions", "sclass"
+
+results_vs <- varSel(model,
+             metric = "auc",
+             bg4cor = bg,
+             #test = test,
+             cor_th = 0.7, #cite the SDMTune paper
+             permut = 10) #25 (see Geneur et al. 2015)
+results_vs
+```
+Keeping: 
+• Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m",
+"slope_30m", "soil_drainage_30m", and "twi_30m"
+• Categorical: "forest_30m"
+
+# Tune hyperparameters
+```{r}
+env_hp <- terra::rast(predictor_stack_full)
+
+env_hp <- subset(env_hp, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m"))
+
+swd_hp <- prepareSWD(species = "Scolopax minor", 
+           env = env_hp, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords),
+           categorical = c("forest_30m")) #, "ecoregions", "sclass"
+
+#adding back in survey type manually
+swd_hp@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+# Split presence locations in training (80%) and testing (20%) datasets
+# datasets_hp <- trainValTest(swd_hp,
+#                          test = 0.2,
+#                          only_presence = FALSE,
+#                          seed = 8)
+# 
+# train_hp <- datasets_hp[[1]]
+# test_hp <- datasets_hp[[2]]
+
+kfolds_hp <- randomFolds(data = swd_hp, k = 5, seed = 8)
+
+model_hp <- train(method = "RF",
+               data = swd_hp,
+               folds = kfolds_hp,
+               ntree = 2000)
+
+hypers <- list(mtry=1:8,
+              ntree = seq(from = 100, to = 3000, by = 100),
+              nodesize = 1:10)
+
+tuned_hypers <- optimizeModel(model = model_hp,
+                     hypers = hypers,
+                     metric = "auc",
+                     #test = test_hp,
+                     seed = 8)
+
+tuned_hypers@models[[1]] #use the hyperparameters from the best model going forward
+
+tuned_mtry_1 <- tuned_hypers@models[[1]]@models[[1]]@model@mtry
+tuned_ntree_1 <- tuned_hypers@models[[1]]@models[[1]]@model@ntree
+tuned_nodesize_1 <- tuned_hypers@models[[1]]@models[[1]]@model@nodesize
+```
+
+mtry: 3
+ntree: 2400
+nodesize: 4
+
+# Eliminate variables with small variable importance
+```{r}
+env_vi <- terra::rast(predictor_stack_full)
+
+#colnames(results_vi@data@data)
+
+env_vi <- subset(env_vi, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m"))
+
+swd_vi <- prepareSWD(species = "Scolopax minor", 
+           env = env_vi, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords),
+           categorical = c("forest_30m")) #, "ecoregions", "sclass"
+
+# Split presence locations in training (80%) and testing (20%) datasets
+# datasets_vi <- trainValTest(swd_vi,
+#                          test = 0.2,
+#                          only_presence = FALSE,
+#                          seed = 8)
+# 
+# train_vi <- datasets_vi[[1]]
+# test_vi <- datasets_vi[[2]]
+
+#adding back in survey type manually
+swd_vi@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+kfolds_vi <- randomFolds(data = swd_vi, k = 5, seed = 8)
+
+model_vi <- train(method = "RF",
+               data = swd_vi,
+               folds = kfolds_vi,
+               mtry = tuned_mtry_1,
+               ntree = tuned_ntree_1,
+               nodesize = tuned_nodesize_1)
+
+results_vi <- reduceVar(model = model_vi,
+          th = 2, #cite the SDMTune paper
+          #test = test_vi,
+          use_jk = TRUE,
+          metric = "auc",
+          permut = 10) #25 (see Geneur et al. 2015)
+
+results_vi
+auc(results_vi, test = TRUE) #0.7848102 0.8041017
+tss(results_vi, test = TRUE) #0.5803167 0.5792609
+```
+Final variables:
+• Continuous: "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", and
+"slope_30m"
+• Categorical: "survey"
+
+Retune hyperparameters for the final model (which is in a separate script)
+```{r}
+env_hp2 <- terra::rast(predictor_stack_full)
+
+env_hp2 <- subset(env_vi, c("lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m"))
+
+swd_hp2 <- prepareSWD(species = "Scolopax minor", 
+           env = env_hp2, 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail@coords)) #categorical = c("ecoregions", "sclass")
+
+# Split presence locations in training (80%) and testing (20%) datasets
+# datasets_hp2 <- trainValTest(swd_hp2,
+#                          test = 0.2,
+#                          only_presence = FALSE,
+#                          seed = 8)
+# 
+# train_hp2 <- datasets_hp2[[1]]
+# test_hp2 <- datasets_hp2[[2]]
+
+#adding back in survey type manually
+swd_hp2@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+kfolds_hp2 <- randomFolds(data = swd_hp2, k = 5, seed = 8)
+
+model_hp2 <- train(method = "RF",
+               data = swd_hp2,
+               folds = kfolds_hp2,
+               mtry = tuned_mtry_1,
+               ntree = tuned_ntree_1,
+               nodesize = tuned_nodesize_1)
+
+hypers2 <- list(mtry=1:5,
+              ntree = seq(from = 100, to = 3000, by = 100),
+              nodesize = 1:10)
+
+tuned_hypers_2 <- optimizeModel(model = model_hp2,
+                     hypers = hypers2,
+                     metric = "auc",
+                     #test = test_hp2,
+                     seed = 8)
+
+tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going forward
+tuned_hypers_2@models[[1]] %>% auc(test = TRUE) #0.7970944 now 0.8232906 (note: the old model was 0.83 AUC)
+tuned_hypers_2@models[[1]] %>% tss(test = TRUE) #0.5858723 now 0.6181498
+```
+
+mtry: 2
+ntree: 200
+nodesize: 1
+

@@ -1,0 +1,245 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+```
+
+Read in the used points, and transform the used and available points to match the predictor stack
+```{r}
+set.seed(8)
+
+pa_sgs_pres_abs <- read_csv(here("methods", "Penn_residential_model", "sgs", "pa_sgs_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 0) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+set.seed(8)
+
+state_surveys <- read_csv(here("methods", "Penn_residential_model", "PA_state_surveys", "pa_statesurveys_pres_abs.csv")) %>%
+  filter(!is.na(Latitude)) %>%
+  mutate(survey_type = 1) %>%
+  mutate(Stop = as.character(Stop)) %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
+
+surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
+  distinct(Latitude, Longitude, .keep_all = TRUE)
+
+used <- surveys_all %>%
+  filter(pres_abs == 1) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>% 
+  filter(route_id != "BALD EAGLE_MAIN PARK_6") %>%
+  as_Spatial()
+
+avail <- surveys_all %>%
+  filter(pres_abs == 0) %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326) %>%
+  st_transform(crs = st_crs(predictor_stack_full)) %>%
+  filter(route_id != "Route 059 Stop 4") %>% 
+  as_Spatial()
+```
+
+Run fully configured model
+```{r}
+env <- terra::rast(predictor_stack_full)
+
+env <- subset(env, c("lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m")) 
+
+swd <- prepareSWD(species = "Scolopax minor", 
+                  env = env, 
+                  p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+                  a = as.data.frame(avail@coords)) #categorical = c("ecoregions", "sclass")
+
+swd@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+
+kfolds <- randomFolds(data = swd, k = 5, seed = 8)
+
+train_data_1 <- swd
+train_data_1@coords <- train_data_1@coords[kfolds$train[,1],]
+train_data_1@data <- train_data_1@data[kfolds$train[,1],]
+train_data_1@pa <- train_data_1@pa[kfolds$train[,1]]
+
+train_data_2 <- swd
+train_data_2@coords <- train_data_2@coords[kfolds$train[,2],]
+train_data_2@data <- train_data_2@data[kfolds$train[,2],]
+train_data_2@pa <- train_data_2@pa[kfolds$train[,2]]
+
+train_data_3 <- swd
+train_data_3@coords <- train_data_3@coords[kfolds$train[,3],]
+train_data_3@data <- train_data_3@data[kfolds$train[,3],]
+train_data_3@pa <- train_data_3@pa[kfolds$train[,3]]
+
+train_data_4 <- swd
+train_data_4@coords <- train_data_4@coords[kfolds$train[,4],]
+train_data_4@data <- train_data_4@data[kfolds$train[,4],]
+train_data_4@pa <- train_data_4@pa[kfolds$train[,4]]
+
+train_data_5 <- swd
+train_data_5@coords <- train_data_5@coords[kfolds$train[,5],]
+train_data_5@data <- train_data_5@data[kfolds$train[,5],]
+train_data_5@pa <- train_data_5@pa[kfolds$train[,5]]
+
+## Normal model (for evaluation)
+model <- train(method = "RF",
+               data = swd,
+               folds = kfolds,
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+auc(model, test = TRUE) #0.7947335 new 0.7995098
+tss(model, test = TRUE) #0.6002011 new 0.5730518
+
+saveRDS(model, here("methods", "Penn_residential_model", "model_residential.rds"))
+
+# individual models (for prediction on the cluster)
+
+model_1 <- train(method = "RF",
+               data = train_data_1, #training dataset
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+model_2 <- train(method = "RF",
+               data = train_data_2, #training dataset
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+model_3 <- train(method = "RF",
+               data = train_data_3, #training dataset
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+model_4 <- train(method = "RF",
+               data = train_data_4, #training dataset
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+model_5 <- train(method = "RF",
+               data = train_data_5, #training dataset
+               mtry = 2,
+               ntree = 200,
+               nodesize = 1)
+
+saveRDS(model_1, here("methods", "Penn_residential_model", "model_residential_1.rds"))
+saveRDS(model_2, here("methods", "Penn_residential_model", "model_residential_2.rds"))
+saveRDS(model_3, here("methods", "Penn_residential_model", "model_residential_3.rds"))
+saveRDS(model_4, here("methods", "Penn_residential_model", "model_residential_4.rds"))
+saveRDS(model_5, here("methods", "Penn_residential_model", "model_residential_5.rds"))
+
+# modelReport(model, here("methods", "Penn_migration_model", "report")) #not working
+# # use for a statistical report in another file
+# plotResponse(model, var = "lsm_1km_dev")
+# plotResponse(model, var = "lsm_10km_ed")
+# plotResponse(model, var = "lsm_10km_dev")
+# plotResponse(model, var = "elev_30m")
+# plotResponse(model, var = "slope_30m")
+# plotResponse(model, var = "soil_drainage_30m")
+# plotResponse(model, var = "twi_30m")
+# plotResponse(model, var = "sclass")
+# plotROC(model@models[[1]])
+
+# model_vi <- varImp(model) #calculates permutation importance, which comes from MaxEnt
+# model_vi
+# plotVarImp(model_vi)
+```
+
+Add a "survey" layer to the raster stack for prediction
+```{r}
+forest_30m <- here("methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster()
+
+survey <- forest_30m
+names(survey) <- "survey"
+survey[survey] <- 0
+# levels(survey) <- data.frame(ID = 0:1, survey = 0:1)
+
+env_survey <- c(env, terra::rast(survey))
+names(env_survey)[length(names(env_survey))] <- "survey"
+
+env_survey
+```
+
+# Making a prediction layer
+Cutting using a fishnet for parallel processing
+```{r}
+fishnet <- st_read(here("methods", "Penn_residential_model", "fishnet", "pa_fishnet_300.shp")) %>%
+  st_transform(crs(predictor_stack_full))
+
+for(i in 1:nrow(fishnet)){
+  temp_extent <- fishnet[i,] %>% as_Spatial() %>% extent()
+  crop(x = env_survey, y = temp_extent, 
+       filename = here("methods", "Penn_residential_model", "predictor_stack_3", paste0("predictor_stack_3_30m_",i,".grd")), overwrite = TRUE) 
+}
+```
+
+Write a series of R scripts that can be used to run these predictions on the cluster
+```{r}
+for(index in 1:nrow(fishnet)){
+  sink(here("methods", "Penn_residential_model", "batch_files", paste0("predict_batch_", index, ".R")))
+  cat(paste0("
+library(tidyverse)
+library(SDMtune) # Needs version 1.1.6 to run: https://cran.r-project.org/src/contrib/Archive/SDMtune/SDMtune_1.1.6.tar.gz
+library(raster)
+library(sp)
+library(sf)
+library(randomForest)
+
+print('reading models')
+
+model_1 <- readRDS('/home/lberigan/SDM_res/model_residential_1.rds')
+model_2 <- readRDS('/home/lberigan/SDM_res/model_residential_2.rds')
+model_3 <- readRDS('/home/lberigan/SDM_res/model_residential_3.rds')
+model_4 <- readRDS('/home/lberigan/SDM_res/model_residential_4.rds')
+model_5 <- readRDS('/home/lberigan/SDM_res/model_residential_5.rds')
+
+print('reading raster')
+
+predictor_stack_iter <- brick('/home/lberigan/SDM_res/predictor_stack_3/predictor_stack_3_30m_", index,".grd')
+predictor_stack_iter <- stack(predictor_stack_iter)
+
+print('predicting variables')
+
+f <- list(survey = c(0,1)) #ecoregions = 1:11, sclass = c(1,2,3,4,5,6,7,111,120,132,180),
+
+pred_1 <- predict(model_1, data = predictor_stack_iter, factors = f)
+pred_2 <- predict(model_2, data = predictor_stack_iter, factors = f)
+pred_3 <- predict(model_3, data = predictor_stack_iter, factors = f)
+pred_4 <- predict(model_4, data = predictor_stack_iter, factors = f)
+pred_5 <- predict(model_5, data = predictor_stack_iter, factors = f)
+
+print('stacking')
+
+pred_stack <- stack(pred_1, pred_2, pred_3, pred_4, pred_5)
+
+print('averaging')
+
+calc(pred_stack, fun = mean, filename = '/home/lberigan/SDM_res/predict_output/predict_", index,".tif')
+
+print('done')
+             "))
+  sink()
+}
+
+```

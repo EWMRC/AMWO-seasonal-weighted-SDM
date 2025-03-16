@@ -104,15 +104,17 @@ Reading in the SGS used and available data, separate into used and available, an
 pa_sgs_pres_abs <- read_csv("pa_sgs_pres_abs.csv") %>%
   filter(!is.na(Latitude)) %>%
   mutate(survey_type = 0) %>%
-  distinct(Latitude, Longitude, .keep_all = TRUE)
-  #group_by(Route) %>%
-  #sample_n(1)
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
 
 state_surveys <- read_csv("pa_statesurveys_pres_abs.csv") %>%
   filter(!is.na(Latitude)) %>%
   mutate(survey_type = 1) %>%
   mutate(Stop = as.character(Stop)) %>%
-  distinct(Latitude, Longitude, .keep_all = TRUE)
+  distinct(Latitude, Longitude, .keep_all = TRUE) %>% 
+  group_by(Route) %>%
+  sample_n(1)
 
 surveys_all <- bind_rows(pa_sgs_pres_abs, state_surveys)  %>%
   distinct(Latitude, Longitude, .keep_all = TRUE)

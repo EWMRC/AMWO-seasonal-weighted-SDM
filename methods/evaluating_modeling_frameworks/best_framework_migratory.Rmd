@@ -1,0 +1,75 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
+library(sf)
+```
+
+Read in preprocessed available data
+```{r}
+avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiased.rds"))
+
+predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+
+names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+```
+
+Read in the used points, and transform the used and available points to match the predictor stack
+```{r}
+used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  as_Spatial() 
+
+set.seed(8)
+
+avail_unbiased <- avail_unbiased %>%
+  st_as_sf() %>% 
+  st_transform(st_crs(predictor_stack_full)) %>% 
+  slice_sample(n = 2000) %>% 
+  as_Spatial()
+```
+
+Prep SDMs
+```{r}
+swd_full <- prepareSWD(species = "Scolopax minor", 
+           env = terra::rast(predictor_stack_full), 
+           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
+           a = as.data.frame(avail_unbiased@coords),
+           categorical = c("forest_30m", "ecoregions", "sclass"))
+
+swd_full_folds <- randomFolds(swd_full, k = 5, only_presence = TRUE, seed = 8)
+```
+
+RF test
+```{r}
+rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 2000)
+
+auc(rf_full, test = TRUE) #0.8587086
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(rf_full, test = TRUE) #0.6246121
+```
+
+Maxnet test (think maxent but not in Java: https://cran.r-project.org/web/packages/maxnet/index.html)
+```{r}
+maxnet_full <- train(method = "Maxnet", data = swd_full, swd_full_folds)
+
+auc(maxnet_full, test = TRUE) #0.6168971
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(maxnet_full, test = TRUE) #0.2614707
+```
+
+Boosted Regression Tree test
+```{r}
+brt_unbiased <- train(method = "BRT", data = swd_full, swd_full_folds)
+
+auc(brt_unbiased, test = TRUE) #0.6156835
+#The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
+tss(brt_unbiased, test = TRUE) #0.2475193
+```
