@@ -1780,14 +1780,14 @@ avail_unbiased &lt;- readRDS(here(&quot;methods&quot;, &quot;Penn_migration_mode
 <p>Read in the used points</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXNlZCA8LSBzdF9yZWFkKGRzbiA9IHRoZXJlOjpoZXJlX2ZpbGUoXCJEYXRhXCIsIFwibW92ZWJhbmtfbG9jYXRpb25zXCIsIFwiZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEuc2hwXCIpKSAlPiUgXG4gIHN0X3RyYW5zZm9ybShzdF9jcnMocHJlZGljdG9yX3N0YWNrX2Z1bGwpKSAlPiUgXG4gIGFzX1NwYXRpYWwoKSBcbmBgYCJ9 -->
-<pre class="r"><code>used &lt;- st_read(dsn = there::here_file(&quot;Data&quot;, &quot;movebank_locations&quot;, &quot;dispersing_points_pa_6_2_2021.shp&quot;)) %&gt;% 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXNlZCA8LSBzdF9yZWFkKGRzbiA9IGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJtb3ZlYmFua19sb2NhdGlvbnNcIiwgXCJkaXNwZXJzaW5nX3BvaW50c19wYV82XzJfMjAyMS5zaHBcIikpICU+JSBcbiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSBcbiAgYXNfU3BhdGlhbCgpIFxuYGBgIn0= -->
+<pre class="r"><code>used &lt;- st_read(dsn = here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;movebank_locations&quot;, &quot;dispersing_points_pa_6_2_2021.shp&quot;)) %&gt;% 
   st_transform(st_crs(predictor_stack_full)) %&gt;% 
   as_Spatial() </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVhZGluZyBsYXllciBgZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEnIGZyb20gZGF0YSBzb3VyY2UgXG4gIGBEOlxcT25lRHJpdmUgLSBVbml2ZXJzaXR5IG9mIE1haW5lIFN5c3RlbVxcTWFpbmVBbmFseXNpc1xcRGF0YVxcTW92ZWJhbmtfbG9jYXRpb25zXFxkaXNwZXJzaW5nX3BvaW50c19wYV82XzJfMjAyMS5zaHAnIFxuICB1c2luZyBkcml2ZXIgYEVTUkkgU2hhcGVmaWxlJ1xuU2ltcGxlIGZlYXR1cmUgY29sbGVjdGlvbiB3aXRoIDExMyBmZWF0dXJlcyBhbmQgNyBmaWVsZHNcbkdlb21ldHJ5IHR5cGU6IFBPSU5UXG5EaW1lbnNpb246ICAgICBYWVxuQm91bmRpbmcgYm94OiAgeG1pbjogMTI3OTY0OCB5bWluOiAxOTg5MjU2IHhtYXg6IDE3NDY3OTAgeW1heDogMjI5MTY2OVxuUHJvamVjdGVkIENSUzogTkFEODMgLyBDb251cyBBbGJlcnNcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiUmVhZGluZyBsYXllciBgZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEnIGZyb20gZGF0YSBzb3VyY2UgXG4gIGAvVXNlcnMvbGlhbWJlcmlnYW4vTGlicmFyeS9DbG91ZFN0b3JhZ2UvT25lRHJpdmUtS2Fuc2FzU3RhdGVVbml2ZXJzaXR5L01haW5lQW5hbHlzaXMvUHJvamVjdHMvQU1XTy1zZWFzb25hbC13ZWlnaHRlZC1TRE0vbWV0aG9kcy9QZW5uX21pZ3JhdGlvbl9tb2RlbC9tb3ZlYmFua19sb2NhdGlvbnMvZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEuc2hwJyBcbiAgdXNpbmcgZHJpdmVyIGBFU1JJIFNoYXBlZmlsZSdcblNpbXBsZSBmZWF0dXJlIGNvbGxlY3Rpb24gd2l0aCAxMTMgZmVhdHVyZXMgYW5kIDcgZmllbGRzXG5HZW9tZXRyeSB0eXBlOiBQT0lOVFxuRGltZW5zaW9uOiAgICAgWFlcbkJvdW5kaW5nIGJveDogIHhtaW46IDEyNzk2NDggeW1pbjogMTk4OTI1NiB4bWF4OiAxNzQ2NzkwIHltYXg6IDIyOTE2NjlcblByb2plY3RlZCBDUlM6IE5BRDgzIC8gQ29udXMgQWxiZXJzXG4ifQ== -->
 <pre><code>Reading layer `dispersing_points_pa_6_2_2021&#39; from data source 
-  `D:\OneDrive - University of Maine System\MaineAnalysis\Data\Movebank_locations\dispersing_points_pa_6_2_2021.shp&#39; 
+  `/Users/liamberigan/Library/CloudStorage/OneDrive-KansasStateUniversity/MaineAnalysis/Projects/AMWO-seasonal-weighted-SDM/methods/Penn_migration_model/movebank_locations/dispersing_points_pa_6_2_2021.shp&#39; 
   using driver `ESRI Shapefile&#39;
 Simple feature collection with 113 features and 7 fields
 Geometry type: POINT
@@ -1816,26 +1816,16 @@ avail_unbiased &lt;- avail_unbiased %&gt;%
            a = as.data.frame(avail_unbiased@coords),
            categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbuKclCBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgcHJlc2VuY2UgbG9jYXRpb25zIFs0NDhtc11cblxuXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= -->
 <pre><code>
-ℹ Extracting predictor information for presence locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbiJ9 -->
-<pre><code>Warning: ! 1 location is NA for some environmental variables and has been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9ucyBbMjE2bXNdXG5cblxu4oS5IEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zXG4ifQ== -->
-<pre><code>
-✔ Extracting predictor information for presence locations [216ms]
+ℹ Extracting predictor information for presence locations
+Warning: ! 1 location is NA for some environmental variables and has been discarded
+✔ Extracting predictor information for presence locations [448ms]
 
 
-ℹ Extracting predictor information for absence/background locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAyNiBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG4ifQ== -->
-<pre><code>Warning: ! 26 locations are NA for some environmental variables and have been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnMgWzk4NG1zXVxuIn0= -->
-<pre><code>
-✔ Extracting predictor information for absence/background locations [984ms]</code></pre>
+ℹ Extracting predictor information for absence/background locations
+Warning: ! 26 locations are NA for some environmental variables and have been discarded
+✔ Extracting predictor information for absence/background locations [6.5s]</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTcGxpdCBwcmVzZW5jZSBsb2NhdGlvbnMgaW4gdHJhaW5pbmcgKDgwJSkgYW5kIHRlc3RpbmcgKDIwJSkgZGF0YXNldHNcbiMgZGF0YXNldHMgPC0gdHJhaW5WYWxUZXN0KHN3ZF9mdWxsLFxuIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMixcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIG9ubHlfcHJlc2VuY2UgPSBGQUxTRSxcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dXG4jIHRlc3QgPC0gZGF0YXNldHNbWzJdXVxua2ZvbGRzIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfZnVsbCwgb25seV9wcmVzZW5jZSA9IFRSVUUsIGsgPSA1LCBzZWVkID0gOClcbmBgYCJ9 -->
 <pre class="r"><code># Split presence locations in training (80%) and testing (20%) datasets
@@ -1858,17 +1848,17 @@ kfolds &lt;- randomFolds(data = swd_full, only_presence = TRUE, k = 5, seed = 8)
                folds = kfolds,
                ntree = 2000)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6IDIwcyAtIDAwOjAwOjA1XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgIDQwJSB8IEVUQTogMTVzIC0gMDA6MDA6MTAuMVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6IDEwcyAtIDAwOjAwOjE1LjJcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgODAlIHwgRVRBOiAgNXMgLSAwMDowMDoyMC40XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgMTAwJSB8IEVUQTogIDBzIC0gMDA6MDA6MjUuM1xuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6IDE2cyAtIDAwOjAwOjA0XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgIDQwJSB8IEVUQTogMTJzIC0gMDA6MDA6Ny44XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgIDYwJSB8IEVUQTogIDhzIC0gMDA6MDA6MTEuNlxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjE1LjZcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxOS43XG4ifQ== -->
 <pre><code>
-Cross Validation  ■■■■■■■                           20% | ETA: 20s - 00:00:05
+Cross Validation  ■■■■■■■                           20% | ETA: 16s - 00:00:04
 
-Cross Validation  ■■■■■■■■■■■■■                     40% | ETA: 15s - 00:00:10.1
+Cross Validation  ■■■■■■■■■■■■■                     40% | ETA: 12s - 00:00:7.8
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA: 10s - 00:00:15.2
+Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA:  8s - 00:00:11.6
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  5s - 00:00:20.4
+Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  4s - 00:00:15.6
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:25.3</code></pre>
+Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:19.7</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4NlxuYGBgIn0= -->
 <pre class="r"><code>auc(model, test = TRUE) #0.8587086</code></pre>
@@ -1888,20 +1878,19 @@ Cross Validation  ■■■■■■■■■■■■■■■■■■■■�
 <h1>Remove variables with high correlation</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBiZyA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSBcIkNvcnJlbGF0aW9uIHRlc3RcIixcbiMgICAgICAgICAgICAgICAgICBhID0gYXZhaWxfdW5iaWFzZWQsXG4jICAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLFxuIyAgICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcImZvcmVzdF8zMG1cIiwgXCJlY29yZWdpb25zXCIsIFwic2NsYXNzXCIpKVxuIyBcbiMgcmVzdWx0c192cyA8LSB2YXJTZWwobW9kZWwsXG4jICAgICAgICAgICAgICBtZXRyaWMgPSBcImF1Y1wiLFxuIyAgICAgICAgICAgICAgYmc0Y29yID0gYmcsXG4jICAgICAgICAgICAgICAjdGVzdCA9IHRlc3QsXG4jICAgICAgICAgICAgICBjb3JfdGggPSAwLjcsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyXG4jICAgICAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KVxuIyByZXN1bHRzX3ZzXG5gYGAifQ== -->
-<pre class="r"><code># bg &lt;- prepareSWD(species = &quot;Correlation test&quot;,
-#                  a = avail_unbiased,
-#                  env = terra::rast(predictor_stack_full),
-#            categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
-# 
-# results_vs &lt;- varSel(model,
-#              metric = &quot;auc&quot;,
-#              bg4cor = bg,
-#              #test = test,
-#              cor_th = 0.7, #cite the SDMTune paper
-#              permut = 10) #25 (see Geneur et al. 2015)
-# results_vs</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmcgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXCJDb3JyZWxhdGlvbiB0ZXN0XCIsXG4gICAgICAgICAgICAgICAgIGEgPSBhdmFpbF91bmJpYXNlZCxcbiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcblxuYGBgIn0= -->
+<pre class="r"><code>bg &lt;- prepareSWD(species = &quot;Correlation test&quot;,
+                 a = avail_unbiased,
+                 env = terra::rast(predictor_stack_full),
+           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
+</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= -->
+<pre><code>
+ℹ Extracting predictor information for absence/background locations
+Warning: ! 26 locations are NA for some environmental variables and have been discarded
+✔ Extracting predictor information for absence/background locations [6.5s]</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Keeping: • Continuous: “lsm_1km_dev”, “lsm_10km_ed”, “lsm_10km_agri”,
@@ -1912,7 +1901,7 @@ Cross Validation  ■■■■■■■■■■■■■■■■■■■■�
 <h1>Tune hyperparameters</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG5lbnZfaHAgPC0gc3Vic2V0KGVudl9ocCwgYyhcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9hZ3JpXCIsIFwibHNtXzEwa21fZGV2XCIsIFwiZWxldl8zMG1cIiwgXCJzbG9wZV8zMG1cIiwgXCJzb2lsX2RyYWluYWdlXzMwbVwiLCBcInR3aV8zMG1cIiwgXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcblxuc3dkX2hwIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIixcbiAgICAgICAgICAgZW52ID0gZW52X2hwLFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSxcbiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSxcbiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKFwiZm9yZXN0XzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIikpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG5lbnZfaHAgPC0gc3Vic2V0KGVudl9ocCwgYyhcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9hZ3JpXCIsIFwibHNtXzEwa21fZGV2XCIsIFwiZWxldl8zMG1cIiwgXCJzbG9wZV8zMG1cIiwgXCJzb2lsX2RyYWluYWdlXzMwbVwiLCBcInR3aV8zMG1cIiwgXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcblxuc3dkX2hwIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIixcbiAgICAgICAgICAgZW52ID0gZW52X2hwLFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSxcbiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSxcbiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKFwiZm9yZXN0XzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIikpXG5cbmtmb2xkc19ocCA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwLCBrID0gNSwgb25seV9wcmVzZW5jZSA9IFRSVUUsIHNlZWQgPSA4KVxuXG5tb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSBcIlJGXCIsXG4gICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAsXG4gICAgICAgICAgICAgICBudHJlZSA9IDIwMDApXG5cbmh5cGVycyA8LSBsaXN0KG10cnk9MTo4LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnMgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzLFxuICAgICAgICAgICAgICAgICAgICAgbWV0cmljID0gXCJhdWNcIixcbiAgICAgICAgICAgICAgICAgICAgICN0ZXN0ID0gdGVzdF9ocCxcbiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuXG50dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxuXG50dW5lZF9tdHJ5XzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG10cnlcbnR1bmVkX250cmVlXzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG50cmVlXG50dW5lZF9ub2Rlc2l6ZV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBub2Rlc2l6ZVxuYGBgIn0= -->
 <pre class="r"><code>env_hp &lt;- terra::rast(predictor_stack_full)
 
 env_hp &lt;- subset(env_hp, c(&quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
@@ -1921,51 +1910,16 @@ swd_hp &lt;- prepareSWD(species = &quot;Scolopax minor&quot;,
            env = env_hp,
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2),
            a = as.data.frame(avail_unbiased@coords),
-           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuIn0= -->
-<pre><code>
-ℹ Extracting predictor information for presence locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbiJ9 -->
-<pre><code>Warning: ! 1 location is NA for some environmental variables and has been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9ucyBbMTc3bXNdXG5cblxu4oS5IEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zXG4ifQ== -->
-<pre><code>
-✔ Extracting predictor information for presence locations [177ms]
+           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
 
-
-ℹ Extracting predictor information for absence/background locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxOSBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG4ifQ== -->
-<pre><code>Warning: ! 19 locations are NA for some environmental variables and have been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnMgWzQ1M21zXVxuIn0= -->
-<pre><code>
-✔ Extracting predictor information for absence/background locations [453ms]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2ZvbGRzX2hwIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfaHAsIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpXG5cbm1vZGVsX2hwIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAsXG4gICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc19ocCxcbiAgICAgICAgICAgICAgIG50cmVlID0gMjAwMClcbmBgYCJ9 -->
-<pre class="r"><code>kfolds_hp &lt;- randomFolds(data = swd_hp, k = 5, only_presence = TRUE, seed = 8)
+kfolds_hp &lt;- randomFolds(data = swd_hp, k = 5, only_presence = TRUE, seed = 8)
 
 model_hp &lt;- train(method = &quot;RF&quot;,
                data = swd_hp,
                folds = kfolds_hp,
-               ntree = 2000)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6ICA4cyAtIDAwOjAwOjIuMVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MCUgfCBFVEE6ICA3cyAtIDAwOjAwOjQuNlxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6ICA1cyAtIDAwOjAwOjA3IFxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICAycyAtIDAwOjAwOjkuNVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgIDEwMCUgfCBFVEE6ICAwcyAtIDAwOjAwOjExLjlcbiJ9 -->
-<pre><code>
-Cross Validation  ■■■■■■■                           20% | ETA:  8s - 00:00:2.1
+               ntree = 2000)
 
-Cross Validation  ■■■■■■■■■■■■■                     40% | ETA:  7s - 00:00:4.6
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA:  5s - 00:00:07 
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2s - 00:00:9.5
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:11.9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaHlwZXJzIDwtIGxpc3QobXRyeT0xOjgsXG4gICAgICAgICAgICAgIG50cmVlID0gc2VxKGZyb20gPSAxMDAsIHRvID0gMzAwMCwgYnkgPSAxMDApLFxuICAgICAgICAgICAgICBub2Rlc2l6ZSA9IDE6MTApXG5cbnR1bmVkX2h5cGVycyA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAsXG4gICAgICAgICAgICAgICAgICAgICBoeXBlcnMgPSBoeXBlcnMsXG4gICAgICAgICAgICAgICAgICAgICBtZXRyaWMgPSBcImF1Y1wiLFxuICAgICAgICAgICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0X2hwLFxuICAgICAgICAgICAgICAgICAgICAgc2VlZCA9IDgpXG5gYGAifQ== -->
-<pre class="r"><code>hypers &lt;- list(mtry=1:8,
+hypers &lt;- list(mtry=1:8,
               ntree = seq(from = 100, to = 3000, by = 100),
               nodesize = 1:10)
 
@@ -1973,159 +1927,11 @@ tuned_hypers &lt;- optimizeModel(model = model_hp,
                      hypers = hypers,
                      metric = &quot;auc&quot;,
                      #test = test_hp,
-                     seed = 8)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5PcHRpbWl6ZSBNb2RlbCAg4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDIlIHwgRVRBOiAyMm0gLSAwMDowMDoyMlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMyUgfCBFVEE6IDE2bSAtIDAwOjAwOjMzLjRcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDUlIHwgRVRBOiAxM20gLSAwMDowMDo0MC4zXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDclIHwgRVRBOiAxMm0gLSAwMDowMDo1MC41XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDglIHwgRVRBOiAxMm0gLSAwMDowMToyLjkgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMCUgfCBFVEE6IDEwbSAtIDAwOjAxOjA4IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTElIHwgRVRBOiAxMG0gLSAwMDowMToxNS4xXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEzJSB8IEVUQTogIDltIC0gMDA6MDE6MjEuNVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNSUgfCBFVEE6ICA5bSAtIDAwOjAxOjI4LjRcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNiUgfCBFVEE6ICA5bSAtIDAwOjAxOjQxLjNcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAxOCUgfCBFVEE6ICA4bSAtIDAwOjAxOjQ5ICBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgIDIwJSB8IEVUQTogIDltIC0gMDA6MDI6OC42XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMSUgfCBFVEE6ICA4bSAtIDAwOjAyOjEzLjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgMjMlIHwgRVRBOiAgOG0gLSAwMDowMjozMS4yXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgIDI1JSB8IEVUQTogIDltIC0gMDA6MDI6NDkuNFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgIDI2JSB8IEVUQTogIDltIC0gMDA6MDM6MTAuOFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgIDI4JSB8IEVUQTogIDltIC0gMDA6MDM6MTkuOVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgMzAlIHwgRVRBOiAgOW0gLSAwMDowMzozNCAgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAzMSUgfCBFVEE6ICA4bSAtIDAwOjAzOjQ0LjhcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgMzMlIHwgRVRBOiAgOG0gLSAwMDowMzo1MiAgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgIDM0JSB8IEVUQTogIDhtIC0gMDA6MDQ6My4zXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgMzYlIHwgRVRBOiAgN20gLSAwMDowNDo3LjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAzOCUgfCBFVEE6ICA3bSAtIDAwOjA0OjE2LjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgIDM5JSB8IEVUQTogIDdtIC0gMDA6MDQ6MzYuMVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgNDElIHwgRVRBOiAgN20gLSAwMDowNDo0MC44XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgIDQzJSB8IEVUQTogIDZtIC0gMDA6MDQ6NDguOFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICA0NCUgfCBFVEE6ICA2bSAtIDAwOjA0OjU4ICBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICA0NiUgfCBFVEE6ICA2bSAtIDAwOjA1OjMuM1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgIDQ4JSB8IEVUQTogIDZtIC0gMDA6MDU6MTQuNlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgNDklIHwgRVRBOiAgNm0gLSAwMDowNToyMSAgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICA1MSUgfCBFVEE6ICA1bSAtIDAwOjA1OjI4LjZcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgNTIlIHwgRVRBOiAgNW0gLSAwMDowNTo0MC45XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgIDU0JSB8IEVUQTogIDVtIC0gMDA6MDU6NTIgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgIDU2JSB8IEVUQTogIDVtIC0gMDA6MDU6NTkuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgIDU3JSB8IEVUQTogIDVtIC0gMDA6MDY6MDggIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgNTklIHwgRVRBOiAgNG0gLSAwMDowNjoyMy4yXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MSUgfCBFVEE6ICA0bSAtIDAwOjA2OjI5LjhcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgNjIlIHwgRVRBOiAgNG0gLSAwMDowNjo0MC43XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgIDY0JSB8IEVUQTogIDRtIC0gMDA6MDY6NDcuMVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgIDY2JSB8IEVUQTogIDRtIC0gMDA6MDY6NTMuNVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgIDY3JSB8IEVUQTogIDNtIC0gMDA6MDc6NC42IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgNjklIHwgRVRBOiAgM20gLSAwMDowNzoxMS45XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICA3MCUgfCBFVEE6ICAzbSAtIDAwOjA3OjIyICBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgNzIlIHwgRVRBOiAgM20gLSAwMDowNzoyNy4xXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgIDc0JSB8IEVUQTogIDNtIC0gMDA6MDc6MzQuMlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgIDc1JSB8IEVUQTogIDNtIC0gMDA6MDc6NDAuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgIDc3JSB8IEVUQTogIDJtIC0gMDA6MDc6NTAuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgNzklIHwgRVRBOiAgMm0gLSAwMDowODowMyAgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICAybSAtIDAwOjA4OjIwXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgIDgyJSB8IEVUQTogIDJtIC0gMDA6MDg6MjYuNVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICA4NCUgfCBFVEE6ICAybSAtIDAwOjA4OjMyICBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICA4NSUgfCBFVEE6ICAybSAtIDAwOjA4OjQxLjJcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICA4NyUgfCBFVEE6ICAxbSAtIDAwOjA4OjQ4LjVcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgIDg5JSB8IEVUQTogIDFtIC0gMDA6MDk6NC45IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgOTAlIHwgRVRBOiAgMW0gLSAwMDowOToxMS41XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgIDkyJSB8IEVUQTogIDFtIC0gMDA6MDk6MzEgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICA5MyUgfCBFVEE6IDQxcyAtIDAwOjA5OjM3LjNcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICA5NSUgfCBFVEE6IDMwcyAtIDAwOjA5OjQ2LjRcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICA5NyUgfCBFVEE6IDIwcyAtIDAwOjA5OjUyLjhcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgIDk4JSB8IEVUQTogMTBzIC0gMDA6MTA6OS40IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDoxMDo5LjdcbiJ9 -->
-<pre><code>
-Optimize Model  ■                                  2% | ETA: 22m - 00:00:22
+                     seed = 8)
 
-Optimize Model  ■■                                 3% | ETA: 16m - 00:00:33.4
+tuned_hypers@models[[1]] #use the hyperparameters from the best model going forward
 
-Optimize Model  ■■                                 5% | ETA: 13m - 00:00:40.3
-
-Optimize Model  ■■■                                7% | ETA: 12m - 00:00:50.5
-
-Optimize Model  ■■■                                8% | ETA: 12m - 00:01:2.9 
-
-Optimize Model  ■■■■                              10% | ETA: 10m - 00:01:08 
-
-Optimize Model  ■■■■                              11% | ETA: 10m - 00:01:15.1
-
-Optimize Model  ■■■■■                             13% | ETA:  9m - 00:01:21.5
-
-Optimize Model  ■■■■■                             15% | ETA:  9m - 00:01:28.4
-
-Optimize Model  ■■■■■■                            16% | ETA:  9m - 00:01:41.3
-
-Optimize Model  ■■■■■■                            18% | ETA:  8m - 00:01:49  
-
-Optimize Model  ■■■■■■■                           20% | ETA:  9m - 00:02:8.6
-
-Optimize Model  ■■■■■■■                           21% | ETA:  8m - 00:02:13.9
-
-Optimize Model  ■■■■■■■■                          23% | ETA:  8m - 00:02:31.2
-
-Optimize Model  ■■■■■■■■                          25% | ETA:  9m - 00:02:49.4
-
-Optimize Model  ■■■■■■■■■                         26% | ETA:  9m - 00:03:10.8
-
-Optimize Model  ■■■■■■■■■                         28% | ETA:  9m - 00:03:19.9
-
-Optimize Model  ■■■■■■■■■■                        30% | ETA:  9m - 00:03:34  
-
-Optimize Model  ■■■■■■■■■■                        31% | ETA:  8m - 00:03:44.8
-
-Optimize Model  ■■■■■■■■■■■                       33% | ETA:  8m - 00:03:52  
-
-Optimize Model  ■■■■■■■■■■■                       34% | ETA:  8m - 00:04:3.3
-
-Optimize Model  ■■■■■■■■■■■■                      36% | ETA:  7m - 00:04:7.9
-
-Optimize Model  ■■■■■■■■■■■■                      38% | ETA:  7m - 00:04:16.9
-
-Optimize Model  ■■■■■■■■■■■■■                     39% | ETA:  7m - 00:04:36.1
-
-Optimize Model  ■■■■■■■■■■■■■                     41% | ETA:  7m - 00:04:40.8
-
-Optimize Model  ■■■■■■■■■■■■■■                    43% | ETA:  6m - 00:04:48.8
-
-Optimize Model  ■■■■■■■■■■■■■■                    44% | ETA:  6m - 00:04:58  
-
-Optimize Model  ■■■■■■■■■■■■■■■                   46% | ETA:  6m - 00:05:3.3
-
-Optimize Model  ■■■■■■■■■■■■■■■                   48% | ETA:  6m - 00:05:14.6
-
-Optimize Model  ■■■■■■■■■■■■■■■■                  49% | ETA:  6m - 00:05:21  
-
-Optimize Model  ■■■■■■■■■■■■■■■■                  51% | ETA:  5m - 00:05:28.6
-
-Optimize Model  ■■■■■■■■■■■■■■■■■                 52% | ETA:  5m - 00:05:40.9
-
-Optimize Model  ■■■■■■■■■■■■■■■■■                 54% | ETA:  5m - 00:05:52  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■                56% | ETA:  5m - 00:05:59.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■                57% | ETA:  5m - 00:06:08  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■               59% | ETA:  4m - 00:06:23.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■               61% | ETA:  4m - 00:06:29.8
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■              62% | ETA:  4m - 00:06:40.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  4m - 00:06:47.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  4m - 00:06:53.5
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■             67% | ETA:  3m - 00:07:4.6 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  3m - 00:07:11.9
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  3m - 00:07:22  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  3m - 00:07:27.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  3m - 00:07:34.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■          75% | ETA:  3m - 00:07:40.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  2m - 00:07:50.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  2m - 00:08:03  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2m - 00:08:20
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% | ETA:  2m - 00:08:26.5
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■        84% | ETA:  2m - 00:08:32  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA:  2m - 00:08:41.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  1m - 00:08:48.5
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA:  1m - 00:09:4.9 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  1m - 00:09:11.5
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA:  1m - 00:09:31  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA: 41s - 00:09:37.3
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 30s - 00:09:46.4
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA: 20s - 00:09:52.8
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   98% | ETA: 10s - 00:10:9.4 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:10:9.7</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dICN1c2UgdGhlIGh5cGVycGFyYW1ldGVycyBmcm9tIHRoZSBiZXN0IG1vZGVsIGdvaW5nIGZvcndhcmRcbmBgYCJ9 -->
-<pre class="r"><code>tuned_hypers@models[[1]] #use the hyperparameters from the best model going forward</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgT2JqZWN0IG9mIGNsYXNzOiA8U0RNbW9kZWxDVj4g4pSA4pSAXG5cbk1ldGhvZDogUmFuZG9tIEZvcmVzdFxuXG7ilIDilIAgSHlwZXJwYXJhbWV0ZXJzIFxu4oCiIG10cnk6IDFcbuKAoiBudHJlZTogMjEwMFxu4oCiIG5vZGVzaXplOiA4XG5cbuKUgOKUgCBJbmZvIFxu4oCiIFNwZWNpZXM6IFNjb2xvcGF4IG1pbm9yXG7igKIgUmVwbGljYXRlczogNVxu4oCiIFRvdGFsIHByZXNlbmNlIGxvY2F0aW9uczogMTEyXG7igKIgVG90YWwgYWJzZW5jZSBsb2NhdGlvbnM6IDE5ODFcblxu4pSA4pSAIFZhcmlhYmxlcyBcbuKAoiBDb250aW51b3VzOiBcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9hZ3JpXCIsIFwibHNtXzEwa21fZGV2XCIsXG5cImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgYW5kIFwidHdpXzMwbVwiXG7igKIgQ2F0ZWdvcmljYWw6IFwiZm9yZXN0XzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgYW5kIFwic2NsYXNzXCJcbiJ9 -->
-<pre><code>
-── Object of class: &lt;SDMmodelCV&gt; ──
-
-Method: Random Forest
-
-── Hyperparameters 
-• mtry: 1
-• ntree: 2100
-• nodesize: 8
-
-── Info 
-• Species: Scolopax minor
-• Replicates: 5
-• Total presence locations: 112
-• Total absence locations: 1981
-
-── Variables 
-• Continuous: &quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;,
-&quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, and &quot;twi_30m&quot;
-• Categorical: &quot;forest_30m&quot;, &quot;ecoregions&quot;, and &quot;sclass&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVuZWRfbXRyeV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBtdHJ5XG50dW5lZF9udHJlZV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBudHJlZVxudHVuZWRfbm9kZXNpemVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbm9kZXNpemVcbmBgYCJ9 -->
-<pre class="r"><code>tuned_mtry_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@mtry
+tuned_mtry_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@mtry
 tuned_ntree_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@ntree
 tuned_nodesize_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@nodesize</code></pre>
 <!-- rnb-source-end -->
@@ -2137,121 +1943,167 @@ tuned_nodesize_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@nodesize</code
 <h1>Eliminate variables with small variable importance</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X3ZpIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG4jY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpXG5cbmVudl92aSA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2FncmlcIiwgXCJsc21fMTBrbV9kZXZcIiwgXCJlbGV2XzMwbVwiLCBcInNsb3BlXzMwbVwiLCBcInNvaWxfZHJhaW5hZ2VfMzBtXCIsIFwidHdpXzMwbVwiLCBcImZvcmVzdF8zMG1cIiwgXCJlY29yZWdpb25zXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfdmkgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXCJTY29sb3BheCBtaW5vclwiLCBcbiAgICAgICAgICAgZW52ID0gZW52X3ZpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcbmBgYCJ9 -->
-<pre class="r"><code>env_vi &lt;- terra::rast(predictor_stack_full)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZW52X3ZpIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG4jY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpXG5cbmVudl92aSA8LSBzdWJzZXQoZW52X3ZpLCBjKFxcbHNtXzFrbV9kZXZcXCwgXFxsc21fMTBrbV9lZFxcLCBcXGxzbV8xMGttX2FncmlcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLCBcXHNvaWxfZHJhaW5hZ2VfMzBtXFwsIFxcdHdpXzMwbVxcLCBcXGZvcmVzdF8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpKVxuXG5zd2RfdmkgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxTY29sb3BheCBtaW5vclxcLCBcbiAgICAgICAgICAgZW52ID0gZW52X3ZpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcbmBgYFxuYGBgIn0= -->
+<pre class="r"><code>```r
+env_vi &lt;- terra::rast(predictor_stack_full)
 
 #colnames(results_vi@data@data)
 
-env_vi &lt;- subset(env_vi, c(&quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
+env_vi &lt;- subset(env_vi, c(\lsm_1km_dev\, \lsm_10km_ed\, \lsm_10km_agri\, \lsm_10km_dev\, \elev_30m\, \slope_30m\, \soil_drainage_30m\, \twi_30m\, \forest_30m\, \ecoregions\, \sclass\))
 
-swd_vi &lt;- prepareSWD(species = &quot;Scolopax minor&quot;, 
+swd_vi &lt;- prepareSWD(species = \Scolopax minor\, 
            env = env_vi, 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail_unbiased@coords),
-           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuIn0= -->
+           categorical = c(\forest_30m\, \ecoregions\, \sclass\))</code></pre>
 <pre><code>
-ℹ Extracting predictor information for presence locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbiJ9 -->
-<pre><code>Warning: ! 1 location is NA for some environmental variables and has been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9ucyBbMTcybXNdXG5cblxu4oS5IEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zXG4ifQ== -->
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcblxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBwcmVzZW5jZSBsb2NhdGlvbnMgWzE3Mm1zXVxuXG5cbuKEuSBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgYWJzZW5jZS9iYWNrZ3JvdW5kIGxvY2F0aW9uc1xuV2FybmluZzogISAxOSBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG5cbuKclCBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgYWJzZW5jZS9iYWNrZ3JvdW5kIGxvY2F0aW9ucyBbNDM1bXNdXG4ifQ== --&gt;
+</code></pre>
+<p>ℹ Extracting predictor information for presence locations Warning: !
+1 location is NA for some environmental variables and has been
+discarded</p>
+<p>✔ Extracting predictor information for presence locations [172ms]</p>
+<p>ℹ Extracting predictor information for absence/background locations
+Warning: ! 19 locations are NA for some environmental variables and have
+been discarded</p>
+<p>✔ Extracting predictor information for absence/background locations
+[435ms]</p>
 <pre><code>
-✔ Extracting predictor information for presence locations [172ms]
 
 
-ℹ Extracting predictor information for absence/background locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxOSBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG4ifQ== -->
-<pre><code>Warning: ! 19 locations are NA for some environmental variables and have been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnMgWzQzNW1zXVxuIn0= -->
-<pre><code>
-✔ Extracting predictor information for absence/background locations [435ms]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2ZvbGRzX3ZpIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfdmksIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpXG5cbm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfdmksXG4gICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc192aSxcbiAgICAgICAgICAgICAgIG10cnkgPSB0dW5lZF9tdHJ5XzEsXG4gICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsXG4gICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpXG5gYGAifQ== -->
-<pre class="r"><code>kfolds_vi &lt;- randomFolds(data = swd_vi, k = 5, only_presence = TRUE, seed = 8)
+&lt;!-- rnb-output-end --&gt;
 
-model_vi &lt;- train(method = &quot;RF&quot;,
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxua2ZvbGRzX3ZpIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfdmksIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpXG5cbm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9IFxcUkZcXCxcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfdmksXG4gICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc192aSxcbiAgICAgICAgICAgICAgIG10cnkgPSB0dW5lZF9tdHJ5XzEsXG4gICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsXG4gICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+kfolds_vi &lt;- randomFolds(data = swd_vi, k = 5, only_presence = TRUE, seed = 8)
+
+model_vi &lt;- train(method = \RF\,
                data = swd_vi,
                folds = kfolds_vi,
                mtry = tuned_mtry_1,
                ntree = tuned_ntree_1,
                nodesize = tuned_nodesize_1)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6ICA4cyAtIDAwOjAwOjEuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MCUgfCBFVEE6ICA2cyAtIDAwOjAwOjA0IFxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjA2XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgIDgwJSB8IEVUQTogIDJzIC0gMDA6MDA6MDhcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxMFxuIn0= -->
 <pre><code>
-Cross Validation  ■■■■■■■                           20% | ETA:  8s - 00:00:1.9
+&lt;!-- rnb-source-end --&gt;
 
-Cross Validation  ■■■■■■■■■■■■■                     40% | ETA:  6s - 00:00:04 
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6ICA4cyAtIDAwOjAwOjEuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MCUgfCBFVEE6ICA2cyAtIDAwOjAwOjA0IFxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjA2XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgIDgwJSB8IEVUQTogIDJzIC0gMDA6MDA6MDhcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxMFxuIn0= --&gt;
+</code></pre>
+<p>Cross Validation ■■■■■■■ 20% | ETA: 8s - 00:00:1.9</p>
+<p>Cross Validation ■■■■■■■■■■■■■ 40% | ETA: 6s - 00:00:04</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■ 60% | ETA: 4s - 00:00:06</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■ 80% | ETA: 2s -
+00:00:08</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 100% | ETA: 0s -
+00:00:10</p>
+<pre><code>
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA:  4s - 00:00:06
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2s - 00:00:08
+&lt;!-- rnb-output-end --&gt;
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:10</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzdWx0c192aSA8LSByZWR1Y2VWYXIobW9kZWwgPSBtb2RlbF92aSxcbiAgICAgICAgICB0aCA9IDIsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyXG4gICAgICAgICAgI3Rlc3QgPSB0ZXN0X3ZpLFxuICAgICAgICAgIHVzZV9qayA9IFRSVUUsXG4gICAgICAgICAgbWV0cmljID0gXCJhdWNcIixcbiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KVxuYGBgIn0= -->
-<pre class="r"><code>results_vi &lt;- reduceVar(model = model_vi,
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzdWx0c192aSA8LSByZWR1Y2VWYXIobW9kZWwgPSBtb2RlbF92aSxcbiAgICAgICAgICB0aCA9IDIsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyXG4gICAgICAgICAgI3Rlc3QgPSB0ZXN0X3ZpLFxuICAgICAgICAgIHVzZV9qayA9IFRSVUUsXG4gICAgICAgICAgbWV0cmljID0gXFxhdWNcXCxcbiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+results_vi &lt;- reduceVar(model = model_vi,
           th = 2, #cite the SDMTune paper
           #test = test_vi,
           use_jk = TRUE,
-          metric = &quot;auc&quot;,
+          metric = \auc\,
           permut = 10) #25 (see Geneur et al. 2015)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoi4pyUIFRoZSB2YXJpYWJsZXMgZm9yZXN0XzMwbSwgZWNvcmVnaW9ucywgYW5kIGxzbV8xMGttX2FncmkgaGF2ZSBiZWVuIHJlbW92ZWRcbiJ9 -->
-<pre><code>✔ The variables forest_30m, ecoregions, and lsm_10km_agri have been removed</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzdWx0c192aVxuYGBgIn0= -->
-<pre class="r"><code>results_vi</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgT2JqZWN0IG9mIGNsYXNzOiA8U0RNbW9kZWxDVj4g4pSA4pSAXG5cbk1ldGhvZDogUmFuZG9tIEZvcmVzdFxuXG7ilIDilIAgSHlwZXJwYXJhbWV0ZXJzIFxu4oCiIG10cnk6IDFcbuKAoiBudHJlZTogMjEwMFxu4oCiIG5vZGVzaXplOiA4XG5cbuKUgOKUgCBJbmZvIFxu4oCiIFNwZWNpZXM6IFNjb2xvcGF4IG1pbm9yXG7igKIgUmVwbGljYXRlczogNVxu4oCiIFRvdGFsIHByZXNlbmNlIGxvY2F0aW9uczogMTEyXG7igKIgVG90YWwgYWJzZW5jZSBsb2NhdGlvbnM6IDE5ODFcblxu4pSA4pSAIFZhcmlhYmxlcyBcbuKAoiBDb250aW51b3VzOiBcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9kZXZcIiwgXCJlbGV2XzMwbVwiLCBcInNsb3BlXzMwbVwiLFxuXCJzb2lsX2RyYWluYWdlXzMwbVwiLCBhbmQgXCJ0d2lfMzBtXCJcbuKAoiBDYXRlZ29yaWNhbDogXCJzY2xhc3NcIlxuIn0= -->
 <pre><code>
-── Object of class: &lt;SDMmodelCV&gt; ──
+&lt;!-- rnb-source-end --&gt;
 
-Method: Random Forest
+&lt;!-- rnb-output-begin eyJkYXRhIjoi4pyUIFRoZSB2YXJpYWJsZXMgZm9yZXN0XzMwbSwgZWNvcmVnaW9ucywgYW5kIGxzbV8xMGttX2FncmkgaGF2ZSBiZWVuIHJlbW92ZWRcbiJ9 --&gt;
+</code></pre>
+<p>✔ The variables forest_30m, ecoregions, and lsm_10km_agri have been
+removed</p>
+<pre><code>
 
-── Hyperparameters 
-• mtry: 1
-• ntree: 2100
-• nodesize: 8
 
-── Info 
-• Species: Scolopax minor
-• Replicates: 5
-• Total presence locations: 112
-• Total absence locations: 1981
+&lt;!-- rnb-output-end --&gt;
 
-── Variables 
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzdWx0c192aVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+results_vi</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgT2JqZWN0IG9mIGNsYXNzOiA8U0RNbW9kZWxDVj4g4pSA4pSAXG5cbk1ldGhvZDogUmFuZG9tIEZvcmVzdFxuXG7ilIDilIAgSHlwZXJwYXJhbWV0ZXJzIFxu4oCiIG10cnk6IDFcbuKAoiBudHJlZTogMjEwMFxu4oCiIG5vZGVzaXplOiA4XG5cbuKUgOKUgCBJbmZvIFxu4oCiIFNwZWNpZXM6IFNjb2xvcGF4IG1pbm9yXG7igKIgUmVwbGljYXRlczogNVxu4oCiIFRvdGFsIHByZXNlbmNlIGxvY2F0aW9uczogMTEyXG7igKIgVG90YWwgYWJzZW5jZSBsb2NhdGlvbnM6IDE5ODFcblxu4pSA4pSAIFZhcmlhYmxlcyBcbuKAoiBDb250aW51b3VzOiBcXGxzbV8xa21fZGV2XFwsIFxcbHNtXzEwa21fZWRcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLFxuXFxzb2lsX2RyYWluYWdlXzMwbVxcLCBhbmQgXFx0d2lfMzBtXFxcbuKAoiBDYXRlZ29yaWNhbDogXFxzY2xhc3NcXFxuIn0= --&gt;
+</code></pre>
+<p>── Object of class: <SDMmodelCV> ──</p>
+<p>Method: Random Forest</p>
+<p>── Hyperparameters • mtry: 1 • ntree: 2100 • nodesize: 8</p>
+<p>── Info • Species: Scolopax minor • Replicates: 5 • Total presence
+locations: 112 • Total absence locations: 1981</p>
+<p>── Variables • Continuous: _1km_dev, _10km_ed, _10km_dev, _30m, _30m,
+_drainage_30m, and _30m<br />
+• Categorical: <br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXVjKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC41ODYxNjQ5XG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+auc(results_vi, test = TRUE) #0.5861649</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODQ2ODQzM1xuIn0= --&gt;
+</code></pre>
+<p>[1] 0.8468433</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudHNzKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC4yMDkwMDI2XG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+tss(results_vi, test = TRUE) #0.2090026</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNTk2Nzk3NlxuIn0= --&gt;
+</code></pre>
+<p>[1] 0.5967976</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+Final variables:
 • Continuous: &quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;,
 &quot;soil_drainage_30m&quot;, and &quot;twi_30m&quot;
-• Categorical: &quot;sclass&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXVjKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC41ODYxNjQ5XG5gYGAifQ== -->
-<pre class="r"><code>auc(results_vi, test = TRUE) #0.5861649</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODQ2ODQzM1xuIn0= -->
-<pre><code>[1] 0.8468433</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHNzKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC4yMDkwMDI2XG5gYGAifQ== -->
-<pre class="r"><code>tss(results_vi, test = TRUE) #0.2090026</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNTk2Nzk3NlxuIn0= -->
-<pre><code>[1] 0.5967976</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Final variables: • Continuous: “lsm_1km_dev”, “lsm_10km_ed”,
-“lsm_10km_dev”, “elev_30m”, “slope_30m”, “soil_drainage_30m”, and
-“twi_30m” • Categorical: “sclass”</p>
-<p>Retune hyperparameters for the final model (which is in a separate
-script)</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwMiA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwMiA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2RldlwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfaHAyIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIiwgXG4gICAgICAgICAgIGVudiA9IGVudl9ocDIsIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcInNjbGFzc1wiKSlcbmBgYCJ9 -->
-<pre class="r"><code>env_hp2 &lt;- terra::rast(predictor_stack_full)
+• Categorical: &quot;sclass&quot;
+
+Retune hyperparameters for the final model (which is in a separate script)
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwMiA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwMiA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2RldlwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfaHAyIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIiwgXG4gICAgICAgICAgIGVudiA9IGVudl9ocDIsIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcInNjbGFzc1wiKSlcblxua2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAyLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAyLFxuICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSxcbiAgICAgICAgICAgICAgIG50cmVlID0gdHVuZWRfbnRyZWVfMSxcbiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSlcblxuaHlwZXJzMiA8LSBsaXN0KG10cnk9MTo3LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnNfMiA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAyLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMixcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFwiYXVjXCIsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcblxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIGF1Yyh0ZXN0ID0gVFJVRSkgIzAuODI4OTU2NFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIHRzcyh0ZXN0ID0gVFJVRSkgIzAuNTU3NTQ2OVxuYGBgIn0= --&gt;
+
+```r
+env_hp2 &lt;- terra::rast(predictor_stack_full)
 
 env_hp2 &lt;- subset(env_vi, c(&quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;sclass&quot;))
 
@@ -2259,229 +2111,37 @@ swd_hp2 &lt;- prepareSWD(species = &quot;Scolopax minor&quot;,
            env = env_hp2, 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail_unbiased@coords),
-           categorical = c(&quot;sclass&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuIn0= -->
-<pre><code>
-ℹ Extracting predictor information for presence locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbiJ9 -->
-<pre><code>Warning: ! 1 location is NA for some environmental variables and has been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9ucyBbMTYzbXNdXG5cblxu4oS5IEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zXG4ifQ== -->
-<pre><code>
-✔ Extracting predictor information for presence locations [163ms]
+           categorical = c(&quot;sclass&quot;))
 
-
-ℹ Extracting predictor information for absence/background locations</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogISAxOSBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG4ifQ== -->
-<pre><code>Warning: ! 19 locations are NA for some environmental variables and have been discarded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7inJQgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnMgWzM3NG1zXVxuIn0= -->
-<pre><code>
-✔ Extracting predictor information for absence/background locations [374ms]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAyLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAyLFxuICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSxcbiAgICAgICAgICAgICAgIG50cmVlID0gdHVuZWRfbnRyZWVfMSxcbiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSlcbmBgYCJ9 -->
-<pre class="r"><code>kfolds_hp2 &lt;- randomFolds(data = swd_hp2, k = 5, only_presence = TRUE, seed = 8)
+kfolds_hp2 &lt;- randomFolds(data = swd_hp2, k = 5, only_presence = TRUE, seed = 8)
 
 model_hp2 &lt;- train(method = &quot;RF&quot;,
                data = swd_hp2,
                folds = kfolds_hp2,
                mtry = tuned_mtry_1,
                ntree = tuned_ntree_1,
-               nodesize = tuned_nodesize_1)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6ICA4cyAtIDAwOjAwOjEuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MCUgfCBFVEE6ICA2cyAtIDAwOjAwOjMuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjUuOFxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICAycyAtIDAwOjAwOjcuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgIDEwMCUgfCBFVEE6ICAwcyAtIDAwOjAwOjkuOVxuIn0= -->
-<pre><code>
-Cross Validation  ■■■■■■■                           20% | ETA:  8s - 00:00:1.9
+               nodesize = tuned_nodesize_1)
 
-Cross Validation  ■■■■■■■■■■■■■                     40% | ETA:  6s - 00:00:3.9
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA:  4s - 00:00:5.8
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2s - 00:00:7.9
-
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:9.9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaHlwZXJzMiA8LSBsaXN0KG10cnk9MTo3LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnNfMiA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAyLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMixcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFwiYXVjXCIsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcbmBgYCJ9 -->
-<pre class="r"><code>hypers2 &lt;- list(mtry=1:7,
+hypers2 &lt;- list(mtry=1:7,
               ntree = seq(from = 100, to = 3000, by = 100),
               nodesize = 1:10)
 
 tuned_hypers_2 &lt;- optimizeModel(model = model_hp2,
                      hypers = hypers2,
                      metric = &quot;auc&quot;,
-                     seed = 8)</code></pre>
+                     seed = 8)
+
+tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going forward
+tuned_hypers_2@models[[1]] %&gt;% auc(test = TRUE) #0.8289564
+tuned_hypers_2@models[[1]] %&gt;% tss(test = TRUE) #0.5575469</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5PcHRpbWl6ZSBNb2RlbCAg4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDIlIHwgRVRBOiAyMm0gLSAwMDowMDoyMS45XG5cbk9wdGltaXplIE1vZGVsICDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzJSB8IEVUQTogMTRtIC0gMDA6MDA6MjguNlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNSUgfCBFVEE6IDEybSAtIDAwOjAwOjM2LjdcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNyUgfCBFVEE6IDEybSAtIDAwOjAwOjUyLjJcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOCUgfCBFVEE6IDEzbSAtIDAwOjAxOjcuNiBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwJSB8IEVUQTogMTNtIC0gMDA6MDE6MjYuMVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTElIHwgRVRBOiAxMW0gLSAwMDowMToyOC4yXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEzJSB8IEVUQTogMTBtIC0gMDA6MDE6MzAuNlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNSUgfCBFVEE6IDEwbSAtIDAwOjAxOjM5LjFcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNiUgfCBFVEE6ICA5bSAtIDAwOjAxOjQyLjNcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgICAxOCUgfCBFVEE6ICA4bSAtIDAwOjAxOjUwLjVcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgIDIwJSB8IEVUQTogIDhtIC0gMDA6MDI6MC45IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgICAgMjElIHwgRVRBOiAgOG0gLSAwMDowMjo2LjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgICAgMjMlIHwgRVRBOiAgOG0gLSAwMDowMjoxOS41XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgIDI1JSB8IEVUQTogIDhtIC0gMDA6MDI6MzAuOFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgIDI2JSB8IEVUQTogIDhtIC0gMDA6MDI6NDQgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgIDI4JSB8IEVUQTogIDhtIC0gMDA6MDI6NTQuNFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgICAgMzAlIHwgRVRBOiAgN20gLSAwMDowMzozLjMgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAzMSUgfCBFVEE6ICA3bSAtIDAwOjAzOjE0LjdcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgICAgMzMlIHwgRVRBOiAgN20gLSAwMDowMzoyNC44XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgIDM0JSB8IEVUQTogIDdtIC0gMDA6MDM6MzQuNFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgIDM2JSB8IEVUQTogIDdtIC0gMDA6MDM6NTMgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgIDM4JSB8IEVUQTogIDdtIC0gMDA6MDM6NTguN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgICAgMzklIHwgRVRBOiAgN20gLSAwMDowNDoxMy45XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MSUgfCBFVEE6ICA3bSAtIDAwOjA0OjMxLjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgNDMlIHwgRVRBOiAgN20gLSAwMDowNDo0OS44XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgIDQ0JSB8IEVUQTogIDZtIC0gMDA6MDU6OC4xIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgIDQ2JSB8IEVUQTogIDZtIC0gMDA6MDU6MTguOVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgIDQ4JSB8IEVUQTogIDZtIC0gMDA6MDU6MjQuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgICAgNDklIHwgRVRBOiAgNm0gLSAwMDowNTo0MS4xXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICA1MSUgfCBFVEE6ICA2bSAtIDAwOjA1OjU5LjlcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgNTIlIHwgRVRBOiAgNm0gLSAwMDowNjo3LjUgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgIDU0JSB8IEVUQTogIDVtIC0gMDA6MDY6MTYuOFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgIDU2JSB8IEVUQTogIDVtIC0gMDA6MDY6MzAgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgIDU3JSB8IEVUQTogIDVtIC0gMDA6MDY6NDcuMVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgICAgNTklIHwgRVRBOiAgNW0gLSAwMDowNjo1NC42XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MSUgfCBFVEE6ICA1bSAtIDAwOjA3OjQuMSBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgNjIlIHwgRVRBOiAgNG0gLSAwMDowNzoyMS4xXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgIDY0JSB8IEVUQTogIDRtIC0gMDA6MDc6MzIuMVxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgIDY2JSB8IEVUQTogIDRtIC0gMDA6MDc6NDQuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgIDY3JSB8IEVUQTogIDRtIC0gMDA6MDg6My43IFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgICAgNjklIHwgRVRBOiAgNG0gLSAwMDowODoyMi43XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICA3MCUgfCBFVEE6ICA0bSAtIDAwOjA4OjQxLjJcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgNzIlIHwgRVRBOiAgM20gLSAwMDowODo2MCAgXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgIDc0JSB8IEVUQTogIDNtIC0gMDA6MDk6MTkuMlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgIDc1JSB8IEVUQTogIDNtIC0gMDA6MDk6MzcuN1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgIDc3JSB8IEVUQTogIDNtIC0gMDA6MDk6NDQuOFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgICAgNzklIHwgRVRBOiAgM20gLSAwMDowOTo1Ny45XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICAybSAtIDAwOjEwOjEuOSBcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgODIlIHwgRVRBOiAgMm0gLSAwMDoxMDoxMS44XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgIDg0JSB8IEVUQTogIDJtIC0gMDA6MTA6MzAuNlxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgIDg1JSB8IEVUQTogIDJtIC0gMDA6MTA6NTMuM1xuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgIDg3JSB8IEVUQTogIDJtIC0gMDA6MTA6NTUgIFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICAgODklIHwgRVRBOiAgMW0gLSAwMDoxMTo0LjdcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgIDkwJSB8IEVUQTogIDFtIC0gMDA6MTE6MjAuNFxuXG5PcHRpbWl6ZSBNb2RlbCAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAgICA5MiUgfCBFVEE6ICAxbSAtIDAwOjExOjM5LjdcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgOTMlIHwgRVRBOiAgMW0gLSAwMDoxMTo1OC42XG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgOTUlIHwgRVRBOiAzOHMgLSAwMDoxMjoxNy4zXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgOTclIHwgRVRBOiAyNXMgLSAwMDoxMjoyNy4xXG5cbk9wdGltaXplIE1vZGVsICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICA5OCUgfCBFVEE6IDEzcyAtIDAwOjEyOjQ2LjJcblxuT3B0aW1pemUgTW9kZWwgIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgMTAwJSB8IEVUQTogIDBzIC0gMDA6MTI6NDYuNFxuIn0= -->
-<pre><code>
-Optimize Model  ■                                  2% | ETA: 22m - 00:00:21.9
-
-Optimize Model  ■■                                 3% | ETA: 14m - 00:00:28.6
-
-Optimize Model  ■■                                 5% | ETA: 12m - 00:00:36.7
-
-Optimize Model  ■■■                                7% | ETA: 12m - 00:00:52.2
-
-Optimize Model  ■■■                                8% | ETA: 13m - 00:01:7.6 
-
-Optimize Model  ■■■■                              10% | ETA: 13m - 00:01:26.1
-
-Optimize Model  ■■■■                              11% | ETA: 11m - 00:01:28.2
-
-Optimize Model  ■■■■■                             13% | ETA: 10m - 00:01:30.6
-
-Optimize Model  ■■■■■                             15% | ETA: 10m - 00:01:39.1
-
-Optimize Model  ■■■■■■                            16% | ETA:  9m - 00:01:42.3
-
-Optimize Model  ■■■■■■                            18% | ETA:  8m - 00:01:50.5
-
-Optimize Model  ■■■■■■■                           20% | ETA:  8m - 00:02:0.9 
-
-Optimize Model  ■■■■■■■                           21% | ETA:  8m - 00:02:6.9
-
-Optimize Model  ■■■■■■■■                          23% | ETA:  8m - 00:02:19.5
-
-Optimize Model  ■■■■■■■■                          25% | ETA:  8m - 00:02:30.8
-
-Optimize Model  ■■■■■■■■■                         26% | ETA:  8m - 00:02:44  
-
-Optimize Model  ■■■■■■■■■                         28% | ETA:  8m - 00:02:54.4
-
-Optimize Model  ■■■■■■■■■■                        30% | ETA:  7m - 00:03:3.3 
-
-Optimize Model  ■■■■■■■■■■                        31% | ETA:  7m - 00:03:14.7
-
-Optimize Model  ■■■■■■■■■■■                       33% | ETA:  7m - 00:03:24.8
-
-Optimize Model  ■■■■■■■■■■■                       34% | ETA:  7m - 00:03:34.4
-
-Optimize Model  ■■■■■■■■■■■■                      36% | ETA:  7m - 00:03:53  
-
-Optimize Model  ■■■■■■■■■■■■                      38% | ETA:  7m - 00:03:58.7
-
-Optimize Model  ■■■■■■■■■■■■■                     39% | ETA:  7m - 00:04:13.9
-
-Optimize Model  ■■■■■■■■■■■■■                     41% | ETA:  7m - 00:04:31.9
-
-Optimize Model  ■■■■■■■■■■■■■■                    43% | ETA:  7m - 00:04:49.8
-
-Optimize Model  ■■■■■■■■■■■■■■                    44% | ETA:  6m - 00:05:8.1 
-
-Optimize Model  ■■■■■■■■■■■■■■■                   46% | ETA:  6m - 00:05:18.9
-
-Optimize Model  ■■■■■■■■■■■■■■■                   48% | ETA:  6m - 00:05:24.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■                  49% | ETA:  6m - 00:05:41.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■                  51% | ETA:  6m - 00:05:59.9
-
-Optimize Model  ■■■■■■■■■■■■■■■■■                 52% | ETA:  6m - 00:06:7.5 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■                 54% | ETA:  5m - 00:06:16.8
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■                56% | ETA:  5m - 00:06:30  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■                57% | ETA:  5m - 00:06:47.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■               59% | ETA:  5m - 00:06:54.6
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■               61% | ETA:  5m - 00:07:4.1 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■              62% | ETA:  4m - 00:07:21.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■              64% | ETA:  4m - 00:07:32.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  4m - 00:07:44.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■             67% | ETA:  4m - 00:08:3.7 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■            69% | ETA:  4m - 00:08:22.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■            70% | ETA:  4m - 00:08:41.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■           72% | ETA:  3m - 00:08:60  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  3m - 00:09:19.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■          75% | ETA:  3m - 00:09:37.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  3m - 00:09:44.8
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  3m - 00:09:57.9
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  2m - 00:10:1.9 
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% | ETA:  2m - 00:10:11.8
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■        84% | ETA:  2m - 00:10:30.6
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■       85% | ETA:  2m - 00:10:53.3
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■       87% | ETA:  2m - 00:10:55  
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      89% | ETA:  1m - 00:11:4.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  1m - 00:11:20.4
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA:  1m - 00:11:39.7
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% | ETA:  1m - 00:11:58.6
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    95% | ETA: 38s - 00:12:17.3
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■    97% | ETA: 25s - 00:12:27.1
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   98% | ETA: 13s - 00:12:46.2
-
-Optimize Model  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:12:46.4</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxuYGBgIn0= -->
-<pre class="r"><code>tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going forward</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgT2JqZWN0IG9mIGNsYXNzOiA8U0RNbW9kZWxDVj4g4pSA4pSAXG5cbk1ldGhvZDogUmFuZG9tIEZvcmVzdFxuXG7ilIDilIAgSHlwZXJwYXJhbWV0ZXJzIFxu4oCiIG10cnk6IDJcbuKAoiBudHJlZTogMzAwMFxu4oCiIG5vZGVzaXplOiA5XG5cbuKUgOKUgCBJbmZvIFxu4oCiIFNwZWNpZXM6IFNjb2xvcGF4IG1pbm9yXG7igKIgUmVwbGljYXRlczogNVxu4oCiIFRvdGFsIHByZXNlbmNlIGxvY2F0aW9uczogMTEyXG7igKIgVG90YWwgYWJzZW5jZSBsb2NhdGlvbnM6IDE5ODFcblxu4pSA4pSAIFZhcmlhYmxlcyBcbuKAoiBDb250aW51b3VzOiBcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9kZXZcIiwgXCJlbGV2XzMwbVwiLCBcInNsb3BlXzMwbVwiLFxuXCJzb2lsX2RyYWluYWdlXzMwbVwiLCBhbmQgXCJ0d2lfMzBtXCJcbuKAoiBDYXRlZ29yaWNhbDogXCJzY2xhc3NcIlxuIn0= -->
-<pre><code>
-── Object of class: &lt;SDMmodelCV&gt; ──
-
-Method: Random Forest
-
-── Hyperparameters 
-• mtry: 2
-• ntree: 3000
-• nodesize: 9
-
-── Info 
-• Species: Scolopax minor
-• Replicates: 5
-• Total presence locations: 112
-• Total absence locations: 1981
-
-── Variables 
-• Continuous: &quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;,
-&quot;soil_drainage_30m&quot;, and &quot;twi_30m&quot;
-• Categorical: &quot;sclass&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIGF1Yyh0ZXN0ID0gVFJVRSkgIzAuNTk5MDI0N1xuYGBgIn0= -->
-<pre class="r"><code>tuned_hypers_2@models[[1]] %&gt;% auc(test = TRUE) #0.5990247</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODI4OTU2NFxuIn0= -->
-<pre><code>[1] 0.8289564</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIHRzcyh0ZXN0ID0gVFJVRSkgIzAuMjIyODc1NFxuYGBgIn0= -->
-<pre class="r"><code>tuned_hypers_2@models[[1]] %&gt;% tss(test = TRUE) #0.2228754</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNTU3NTQ2OVxuIn0= -->
-<pre><code>[1] 0.5575469</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>mtry: 2 ntree: 3000 nodesize: 9</p>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KYGBge3J9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkoU0RNdHVuZSkNCmxpYnJhcnkoaGVyZSkNCmxpYnJhcnkocmFzdGVyKQ0KbGlicmFyeShzcCkNCmxpYnJhcnkoc2YpDQpgYGANCg0KUmVhZCBpbiBwcmVwcm9jZXNzZWQgYXZhaWxhYmxlIGRhdGENCmBgYHtyfQ0KcHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoIm1ldGhvZHMiLCAiUGVubl9taWdyYXRpb25fbW9kZWwiLCAicHJlZGljdG9yX3N0YWNrX2Z1bGxfbWlnLnN0ayIpKQ0KDQpuYW1lcyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkgPC0gYygibHNtXzUwMG1fYWkiLCAibHNtXzUwMG1fY29oZXNpb24iLCAibHNtXzUwMG1fZWQiLCAibHNtXzUwMG1fcGxhbmQiLCAibHNtXzUwMG1fYWdyaSIsICJsc21fNTAwbV9kZXYiLCAibHNtXzFrbV9haSIsICJsc21fMWttX2NvaGVzaW9uIiwgImxzbV8xa21fZWQiLCAibHNtXzFrbV9wbGFuZCIsICJsc21fMWttX2FncmkiLCAibHNtXzFrbV9kZXYiLCAibHNtXzVrbV9haSIsICJsc21fNWttX2NvaGVzaW9uIiwgImxzbV81a21fZWQiLCAibHNtXzVrbV9wbGFuZCIsICJsc21fNWttX2FncmkiLCAibHNtXzVrbV9kZXYiLCAibHNtXzEwa21fYWkiLCAibHNtXzEwa21fY29oZXNpb24iLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fcGxhbmQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZm9yZXN0XzMwbSIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLCAic29pbF9kcmFpbmFnZV8zMG0iLCAidHdpXzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpDQoNCmF2YWlsX3VuYmlhc2VkIDwtIHJlYWRSRFMoaGVyZSgibWV0aG9kcyIsICJQZW5uX21pZ3JhdGlvbl9tb2RlbCIsICJhdmFpbF91bmJpYXNlZC5yZHMiKSkNCg0KYGBgDQoNClJlYWQgaW4gdGhlIHVzZWQgcG9pbnRzDQpgYGB7cn0NCnVzZWQgPC0gc3RfcmVhZChkc24gPSB0aGVyZTo6aGVyZV9maWxlKCJEYXRhIiwgIm1vdmViYW5rX2xvY2F0aW9ucyIsICJkaXNwZXJzaW5nX3BvaW50c19wYV82XzJfMjAyMS5zaHAiKSkgJT4lIA0KICBzdF90cmFuc2Zvcm0oc3RfY3JzKHByZWRpY3Rvcl9zdGFja19mdWxsKSkgJT4lIA0KICBhc19TcGF0aWFsKCkgDQoNCnNldC5zZWVkKDgpDQoNCmF2YWlsX3VuYmlhc2VkIDwtIGF2YWlsX3VuYmlhc2VkICU+JQ0KICBzdF9hc19zZigpICU+JSANCiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSANCiAgc2xpY2Vfc2FtcGxlKG4gPSAyMDAwKSAlPiUgDQogIGFzX1NwYXRpYWwoKQ0KYGBgDQoNClByZXAgU0RNcw0KYGBge3J9DQpzd2RfZnVsbCA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiU2NvbG9wYXggbWlub3IiLCANCiAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLCANCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIA0KICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLA0KICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKSkNCg0KIyBTcGxpdCBwcmVzZW5jZSBsb2NhdGlvbnMgaW4gdHJhaW5pbmcgKDgwJSkgYW5kIHRlc3RpbmcgKDIwJSkgZGF0YXNldHMNCiMgZGF0YXNldHMgPC0gdHJhaW5WYWxUZXN0KHN3ZF9mdWxsLA0KIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMiwNCiMgICAgICAgICAgICAgICAgICAgICAgICAgIG9ubHlfcHJlc2VuY2UgPSBGQUxTRSwNCiMgICAgICAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KQ0KIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dDQojIHRlc3QgPC0gZGF0YXNldHNbWzJdXQ0Ka2ZvbGRzIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfZnVsbCwgb25seV9wcmVzZW5jZSA9IFRSVUUsIGsgPSA1LCBzZWVkID0gOCkNCmBgYA0KDQpUcmFpbmluZyBhIGJhc2ljLCBmdWxsIG1vZGVsDQpgYGB7cn0NCm1vZGVsIDwtIHRyYWluKG1ldGhvZCA9ICJSRiIsDQogICAgICAgICAgICAgICBkYXRhID0gc3dkX2Z1bGwsDQogICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkcywNCiAgICAgICAgICAgICAgIG50cmVlID0gMjAwMCkNCg0KYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4Ng0KdHNzKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuNjI0NjEyMQ0KYGBgDQoNCiMgUmVtb3ZlIHZhcmlhYmxlcyB3aXRoIGhpZ2ggY29ycmVsYXRpb24NCg0KYGBge3J9DQpiZyA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiQ29ycmVsYXRpb24gdGVzdCIsDQogICAgICAgICAgICAgICAgIGEgPSBhdmFpbF91bmJpYXNlZCwNCiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLA0KICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKSkNCg0KcmVzdWx0c192cyA8LSB2YXJTZWwobW9kZWwsDQogICAgICAgICAgICAgbWV0cmljID0gImF1YyIsDQogICAgICAgICAgICAgYmc0Y29yID0gYmcsDQogICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0LA0KICAgICAgICAgICAgIGNvcl90aCA9IDAuNywgI2NpdGUgdGhlIFNETVR1bmUgcGFwZXINCiAgICAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KQ0KcmVzdWx0c192cw0KYGBgDQpLZWVwaW5nOiANCuKAoiBDb250aW51b3VzOiAibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLA0KInNsb3BlXzMwbSIsICJzb2lsX2RyYWluYWdlXzMwbSIsIGFuZCAidHdpXzMwbSINCuKAoiBDYXRlZ29yaWNhbDogImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIgYW5kICJzY2xhc3MiDQoNCiMgVHVuZSBoeXBlcnBhcmFtZXRlcnMNCmBgYHtyfQ0KZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKQ0KDQplbnZfaHAgPC0gc3Vic2V0KGVudl9ocCwgYygibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLCAic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgInR3aV8zMG0iLCAiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQ0KDQpzd2RfaHAgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gIlNjb2xvcGF4IG1pbm9yIiwNCiAgICAgICAgICAgZW52ID0gZW52X2hwLA0KICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwNCiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSwNCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpDQoNCmtmb2xkc19ocCA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwLCBrID0gNSwgb25seV9wcmVzZW5jZSA9IFRSVUUsIHNlZWQgPSA4KQ0KDQptb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSAiUkYiLA0KICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9ocCwNCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX2hwLA0KICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKQ0KDQpoeXBlcnMgPC0gbGlzdChtdHJ5PTE6OCwNCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksDQogICAgICAgICAgICAgIG5vZGVzaXplID0gMToxMCkNCg0KdHVuZWRfaHlwZXJzIDwtIG9wdGltaXplTW9kZWwobW9kZWwgPSBtb2RlbF9ocCwNCiAgICAgICAgICAgICAgICAgICAgIGh5cGVycyA9IGh5cGVycywNCiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9ICJhdWMiLA0KICAgICAgICAgICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0X2hwLA0KICAgICAgICAgICAgICAgICAgICAgc2VlZCA9IDgpDQoNCnR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXSAjdXNlIHRoZSBoeXBlcnBhcmFtZXRlcnMgZnJvbSB0aGUgYmVzdCBtb2RlbCBnb2luZyBmb3J3YXJkDQoNCnR1bmVkX210cnlfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbXRyeQ0KdHVuZWRfbnRyZWVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbnRyZWUNCnR1bmVkX25vZGVzaXplXzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG5vZGVzaXplDQpgYGANCg0KbXRyeTogMQ0KbnRyZWU6IDIxMDANCm5vZGVzaXplOiA4DQoNCiMgRWxpbWluYXRlIHZhcmlhYmxlcyB3aXRoIHNtYWxsIHZhcmlhYmxlIGltcG9ydGFuY2UNCmBgYHtyfQ0KZW52X3ZpIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKQ0KDQojY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpDQoNCmVudl92aSA8LSBzdWJzZXQoZW52X3ZpLCBjKCJsc21fMWttX2RldiIsICJsc21fMTBrbV9lZCIsICJsc21fMTBrbV9hZ3JpIiwgImxzbV8xMGttX2RldiIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLCAic29pbF9kcmFpbmFnZV8zMG0iLCAidHdpXzMwbSIsICJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpDQoNCnN3ZF92aSA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiU2NvbG9wYXggbWlub3IiLCANCiAgICAgICAgICAgZW52ID0gZW52X3ZpLCANCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIA0KICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLA0KICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKSkNCg0Ka2ZvbGRzX3ZpIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfdmksIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpDQoNCm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9ICJSRiIsDQogICAgICAgICAgICAgICBkYXRhID0gc3dkX3ZpLA0KICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfdmksDQogICAgICAgICAgICAgICBtdHJ5ID0gdHVuZWRfbXRyeV8xLA0KICAgICAgICAgICAgICAgbnRyZWUgPSB0dW5lZF9udHJlZV8xLA0KICAgICAgICAgICAgICAgbm9kZXNpemUgPSB0dW5lZF9ub2Rlc2l6ZV8xKQ0KDQpyZXN1bHRzX3ZpIDwtIHJlZHVjZVZhcihtb2RlbCA9IG1vZGVsX3ZpLA0KICAgICAgICAgIHRoID0gMiwgI2NpdGUgdGhlIFNETVR1bmUgcGFwZXINCiAgICAgICAgICAjdGVzdCA9IHRlc3RfdmksDQogICAgICAgICAgdXNlX2prID0gVFJVRSwNCiAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwNCiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KQ0KDQpyZXN1bHRzX3ZpDQphdWMocmVzdWx0c192aSwgdGVzdCA9IFRSVUUpICMwLjg0Njg0MzMNCnRzcyhyZXN1bHRzX3ZpLCB0ZXN0ID0gVFJVRSkgIzAuNTk2Nzk3Ng0KYGBgDQpGaW5hbCB2YXJpYWJsZXM6DQrigKIgQ29udGludW91czogImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2RldiIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLA0KInNvaWxfZHJhaW5hZ2VfMzBtIiwgYW5kICJ0d2lfMzBtIg0K4oCiIENhdGVnb3JpY2FsOiAic2NsYXNzIg0KDQpSZXR1bmUgaHlwZXJwYXJhbWV0ZXJzIGZvciB0aGUgZmluYWwgbW9kZWwgKHdoaWNoIGlzIGluIGEgc2VwYXJhdGUgc2NyaXB0KQ0KYGBge3J9DQplbnZfaHAyIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKQ0KDQplbnZfaHAyIDwtIHN1YnNldChlbnZfdmksIGMoImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2RldiIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLCAic29pbF9kcmFpbmFnZV8zMG0iLCAidHdpXzMwbSIsICJzY2xhc3MiKSkNCg0Kc3dkX2hwMiA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiU2NvbG9wYXggbWlub3IiLCANCiAgICAgICAgICAgZW52ID0gZW52X2hwMiwgDQogICAgICAgICAgIHAgPSByZW5hbWUoYXMuZGF0YS5mcmFtZSh1c2VkQGNvb3JkcyksIHggPSBjb29yZHMueDEsIHkgPSBjb29yZHMueDIpLCANCiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSwNCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJzY2xhc3MiKSkNCg0Ka2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOCkNCg0KbW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9ICJSRiIsDQogICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwMiwNCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX2hwMiwNCiAgICAgICAgICAgICAgIG10cnkgPSB0dW5lZF9tdHJ5XzEsDQogICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsDQogICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpDQoNCmh5cGVyczIgPC0gbGlzdChtdHJ5PTE6NywNCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksDQogICAgICAgICAgICAgIG5vZGVzaXplID0gMToxMCkNCg0KdHVuZWRfaHlwZXJzXzIgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwMiwNCiAgICAgICAgICAgICAgICAgICAgIGh5cGVycyA9IGh5cGVyczIsDQogICAgICAgICAgICAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwNCiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KQ0KDQp0dW5lZF9oeXBlcnNfMkBtb2RlbHNbWzFdXSAjdXNlIHRoZSBoeXBlcnBhcmFtZXRlcnMgZnJvbSB0aGUgYmVzdCBtb2RlbCBnb2luZyBmb3J3YXJkDQp0dW5lZF9oeXBlcnNfMkBtb2RlbHNbWzFdXSAlPiUgYXVjKHRlc3QgPSBUUlVFKSAjMC44Mjg5NTY0DQp0dW5lZF9oeXBlcnNfMkBtb2RlbHNbWzFdXSAlPiUgdHNzKHRlc3QgPSBUUlVFKSAjMC41NTc1NDY5DQpgYGANCg0KbXRyeTogMg0KbnRyZWU6IDMwMDANCm5vZGVzaXplOiA5DQoNCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoU0RNdHVuZSkKbGlicmFyeShoZXJlKQpsaWJyYXJ5KHJhc3RlcikKbGlicmFyeShzcCkKbGlicmFyeShzZikKYGBgCgpSZWFkIGluIHByZXByb2Nlc3NlZCBhdmFpbGFibGUgZGF0YQpgYGB7cn0KcHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoIm1ldGhvZHMiLCAiUGVubl9taWdyYXRpb25fbW9kZWwiLCAicHJlZGljdG9yX3N0YWNrX2Z1bGxfbWlnLnN0ayIpKQoKbmFtZXMocHJlZGljdG9yX3N0YWNrX2Z1bGwpIDwtIGMoImxzbV81MDBtX2FpIiwgImxzbV81MDBtX2NvaGVzaW9uIiwgImxzbV81MDBtX2VkIiwgImxzbV81MDBtX3BsYW5kIiwgImxzbV81MDBtX2FncmkiLCAibHNtXzUwMG1fZGV2IiwgImxzbV8xa21fYWkiLCAibHNtXzFrbV9jb2hlc2lvbiIsICJsc21fMWttX2VkIiwgImxzbV8xa21fcGxhbmQiLCAibHNtXzFrbV9hZ3JpIiwgImxzbV8xa21fZGV2IiwgImxzbV81a21fYWkiLCAibHNtXzVrbV9jb2hlc2lvbiIsICJsc21fNWttX2VkIiwgImxzbV81a21fcGxhbmQiLCAibHNtXzVrbV9hZ3JpIiwgImxzbV81a21fZGV2IiwgImxzbV8xMGttX2FpIiwgImxzbV8xMGttX2NvaGVzaW9uIiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX3BsYW5kIiwgImxzbV8xMGttX2FncmkiLCAibHNtXzEwa21fZGV2IiwgImZvcmVzdF8zMG0iLCAiZWxldl8zMG0iLCAic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgInR3aV8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKQoKYXZhaWxfdW5iaWFzZWQgPC0gcmVhZFJEUyhoZXJlKCJtZXRob2RzIiwgIlBlbm5fbWlncmF0aW9uX21vZGVsIiwgImF2YWlsX3VuYmlhc2VkLnJkcyIpKQoKYGBgCgpSZWFkIGluIHRoZSB1c2VkIHBvaW50cwpgYGB7cn0KdXNlZCA8LSBzdF9yZWFkKGRzbiA9IGhlcmUoIm1ldGhvZHMiLCAiUGVubl9taWdyYXRpb25fbW9kZWwiLCAibW92ZWJhbmtfbG9jYXRpb25zIiwgImRpc3BlcnNpbmdfcG9pbnRzX3BhXzZfMl8yMDIxLnNocCIpKSAlPiUgCiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSAKICBhc19TcGF0aWFsKCkgCgpzZXQuc2VlZCg4KQoKYXZhaWxfdW5iaWFzZWQgPC0gYXZhaWxfdW5iaWFzZWQgJT4lCiAgc3RfYXNfc2YoKSAlPiUgCiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSAKICBzbGljZV9zYW1wbGUobiA9IDIwMDApICU+JSAKICBhc19TcGF0aWFsKCkKYGBgCgpQcmVwIFNETXMKYGBge3J9CnN3ZF9mdWxsIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJTY29sb3BheCBtaW5vciIsIAogICAgICAgICAgIGVudiA9IHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKSwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpCgojIFNwbGl0IHByZXNlbmNlIGxvY2F0aW9ucyBpbiB0cmFpbmluZyAoODAlKSBhbmQgdGVzdGluZyAoMjAlKSBkYXRhc2V0cwojIGRhdGFzZXRzIDwtIHRyYWluVmFsVGVzdChzd2RfZnVsbCwKIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMiwKIyAgICAgICAgICAgICAgICAgICAgICAgICAgb25seV9wcmVzZW5jZSA9IEZBTFNFLAojICAgICAgICAgICAgICAgICAgICAgICAgICBzZWVkID0gOCkKIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dCiMgdGVzdCA8LSBkYXRhc2V0c1tbMl1dCmtmb2xkcyA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2Z1bGwsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBrID0gNSwgc2VlZCA9IDgpCmBgYAoKVHJhaW5pbmcgYSBiYXNpYywgZnVsbCBtb2RlbApgYGB7cn0KbW9kZWwgPC0gdHJhaW4obWV0aG9kID0gIlJGIiwKICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9mdWxsLAogICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkcywKICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKQoKYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4Ngp0c3MobW9kZWwsIHRlc3QgPSBUUlVFKSAjMC42MjQ2MTIxCmBgYAoKIyBSZW1vdmUgdmFyaWFibGVzIHdpdGggaGlnaCBjb3JyZWxhdGlvbgoKYGBge3J9CmJnIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJDb3JyZWxhdGlvbiB0ZXN0IiwKICAgICAgICAgICAgICAgICBhID0gYXZhaWxfdW5iaWFzZWQsCiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLAogICAgICAgICAgIGNhdGVnb3JpY2FsID0gYygiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKcmVzdWx0c192cyA8LSB2YXJTZWwobW9kZWwsCiAgICAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwKICAgICAgICAgICAgIGJnNGNvciA9IGJnLAogICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0LAogICAgICAgICAgICAgY29yX3RoID0gMC43LCAjY2l0ZSB0aGUgU0RNVHVuZSBwYXBlcgogICAgICAgICAgICAgcGVybXV0ID0gMTApICMyNSAoc2VlIEdlbmV1ciBldCBhbC4gMjAxNSkKcmVzdWx0c192cwpgYGAKS2VlcGluZzogCuKAoiBDb250aW51b3VzOiAibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLAoic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgYW5kICJ0d2lfMzBtIgrigKIgQ2F0ZWdvcmljYWw6ICJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiIGFuZCAic2NsYXNzIgoKIyBUdW5lIGh5cGVycGFyYW1ldGVycwpgYGB7cn0KZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKQoKZW52X2hwIDwtIHN1YnNldChlbnZfaHAsIGMoImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2FncmkiLCAibHNtXzEwa21fZGV2IiwgImVsZXZfMzBtIiwgInNsb3BlXzMwbSIsICJzb2lsX2RyYWluYWdlXzMwbSIsICJ0d2lfMzBtIiwgImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKSkKCnN3ZF9ocCA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiU2NvbG9wYXggbWlub3IiLAogICAgICAgICAgIGVudiA9IGVudl9ocCwKICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwKICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLAogICAgICAgICAgIGNhdGVnb3JpY2FsID0gYygiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKa2ZvbGRzX2hwIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfaHAsIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpCgptb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSAiUkYiLAogICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwLAogICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc19ocCwKICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKQoKaHlwZXJzIDwtIGxpc3QobXRyeT0xOjgsCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksCiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKQoKdHVuZWRfaHlwZXJzIDwtIG9wdGltaXplTW9kZWwobW9kZWwgPSBtb2RlbF9ocCwKICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzLAogICAgICAgICAgICAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwKICAgICAgICAgICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0X2hwLAogICAgICAgICAgICAgICAgICAgICBzZWVkID0gOCkKCnR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXSAjdXNlIHRoZSBoeXBlcnBhcmFtZXRlcnMgZnJvbSB0aGUgYmVzdCBtb2RlbCBnb2luZyBmb3J3YXJkCgp0dW5lZF9tdHJ5XzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG10cnkKdHVuZWRfbnRyZWVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbnRyZWUKdHVuZWRfbm9kZXNpemVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbm9kZXNpemUKYGBgCgptdHJ5OiAxCm50cmVlOiAyMTAwCm5vZGVzaXplOiA4CgojIEVsaW1pbmF0ZSB2YXJpYWJsZXMgd2l0aCBzbWFsbCB2YXJpYWJsZSBpbXBvcnRhbmNlCmBgYHtyfQplbnZfdmkgPC0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpCgojY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpCgplbnZfdmkgPC0gc3Vic2V0KGVudl92aSwgYygibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLCAic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgInR3aV8zMG0iLCAiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKc3dkX3ZpIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJTY29sb3BheCBtaW5vciIsIAogICAgICAgICAgIGVudiA9IGVudl92aSwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpCgprZm9sZHNfdmkgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF92aSwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOCkKCm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9ICJSRiIsCiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfdmksCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX3ZpLAogICAgICAgICAgICAgICBtdHJ5ID0gdHVuZWRfbXRyeV8xLAogICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsCiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSkKCnJlc3VsdHNfdmkgPC0gcmVkdWNlVmFyKG1vZGVsID0gbW9kZWxfdmksCiAgICAgICAgICB0aCA9IDIsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyCiAgICAgICAgICAjdGVzdCA9IHRlc3RfdmksCiAgICAgICAgICB1c2VfamsgPSBUUlVFLAogICAgICAgICAgbWV0cmljID0gImF1YyIsCiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KQoKcmVzdWx0c192aQphdWMocmVzdWx0c192aSwgdGVzdCA9IFRSVUUpICMwLjg0Njg0MzMKdHNzKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC41OTY3OTc2CmBgYApGaW5hbCB2YXJpYWJsZXM6CuKAoiBDb250aW51b3VzOiAibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fZGV2IiwgImVsZXZfMzBtIiwgInNsb3BlXzMwbSIsCiJzb2lsX2RyYWluYWdlXzMwbSIsIGFuZCAidHdpXzMwbSIK4oCiIENhdGVnb3JpY2FsOiAic2NsYXNzIgoKUmV0dW5lIGh5cGVycGFyYW1ldGVycyBmb3IgdGhlIGZpbmFsIG1vZGVsICh3aGljaCBpcyBpbiBhIHNlcGFyYXRlIHNjcmlwdCkKYGBge3J9CmVudl9ocDIgPC0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpCgplbnZfaHAyIDwtIHN1YnNldChlbnZfdmksIGMoImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2RldiIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLCAic29pbF9kcmFpbmFnZV8zMG0iLCAidHdpXzMwbSIsICJzY2xhc3MiKSkKCnN3ZF9ocDIgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gIlNjb2xvcGF4IG1pbm9yIiwgCiAgICAgICAgICAgZW52ID0gZW52X2hwMiwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJzY2xhc3MiKSkKCmtmb2xkc19ocDIgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF9ocDIsIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpCgptb2RlbF9ocDIgPC0gdHJhaW4obWV0aG9kID0gIlJGIiwKICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9ocDIsCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX2hwMiwKICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSwKICAgICAgICAgICAgICAgbnRyZWUgPSB0dW5lZF9udHJlZV8xLAogICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpCgpoeXBlcnMyIDwtIGxpc3QobXRyeT0xOjcsCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksCiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKQoKdHVuZWRfaHlwZXJzXzIgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwMiwKICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMiwKICAgICAgICAgICAgICAgICAgICAgbWV0cmljID0gImF1YyIsCiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KQoKdHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZAp0dW5lZF9oeXBlcnNfMkBtb2RlbHNbWzFdXSAlPiUgYXVjKHRlc3QgPSBUUlVFKSAjMC44Mjg5NTY0CnR1bmVkX2h5cGVyc18yQG1vZGVsc1tbMV1dICU+JSB0c3ModGVzdCA9IFRSVUUpICMwLjU1NzU0NjkKYGBgCgptdHJ5OiAyCm50cmVlOiAzMDAwCm5vZGVzaXplOiA5Cgo=</div>
 
 
 

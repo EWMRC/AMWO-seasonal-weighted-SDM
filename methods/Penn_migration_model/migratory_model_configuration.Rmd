@@ -23,7 +23,7 @@ avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiase
 
 Read in the used points
 ```{r}
-used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+used <- st_read(dsn = here("methods", "Penn_migration_model", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
   st_transform(st_crs(predictor_stack_full)) %>% 
   as_Spatial() 
 

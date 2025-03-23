@@ -1754,147 +1754,41 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
-<pre class="r"><code>library(tidyverse)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoi4pSA4pSAIEF0dGFjaGluZyBjb3JlIHRpZHl2ZXJzZSBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDIuMC4wIOKUgOKUgFxu4pyUIGRwbHlyICAgICAxLjEuNCAgICAg4pyUIHJlYWRyICAgICAyLjEuNVxu4pyUIGZvcmNhdHMgICAxLjAuMCAgICAg4pyUIHN0cmluZ3IgICAxLjUuMVxu4pyUIGdncGxvdDIgICAzLjUuMSAgICAg4pyUIHRpYmJsZSAgICAzLjIuMVxu4pyUIGx1YnJpZGF0ZSAxLjkuMyAgICAg4pyUIHRpZHlyICAgICAxLjMuMVxu4pyUIHB1cnJyICAgICAxLjAuMiAgICAg4pSA4pSAIENvbmZsaWN0cyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlX2NvbmZsaWN0cygpIOKUgOKUgFxu4pyWIGRwbHlyOjpmaWx0ZXIoKSBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbuKcliBkcGx5cjo6bGFnKCkgICAgbWFza3Mgc3RhdHM6OmxhZygpXG7inJYgcHVycnI6Om1vZGlmeSgpIG1hc2tzIHJlbnY6Om1vZGlmeSgpXG7ihLkgVXNlIHRoZSBcdTAwMWJdODs7aHR0cDovL2NvbmZsaWN0ZWQuci1saWIub3JnL1x1MDAwN2NvbmZsaWN0ZWQgcGFja2FnZVx1MDAxYl04OztcdTAwMDcgdG8gZm9yY2UgYWxsIGNvbmZsaWN0cyB0byBiZWNvbWUgZXJyb3JzXG4ifQ== -->
-<pre><code>── Attaching core tidyverse packages ───────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-✔ purrr     1.0.2     ── Conflicts ─────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-✖ purrr::modify() masks renv::modify()
-ℹ Use the ]8;;http://conflicted.r-lib.org/conflicted package]8;; to force all conflicts to become errors</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShTRE10dW5lKVxuYGBgIn0= -->
-<pre class="r"><code>library(SDMtune)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBfX19fXyAgX19fXyAgIF9fICBfX18gX19cbiAgLyBfX18vIC8gX18gXFwgLyAgfC8gIC8vIC9fIF9fICBfXyBfX19fICAgX19fXG4gIFxcX18gXFwgLyAvIC8gLy8gL3xfLyAvLyBfXy8vIC8gLyAvLyBfXyBcXCAvIF8gXFxcbiBfX18vIC8vIC9fLyAvLyAvICAvIC8vIC9fIC8gL18vIC8vIC8gLyAvLyAgX18vXG4vX19fXy8vX19fX18vL18vICAvXy8gXFxfXy8gXFxfXyxfLy9fLyAvXy8gXFxfX18vICB2ZXJzaW9uIDEuMy4xXG5cblRvIGNpdGUgdGhpcyBwYWNrYWdlIGluIHB1YmxpY2F0aW9ucyB0eXBlOiBjaXRhdGlvbihcIlNETXR1bmVcIikuXG4ifQ== -->
-<pre><code>
-   _____  ____   __  ___ __
-  / ___/ / __ \ /  |/  // /_ __  __ ____   ___
-  \__ \ / / / // /|_/ // __// / / // __ \ / _ \
- ___/ // /_/ // /  / // /_ / /_/ // / / //  __/
-/____//_____//_/  /_/ \__/ \__,_//_/ /_/ \___/  version 1.3.1
-
-To cite this package in publications type: citation(&quot;SDMtune&quot;).</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShoZXJlKVxuYGBgIn0= -->
-<pre class="r"><code>library(here)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiaGVyZSgpIHN0YXJ0cyBhdCAvVXNlcnMvbGlhbWJlcmlnYW4vTGlicmFyeS9DbG91ZFN0b3JhZ2UvT25lRHJpdmUtS2Fuc2FzU3RhdGVVbml2ZXJzaXR5L01haW5lQW5hbHlzaXMvUHJvamVjdHMvQU1XTy1zZWFzb25hbC13ZWlnaHRlZC1TRE1cbiJ9 -->
-<pre><code>here() starts at /Users/liamberigan/Library/CloudStorage/OneDrive-KansasStateUniversity/MaineAnalysis/Projects/AMWO-seasonal-weighted-SDM</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyYXN0ZXIpXG5gYGAifQ== -->
-<pre class="r"><code>library(raster)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBzcFxuXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYcmFzdGVy4oCZXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0IGlzIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6ZHBseXLigJk6XG5cbiAgICBzZWxlY3RcbiJ9 -->
-<pre><code>Loading required package: sp
-
-Attaching package: ‘raster’
-
-The following object is masked from ‘package:dplyr’:
-
-    select</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzcClcbmxpYnJhcnkoc2YpXG5gYGAifQ== -->
-<pre class="r"><code>library(sp)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KFNETXR1bmUpXG5saWJyYXJ5KGhlcmUpXG5saWJyYXJ5KHJhc3RlcilcbmxpYnJhcnkoc3ApXG5saWJyYXJ5KHNmKVxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse)
+library(SDMtune)
+library(here)
+library(raster)
+library(sp)
 library(sf)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTGlua2luZyB0byBHRU9TIDMuMTEuMCwgR0RBTCAzLjUuMywgUFJPSiA5LjEuMDsgc2ZfdXNlX3MyKCkgaXMgVFJVRVxuIn0= -->
-<pre><code>Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Read in preprocessed available data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJwcmVkaWN0b3Jfc3RhY2tfZnVsbF9taWcuc3RrXCIpKVxuXG5uYW1lcyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkgPC0gYyhcImxzbV81MDBtX2FpXCIsIFwibHNtXzUwMG1fY29oZXNpb25cIiwgXCJsc21fNTAwbV9lZFwiLCBcImxzbV81MDBtX3BsYW5kXCIsIFwibHNtXzUwMG1fYWdyaVwiLCBcImxzbV81MDBtX2RldlwiLCBcImxzbV8xa21fYWlcIiwgXCJsc21fMWttX2NvaGVzaW9uXCIsIFwibHNtXzFrbV9lZFwiLCBcImxzbV8xa21fcGxhbmRcIiwgXCJsc21fMWttX2FncmlcIiwgXCJsc21fMWttX2RldlwiLCBcImxzbV81a21fYWlcIiwgXCJsc21fNWttX2NvaGVzaW9uXCIsIFwibHNtXzVrbV9lZFwiLCBcImxzbV81a21fcGxhbmRcIiwgXCJsc21fNWttX2FncmlcIiwgXCJsc21fNWttX2RldlwiLCBcImxzbV8xMGttX2FpXCIsIFwibHNtXzEwa21fY29oZXNpb25cIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX3BsYW5kXCIsIFwibHNtXzEwa21fYWdyaVwiLCBcImxzbV8xMGttX2RldlwiLCBcImZvcmVzdF8zMG1cIiwgXCJlbGV2XzMwbVwiLCBcInNsb3BlXzMwbVwiLCBcInNvaWxfZHJhaW5hZ2VfMzBtXCIsIFwidHdpXzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIilcblxucHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3Vic2V0KHByZWRpY3Rvcl9zdGFja19mdWxsLCBjKFwibHNtXzUwMG1fYWlcIiwgXCJsc21fNTAwbV9jb2hlc2lvblwiLCBcImxzbV81MDBtX2VkXCIsIFwibHNtXzUwMG1fcGxhbmRcIiwgXCJsc21fNTAwbV9hZ3JpXCIsIFwibHNtXzUwMG1fZGV2XCIsIFwibHNtXzFrbV9haVwiLCBcImxzbV8xa21fY29oZXNpb25cIiwgXCJsc21fMWttX2VkXCIsIFwibHNtXzFrbV9wbGFuZFwiLCBcImxzbV8xa21fYWdyaVwiLCBcImxzbV8xa21fZGV2XCIsIFwibHNtXzVrbV9haVwiLCBcImxzbV81a21fY29oZXNpb25cIiwgXCJsc21fNWttX2VkXCIsIFwibHNtXzVrbV9wbGFuZFwiLCBcImxzbV81a21fYWdyaVwiLCBcImxzbV81a21fZGV2XCIsIFwibHNtXzEwa21fYWlcIiwgXCJsc21fMTBrbV9jb2hlc2lvblwiLCBcImxzbV8xMGttX2VkXCIsIFwibHNtXzEwa21fcGxhbmRcIiwgXCJsc21fMTBrbV9hZ3JpXCIsIFwibHNtXzEwa21fZGV2XCIsIFwiZm9yZXN0XzMwbVwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIpKSAjcmVtb3ZlIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiXG5gYGAifQ== -->
-<pre class="r"><code>predictor_stack_full &lt;- stackOpen(here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;predictor_stack_full_mig.stk&quot;))
-
-names(predictor_stack_full) &lt;- c(&quot;lsm_500m_ai&quot;, &quot;lsm_500m_cohesion&quot;, &quot;lsm_500m_ed&quot;, &quot;lsm_500m_pland&quot;, &quot;lsm_500m_agri&quot;, &quot;lsm_500m_dev&quot;, &quot;lsm_1km_ai&quot;, &quot;lsm_1km_cohesion&quot;, &quot;lsm_1km_ed&quot;, &quot;lsm_1km_pland&quot;, &quot;lsm_1km_agri&quot;, &quot;lsm_1km_dev&quot;, &quot;lsm_5km_ai&quot;, &quot;lsm_5km_cohesion&quot;, &quot;lsm_5km_ed&quot;, &quot;lsm_5km_pland&quot;, &quot;lsm_5km_agri&quot;, &quot;lsm_5km_dev&quot;, &quot;lsm_10km_ai&quot;, &quot;lsm_10km_cohesion&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_pland&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;forest_30m&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;)
-
-predictor_stack_full &lt;- subset(predictor_stack_full, c(&quot;lsm_500m_ai&quot;, &quot;lsm_500m_cohesion&quot;, &quot;lsm_500m_ed&quot;, &quot;lsm_500m_pland&quot;, &quot;lsm_500m_agri&quot;, &quot;lsm_500m_dev&quot;, &quot;lsm_1km_ai&quot;, &quot;lsm_1km_cohesion&quot;, &quot;lsm_1km_ed&quot;, &quot;lsm_1km_pland&quot;, &quot;lsm_1km_agri&quot;, &quot;lsm_1km_dev&quot;, &quot;lsm_5km_ai&quot;, &quot;lsm_5km_cohesion&quot;, &quot;lsm_5km_ed&quot;, &quot;lsm_5km_pland&quot;, &quot;lsm_5km_agri&quot;, &quot;lsm_5km_dev&quot;, &quot;lsm_10km_ai&quot;, &quot;lsm_10km_cohesion&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_pland&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;forest_30m&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;)) #remove &quot;ecoregions&quot;, &quot;sclass&quot;</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJwcmVkaWN0b3Jfc3RhY2tfZnVsbF9taWcuc3RrXCIpKVxuYGBgIn0= -->
+<pre class="r"><code>predictor_stack_full &lt;- stackOpen(here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;predictor_stack_full_mig.stk&quot;))</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogY2Fubm90IG9wZW4gZmlsZSAnRDpcXE9uZURyaXZlIC0gVW5pdmVyc2l0eSBvZiBNYWluZSBTeXN0ZW1cXE1haW5lQW5hbHlzaXNcXFByb2plY3RzXFxBTVdPLXNlYXNvbmFsLXdlaWdodGVkLVNETVxcbWV0aG9kc1xcUGVubl9taWdyYXRpb25fbW9kZWxcXHByZWRpY3Rvcl9yYXN0ZXJzX3Jlc2FtcGxlZFxcbHNtXzUwMG1fYWkuZ3JkJzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeUVycm9yIGluIGZpbGUoeCwgXCJyYlwiKSA6IGNhbm5vdCBvcGVuIHRoZSBjb25uZWN0aW9uXG4ifQ== -->
+<pre><code>Warning: cannot open file &#39;D:\OneDrive - University of Maine System\MaineAnalysis\Projects\AMWO-seasonal-weighted-SDM\methods\Penn_migration_model\predictor_rasters_resampled\lsm_500m_ai.grd&#39;: No such file or directoryError in file(x, &quot;rb&quot;) : cannot open the connection</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Read in the used points, and transform the used and available points
 to match the predictor stack</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoOClcblxucGFfc2dzX3ByZXNfYWJzIDwtIHJlYWRfY3N2KGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9yZXNpZGVudGlhbF9tb2RlbFwiLCBcInNnc1wiLCBcInBhX3Nnc19wcmVzX2Ficy5jc3ZcIikpICU+JVxuICBmaWx0ZXIoIWlzLm5hKExhdGl0dWRlKSkgJT4lXG4gIG11dGF0ZShzdXJ2ZXlfdHlwZSA9IDApICU+JVxuICBkaXN0aW5jdChMYXRpdHVkZSwgTG9uZ2l0dWRlLCAua2VlcF9hbGwgPSBUUlVFKSAlPiUgXG4gIGdyb3VwX2J5KFJvdXRlKSAlPiVcbiAgc2FtcGxlX24oMSlcblxuc2V0LnNlZWQoOClcblxuc3RhdGVfc3VydmV5cyA8LSByZWFkX2NzdihoZXJlKFwibWV0aG9kc1wiLCBcIlBlbm5fcmVzaWRlbnRpYWxfbW9kZWxcIiwgXCJQQV9zdGF0ZV9zdXJ2ZXlzXCIsIFwicGFfc3RhdGVzdXJ2ZXlzX3ByZXNfYWJzLmNzdlwiKSkgJT4lXG4gIGZpbHRlcighaXMubmEoTGF0aXR1ZGUpKSAlPiVcbiAgbXV0YXRlKHN1cnZleV90eXBlID0gMSkgJT4lXG4gIG11dGF0ZShTdG9wID0gYXMuY2hhcmFjdGVyKFN0b3ApKSAlPiVcbiAgZGlzdGluY3QoTGF0aXR1ZGUsIExvbmdpdHVkZSwgLmtlZXBfYWxsID0gVFJVRSkgJT4lIFxuICBncm91cF9ieShSb3V0ZSkgJT4lXG4gIHNhbXBsZV9uKDEpXG5cbnN1cnZleXNfYWxsIDwtIGJpbmRfcm93cyhwYV9zZ3NfcHJlc19hYnMsIHN0YXRlX3N1cnZleXMpICAlPiVcbiAgZGlzdGluY3QoTGF0aXR1ZGUsIExvbmdpdHVkZSwgLmtlZXBfYWxsID0gVFJVRSlcblxudXNlZCA8LSBzdXJ2ZXlzX2FsbCAlPiVcbiAgZmlsdGVyKHByZXNfYWJzID09IDEpICU+JVxuICBzdF9hc19zZihjb29yZHMgPSBjKFwiTG9uZ2l0dWRlXCIsIFwiTGF0aXR1ZGVcIiksIGNycyA9IDQzMjYpICU+JVxuICBzdF90cmFuc2Zvcm0oY3JzID0gc3RfY3JzKHByZWRpY3Rvcl9zdGFja19mdWxsKSkgJT4lIFxuICBmaWx0ZXIocm91dGVfaWQgIT0gXCJCQUxEIEVBR0xFX01BSU4gUEFSS182XCIpICU+JVxuICBhc19TcGF0aWFsKClcblxuYXZhaWwgPC0gc3VydmV5c19hbGwgJT4lXG4gIGZpbHRlcihwcmVzX2FicyA9PSAwKSAlPiVcbiAgc3RfYXNfc2YoY29vcmRzID0gYyhcIkxvbmdpdHVkZVwiLCBcIkxhdGl0dWRlXCIpLCBjcnMgPSA0MzI2KSAlPiVcbiAgc3RfdHJhbnNmb3JtKGNycyA9IHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JVxuICBmaWx0ZXIocm91dGVfaWQgIT0gXCJSb3V0ZSAwNTkgU3RvcCA0XCIpICU+JSBcbiAgYXNfU3BhdGlhbCgpXG5gYGAifQ== -->
-<pre class="r"><code>set.seed(8)
-
-pa_sgs_pres_abs &lt;- read_csv(here(&quot;methods&quot;, &quot;Penn_residential_model&quot;, &quot;sgs&quot;, &quot;pa_sgs_pres_abs.csv&quot;)) %&gt;%
-  filter(!is.na(Latitude)) %&gt;%
-  mutate(survey_type = 0) %&gt;%
-  distinct(Latitude, Longitude, .keep_all = TRUE) %&gt;% 
-  group_by(Route) %&gt;%
-  sample_n(1)
-
-set.seed(8)
-
-state_surveys &lt;- read_csv(here(&quot;methods&quot;, &quot;Penn_residential_model&quot;, &quot;PA_state_surveys&quot;, &quot;pa_statesurveys_pres_abs.csv&quot;)) %&gt;%
-  filter(!is.na(Latitude)) %&gt;%
-  mutate(survey_type = 1) %&gt;%
-  mutate(Stop = as.character(Stop)) %&gt;%
-  distinct(Latitude, Longitude, .keep_all = TRUE) %&gt;% 
-  group_by(Route) %&gt;%
-  sample_n(1)
-
-surveys_all &lt;- bind_rows(pa_sgs_pres_abs, state_surveys)  %&gt;%
-  distinct(Latitude, Longitude, .keep_all = TRUE)
-
-used &lt;- surveys_all %&gt;%
-  filter(pres_abs == 1) %&gt;%
-  st_as_sf(coords = c(&quot;Longitude&quot;, &quot;Latitude&quot;), crs = 4326) %&gt;%
-  st_transform(crs = st_crs(predictor_stack_full)) %&gt;% 
-  filter(route_id != &quot;BALD EAGLE_MAIN PARK_6&quot;) %&gt;%
-  as_Spatial()
-
-avail &lt;- surveys_all %&gt;%
-  filter(pres_abs == 0) %&gt;%
-  st_as_sf(coords = c(&quot;Longitude&quot;, &quot;Latitude&quot;), crs = 4326) %&gt;%
-  st_transform(crs = st_crs(predictor_stack_full)) %&gt;%
-  filter(route_id != &quot;Route 059 Stop 4&quot;) %&gt;% 
-  as_Spatial()</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Check for NA values in avail</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0IDwtIGV4dHJhY3QoeCA9IHByZWRpY3Rvcl9zdGFja19mdWxsLCB5ID0gdXNlZClcbiMgeSA8LSBleHRyYWN0KHggPSBwcmVkaWN0b3Jfc3RhY2tfZnVsbCwgeSA9IGF2YWlsKVxuYGBgIn0= -->
-<pre class="r"><code># t &lt;- extract(x = predictor_stack_full, y = used)
-# y &lt;- extract(x = predictor_stack_full, y = avail)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Prep SDMs</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3dkX2Z1bGwgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXCJTY29sb3BheCBtaW5vclwiLCBcbiAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXCJmb3Jlc3RfMzBtXCIpKSAjLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIlxuXG4jYWRkaW5nIGJhY2sgaW4gc3VydmV5IHR5cGUgbWFudWFsbHk6IHNraXBwaW5nIGZvciB0aGUgY29ycmVsYXRpb24gc3RhZ2UgKGFzIHRoZXJlJ3Mgbm8gYXNzb2NpYXRlZCByYXN0ZXIgbGF5ZXIpLCB3aWxsIGluY29ycG9yYXRlIGxhdGVyXG4jIHN3ZF9mdWxsQGRhdGEkc3VydmV5IDwtIGZhY3RvcihjKHVzZWQkc3VydmV5X3R5cGUsIGF2YWlsJHN1cnZleV90eXBlKSwgbGV2ZWxzID0gYygwLDEpKVxuXG4jIFNwbGl0IHByZXNlbmNlIGxvY2F0aW9ucyBpbiB0cmFpbmluZyAoODAlKSBhbmQgdGVzdGluZyAoMjAlKSBkYXRhc2V0c1xuIyBkYXRhc2V0cyA8LSB0cmFpblZhbFRlc3Qoc3dkX2Z1bGwsXG4jICAgICAgICAgICAgICAgICAgICAgICAgICB0ZXN0ID0gMC4yLFxuIyAgICAgICAgICAgICAgICAgICAgICAgICAgb25seV9wcmVzZW5jZSA9IEZBTFNFLFxuIyAgICAgICAgICAgICAgICAgICAgICAgICAgc2VlZCA9IDgpXG4jIHRyYWluIDwtIGRhdGFzZXRzW1sxXV1cbiMgdGVzdCA8LSBkYXRhc2V0c1tbMl1dXG5rZm9sZHMgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF9mdWxsLCBrID0gNSwgc2VlZCA9IDgpXG5gYGAifQ== -->
-<pre class="r"><code>swd_full &lt;- prepareSWD(species = &quot;Scolopax minor&quot;, 
-           env = terra::rast(predictor_stack_full), 
-           p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
-           a = as.data.frame(avail@coords),
-           categorical = c(&quot;forest_30m&quot;)) #, &quot;ecoregions&quot;, &quot;sclass&quot;
-
-#adding back in survey type manually: skipping for the correlation stage (as there&#39;s no associated raster layer), will incorporate later
-# swd_full@data$survey &lt;- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
-
-# Split presence locations in training (80%) and testing (20%) datasets
-# datasets &lt;- trainValTest(swd_full,
-#                          test = 0.2,
-#                          only_presence = FALSE,
-#                          seed = 8)
-# train &lt;- datasets[[1]]
-# test &lt;- datasets[[2]]
-kfolds &lt;- randomFolds(data = swd_full, k = 5, seed = 8)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Training a basic, full model</p>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20210526</CreaDate><CreaTime>16403000</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Spatial Analyst Tools.tbx\ExtractByMask" Date="20210526" Time="164030">ExtractByMask us_200sclass.tif "Forested Areas" "D:\OneDrive - University of Maine System\MaineAnalysis\Data\Landfire_products\US_200SCLASS\us_200sclass_pa.tif"</Process></lineage></DataProperties></Esri></metadata>

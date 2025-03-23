@@ -73,11 +73,11 @@ swd_full_folds <- randomFolds(swd_full, k = 5, seed = 8)
 
 RF test
 ```{r}
-rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 2000)
+rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 500)
 
-auc(rf_full, test = TRUE) #0.7895173
+auc(rf_full, test = TRUE) #0.7866516
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(rf_full, test = TRUE) #0.5544746
+tss(rf_full, test = TRUE) #0.5446456
 ```
 
 Maxnet test (think maxent but not in Java: https://cran.r-project.org/web/packages/maxnet/index.html)
@@ -93,7 +93,7 @@ Boosted Regression Tree test
 ```{r}
 brt_unbiased <- train(method = "BRT", data = swd_full, swd_full_folds)
 
-auc(brt_unbiased, test = TRUE) #0.7597536
+auc(brt_unbiased, test = TRUE) #0.7709402
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(brt_unbiased, test = TRUE) #0.5080694
+tss(brt_unbiased, test = TRUE) #0.5482655
 ```

@@ -96,14 +96,14 @@ names(forest_30m) <- "forest_30m"
 levels(forest_30m) <- data.frame(ID = c(0,1), forest_30m = c(0,1))
 
 #terrain
-elev_30m <- there::here_file("Data", "DEM", "DEM_PA_30m.tif") %>% raster()
+elev_30m <- here("methods", "Penn_migration_model", "additional_covariates", "DEM_PA_30m.tif") %>% raster()
 names(elev_30m) <- "elev_30m"
 
 slope_30m <- here("methods", "Penn_migration_model", "topographic_wetness_index", "DEM_PA_30slope.tif") %>% raster()
 names(slope_30m) <- "slope_30m"
 
 #moisture: replace NAs with the mean value
-soil_drainage_30m <- there::here_file("Data", "SoilDrainage", "soil_drainage_5070.tif") %>% raster()
+soil_drainage_30m <- here("methods", "Penn_migration_model", "additional_covariates", "soil_drainage_5070.tif") %>% raster()
 names(soil_drainage_30m) <- "soil_drainage_30m"
 
 soil_drainage_30m %>%
@@ -115,12 +115,12 @@ twi_30m <- here("methods", "Penn_migration_model", "topographic_wetness_index", 
 names(twi_30m) <- "twi_30m"
 
 #level 3 ecoregions
-ecoregions <- there::here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.tif") %>% raster()
+ecoregions <- here("methods", "Penn_migration_model", "additional_covariates", "level_iii_ecoregions_pa.tif") %>% raster()
 names(ecoregions) <- "ecoregions"
 levels(ecoregions) <- data.frame(ID = 1:11, ecoregions = 1:11)
 
 #succession classes
-sclass <- there::here_file("Data", "Landfire_products", "US_200SCLASS", "us_200sclass_pa.tif") %>% raster()
+sclass <- here("methods", "Penn_migration_model", "additional_covariates", "us_200sclass_pa.tif") %>% raster()
 names(sclass) <- "sclass"
 levels(sclass) <- data.frame(ID = c(1, 2, 3, 4, 5, 6, 7, 111, 120, 132, 180), sclass = c(1, 2, 3, 4, 5, 6, 7, 111, 120, 132, 180))
 ```

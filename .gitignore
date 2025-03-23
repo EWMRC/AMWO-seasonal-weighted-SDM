@@ -121,3 +121,5 @@ methods/Penn_migration_model/output_layer/rf_mig_5_15_24.tif
 methods/Penn_migration_model/output_layer/rf_mig_5_15_24.tif
 methods/Penn_residential_model/output_layer/rf_res_5_15_24.tif
 methods/Penn_residential_model/output_layer/rf_res_5_15_24.tif
+methods/Penn_migration_model/additional_covariates/DEM_PA_30m.tif.ovr
+methods/Penn_migration_model/additional_covariates/DEM_PA_30m.tif

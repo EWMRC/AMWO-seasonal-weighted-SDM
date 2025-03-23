@@ -23,7 +23,7 @@ names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_e
 
 Read in the used points, and transform the used and available points to match the predictor stack
 ```{r}
-used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+used <- st_read(dsn = here("methods", "Penn_migration_model", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
   st_transform(st_crs(predictor_stack_full)) %>% 
   as_Spatial() 
 
@@ -49,18 +49,18 @@ swd_full_folds <- randomFolds(swd_full, k = 5, only_presence = TRUE, seed = 8)
 
 RF test
 ```{r}
-rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 2000)
+rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 500)
 
-auc(rf_full, test = TRUE) #0.8587086
+auc(rf_full, test = TRUE) #0.8463698
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(rf_full, test = TRUE) #0.6246121
+tss(rf_full, test = TRUE) #0.5858761
 ```
 
 Maxnet test (think maxent but not in Java: https://cran.r-project.org/web/packages/maxnet/index.html)
 ```{r}
 maxnet_full <- train(method = "Maxnet", data = swd_full, swd_full_folds)
 
-auc(maxnet_full, test = TRUE) #0.6168971
+auc(maxnet_full, test = TRUE) #0.616897100
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
 tss(maxnet_full, test = TRUE) #0.2614707
 ```
@@ -69,7 +69,7 @@ Boosted Regression Tree test
 ```{r}
 brt_unbiased <- train(method = "BRT", data = swd_full, swd_full_folds)
 
-auc(brt_unbiased, test = TRUE) #0.6156835
+auc(brt_unbiased, test = TRUE) #0.6284959
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(brt_unbiased, test = TRUE) #0.2475193
+tss(brt_unbiased, test = TRUE) #0.2857015
 ```
