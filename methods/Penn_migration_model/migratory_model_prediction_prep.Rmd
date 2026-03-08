@@ -103,9 +103,9 @@ predicted_background <- terra::values(predicted_rast)
 
 predicted_background <- predicted_background[!is.na(predicted_background)]
 
-boyce_results <- ecospat.boyce(predicted_background, predicted_used, nclass = 10)
+boyce_results <- ecospat.boyce(predicted_background, predicted_used)
 
-boyce_results$cor #0.205
+boyce_results$cor #0.396
 
 saveRDS(model, here("methods", "Penn_migration_model", "model_migratory.rds"))
 
