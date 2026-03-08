@@ -1754,49 +1754,79 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KFNETXR1bmUpXG5saWJyYXJ5KGhlcmUpXG5saWJyYXJ5KHJhc3RlcilcbmxpYnJhcnkoc3ApXG5saWJyYXJ5KHNmKVxuYGBgIn0= -->
-<pre class="r"><code>library(tidyverse)
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dWJHbGljbUZ5ZVNoMGFXUjVkbVZ5YzJVcFhHNXNhV0p5WVhKNUtGTkVUWFIxYm1VcFhHNXNhV0p5WVhKNUtHaGxjbVVwWEc1c2FXSnlZWEo1S0hKaGMzUmxjaWxjYm14cFluSmhjbmtvYzNBcFhHNXNhV0p5WVhKNUtITm1LVnh1WUdCZ1hHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KFNETXR1bmUpXG5saWJyYXJ5KGhlcmUpXG5saWJyYXJ5KHJhc3RlcilcbmxpYnJhcnkoc3ApXG5saWJyYXJ5KHNmKVxuYGBgXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KFNETXR1bmUpXG5saWJyYXJ5KGhlcmUpXG5saWJyYXJ5KHJhc3RlcilcbmxpYnJhcnkoc3ApXG5saWJyYXJ5KHNmKVxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
+library(tidyverse)
 library(SDMtune)
 library(here)
 library(raster)
 library(sp)
 library(sf)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Read in preprocessed available data</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJwcmVkaWN0b3Jfc3RhY2tfZnVsbF9taWcuc3RrXCIpKVxuXG5uYW1lcyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkgPC0gYyhcImxzbV81MDBtX2FpXCIsIFwibHNtXzUwMG1fY29oZXNpb25cIiwgXCJsc21fNTAwbV9lZFwiLCBcImxzbV81MDBtX3BsYW5kXCIsIFwibHNtXzUwMG1fYWdyaVwiLCBcImxzbV81MDBtX2RldlwiLCBcImxzbV8xa21fYWlcIiwgXCJsc21fMWttX2NvaGVzaW9uXCIsIFwibHNtXzFrbV9lZFwiLCBcImxzbV8xa21fcGxhbmRcIiwgXCJsc21fMWttX2FncmlcIiwgXCJsc21fMWttX2RldlwiLCBcImxzbV81a21fYWlcIiwgXCJsc21fNWttX2NvaGVzaW9uXCIsIFwibHNtXzVrbV9lZFwiLCBcImxzbV81a21fcGxhbmRcIiwgXCJsc21fNWttX2FncmlcIiwgXCJsc21fNWttX2RldlwiLCBcImxzbV8xMGttX2FpXCIsIFwibHNtXzEwa21fY29oZXNpb25cIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX3BsYW5kXCIsIFwibHNtXzEwa21fYWdyaVwiLCBcImxzbV8xMGttX2RldlwiLCBcImZvcmVzdF8zMG1cIiwgXCJlbGV2XzMwbVwiLCBcInNsb3BlXzMwbVwiLCBcInNvaWxfZHJhaW5hZ2VfMzBtXCIsIFwidHdpXzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIilcblxuYXZhaWxfdW5iaWFzZWQgPC0gcmVhZFJEUyhoZXJlKFwibWV0aG9kc1wiLCBcIlBlbm5fbWlncmF0aW9uX21vZGVsXCIsIFwiYXZhaWxfdW5iaWFzZWQucmRzXCIpKVxuXG5gYGAifQ== -->
-<pre class="r"><code>predictor_stack_full &lt;- stackOpen(here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;predictor_stack_full_mig.stk&quot;))
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-names(predictor_stack_full) &lt;- c(&quot;lsm_500m_ai&quot;, &quot;lsm_500m_cohesion&quot;, &quot;lsm_500m_ed&quot;, &quot;lsm_500m_pland&quot;, &quot;lsm_500m_agri&quot;, &quot;lsm_500m_dev&quot;, &quot;lsm_1km_ai&quot;, &quot;lsm_1km_cohesion&quot;, &quot;lsm_1km_ed&quot;, &quot;lsm_1km_pland&quot;, &quot;lsm_1km_agri&quot;, &quot;lsm_1km_dev&quot;, &quot;lsm_5km_ai&quot;, &quot;lsm_5km_cohesion&quot;, &quot;lsm_5km_ed&quot;, &quot;lsm_5km_pland&quot;, &quot;lsm_5km_agri&quot;, &quot;lsm_5km_dev&quot;, &quot;lsm_10km_ai&quot;, &quot;lsm_10km_cohesion&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_pland&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;forest_30m&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;)
 
-avail_unbiased &lt;- readRDS(here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;avail_unbiased.rds&quot;))
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Read in preprocessed available data
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dWNISmxaR2xqZEc5eVgzTjBZV05yWDJaMWJHd2dQQzBnYzNSaFkydFBjR1Z1S0dobGNtVW9YRnh0WlhSb2IyUnpYRndzSUZ4Y1VHVnVibDl0YVdkeVlYUnBiMjVmYlc5a1pXeGNYQ3dnWEZ4d2NtVmthV04wYjNKZmMzUmhZMnRmWm5Wc2JGOXRhV2N1YzNSclhGd3BLVnh1WEc1dVlXMWxjeWh3Y21Wa2FXTjBiM0pmYzNSaFkydGZablZzYkNrZ1BDMGdZeWhjWEd4emJWODFNREJ0WDJGcFhGd3NJRnhjYkhOdFh6VXdNRzFmWTI5b1pYTnBiMjVjWEN3Z1hGeHNjMjFmTlRBd2JWOWxaRnhjTENCY1hHeHpiVjgxTURCdFgzQnNZVzVrWEZ3c0lGeGNiSE50WHpVd01HMWZZV2R5YVZ4Y0xDQmNYR3h6YlY4MU1EQnRYMlJsZGx4Y0xDQmNYR3h6YlY4eGEyMWZZV2xjWEN3Z1hGeHNjMjFmTVd0dFgyTnZhR1Z6YVc5dVhGd3NJRnhjYkhOdFh6RnJiVjlsWkZ4Y0xDQmNYR3h6YlY4eGEyMWZjR3hoYm1SY1hDd2dYRnhzYzIxZk1XdHRYMkZuY21sY1hDd2dYRnhzYzIxZk1XdHRYMlJsZGx4Y0xDQmNYR3h6YlY4MWEyMWZZV2xjWEN3Z1hGeHNjMjFmTld0dFgyTnZhR1Z6YVc5dVhGd3NJRnhjYkhOdFh6VnJiVjlsWkZ4Y0xDQmNYR3h6YlY4MWEyMWZjR3hoYm1SY1hDd2dYRnhzYzIxZk5XdHRYMkZuY21sY1hDd2dYRnhzYzIxZk5XdHRYMlJsZGx4Y0xDQmNYR3h6YlY4eE1HdHRYMkZwWEZ3c0lGeGNiSE50WHpFd2EyMWZZMjlvWlhOcGIyNWNYQ3dnWEZ4c2MyMWZNVEJyYlY5bFpGeGNMQ0JjWEd4emJWOHhNR3R0WDNCc1lXNWtYRndzSUZ4Y2JITnRYekV3YTIxZllXZHlhVnhjTENCY1hHeHpiVjh4TUd0dFgyUmxkbHhjTENCY1hHWnZjbVZ6ZEY4ek1HMWNYQ3dnWEZ4bGJHVjJYek13YlZ4Y0xDQmNYSE5zYjNCbFh6TXdiVnhjTENCY1hITnZhV3hmWkhKaGFXNWhaMlZmTXpCdFhGd3NJRnhjZEhkcFh6TXdiVnhjTENCY1hHVmpiM0psWjJsdmJuTmNYQ3dnWEZ4elkyeGhjM05jWENsY2JseHVZWFpoYVd4ZmRXNWlhV0Z6WldRZ1BDMGdjbVZoWkZKRVV5aG9aWEpsS0Z4Y2JXVjBhRzlrYzF4Y0xDQmNYRkJsYm01ZmJXbG5jbUYwYVc5dVgyMXZaR1ZzWEZ3c0lGeGNZWFpoYVd4ZmRXNWlhV0Z6WldRdWNtUnpYRndwS1Z4dVhHNWdZR0JjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcbmBgYHJcbnByZWRpY3Rvcl9zdGFja19mdWxsIDwtIHN0YWNrT3BlbihoZXJlKFxcbWV0aG9kc1xcLCBcXFBlbm5fbWlncmF0aW9uX21vZGVsXFwsIFxccHJlZGljdG9yX3N0YWNrX2Z1bGxfbWlnLnN0a1xcKSlcblxubmFtZXMocHJlZGljdG9yX3N0YWNrX2Z1bGwpIDwtIGMoXFxsc21fNTAwbV9haVxcLCBcXGxzbV81MDBtX2NvaGVzaW9uXFwsIFxcbHNtXzUwMG1fZWRcXCwgXFxsc21fNTAwbV9wbGFuZFxcLCBcXGxzbV81MDBtX2FncmlcXCwgXFxsc21fNTAwbV9kZXZcXCwgXFxsc21fMWttX2FpXFwsIFxcbHNtXzFrbV9jb2hlc2lvblxcLCBcXGxzbV8xa21fZWRcXCwgXFxsc21fMWttX3BsYW5kXFwsIFxcbHNtXzFrbV9hZ3JpXFwsIFxcbHNtXzFrbV9kZXZcXCwgXFxsc21fNWttX2FpXFwsIFxcbHNtXzVrbV9jb2hlc2lvblxcLCBcXGxzbV81a21fZWRcXCwgXFxsc21fNWttX3BsYW5kXFwsIFxcbHNtXzVrbV9hZ3JpXFwsIFxcbHNtXzVrbV9kZXZcXCwgXFxsc21fMTBrbV9haVxcLCBcXGxzbV8xMGttX2NvaGVzaW9uXFwsIFxcbHNtXzEwa21fZWRcXCwgXFxsc21fMTBrbV9wbGFuZFxcLCBcXGxzbV8xMGttX2FncmlcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxmb3Jlc3RfMzBtXFwsIFxcZWxldl8zMG1cXCwgXFxzbG9wZV8zMG1cXCwgXFxzb2lsX2RyYWluYWdlXzMwbVxcLCBcXHR3aV8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpXG5cbmF2YWlsX3VuYmlhc2VkIDwtIHJlYWRSRFMoaGVyZShcXG1ldGhvZHNcXCwgXFxQZW5uX21pZ3JhdGlvbl9tb2RlbFxcLCBcXGF2YWlsX3VuYmlhc2VkLnJkc1xcKSlcblxuYGBgXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoXFxtZXRob2RzXFwsIFxcUGVubl9taWdyYXRpb25fbW9kZWxcXCwgXFxwcmVkaWN0b3Jfc3RhY2tfZnVsbF9taWcuc3RrXFwpKVxuXG5uYW1lcyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkgPC0gYyhcXGxzbV81MDBtX2FpXFwsIFxcbHNtXzUwMG1fY29oZXNpb25cXCwgXFxsc21fNTAwbV9lZFxcLCBcXGxzbV81MDBtX3BsYW5kXFwsIFxcbHNtXzUwMG1fYWdyaVxcLCBcXGxzbV81MDBtX2RldlxcLCBcXGxzbV8xa21fYWlcXCwgXFxsc21fMWttX2NvaGVzaW9uXFwsIFxcbHNtXzFrbV9lZFxcLCBcXGxzbV8xa21fcGxhbmRcXCwgXFxsc21fMWttX2FncmlcXCwgXFxsc21fMWttX2RldlxcLCBcXGxzbV81a21fYWlcXCwgXFxsc21fNWttX2NvaGVzaW9uXFwsIFxcbHNtXzVrbV9lZFxcLCBcXGxzbV81a21fcGxhbmRcXCwgXFxsc21fNWttX2FncmlcXCwgXFxsc21fNWttX2RldlxcLCBcXGxzbV8xMGttX2FpXFwsIFxcbHNtXzEwa21fY29oZXNpb25cXCwgXFxsc21fMTBrbV9lZFxcLCBcXGxzbV8xMGttX3BsYW5kXFwsIFxcbHNtXzEwa21fYWdyaVxcLCBcXGxzbV8xMGttX2RldlxcLCBcXGZvcmVzdF8zMG1cXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLCBcXHNvaWxfZHJhaW5hZ2VfMzBtXFwsIFxcdHdpXzMwbVxcLCBcXGVjb3JlZ2lvbnNcXCwgXFxzY2xhc3NcXClcblxuYXZhaWxfdW5iaWFzZWQgPC0gcmVhZFJEUyhoZXJlKFxcbWV0aG9kc1xcLCBcXFBlbm5fbWlncmF0aW9uX21vZGVsXFwsIFxcYXZhaWxfdW5iaWFzZWQucmRzXFwpKVxuXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+predictor_stack_full &lt;- stackOpen(here(\methods\, \Penn_migration_model\, \predictor_stack_full_mig.stk\))
+
+names(predictor_stack_full) &lt;- c(\lsm_500m_ai\, \lsm_500m_cohesion\, \lsm_500m_ed\, \lsm_500m_pland\, \lsm_500m_agri\, \lsm_500m_dev\, \lsm_1km_ai\, \lsm_1km_cohesion\, \lsm_1km_ed\, \lsm_1km_pland\, \lsm_1km_agri\, \lsm_1km_dev\, \lsm_5km_ai\, \lsm_5km_cohesion\, \lsm_5km_ed\, \lsm_5km_pland\, \lsm_5km_agri\, \lsm_5km_dev\, \lsm_10km_ai\, \lsm_10km_cohesion\, \lsm_10km_ed\, \lsm_10km_pland\, \lsm_10km_agri\, \lsm_10km_dev\, \forest_30m\, \elev_30m\, \slope_30m\, \soil_drainage_30m\, \twi_30m\, \ecoregions\, \sclass\)
+
+avail_unbiased &lt;- readRDS(here(\methods\, \Penn_migration_model\, \avail_unbiased.rds\))
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Read in the used points</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXNlZCA8LSBzdF9yZWFkKGRzbiA9IGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJtb3ZlYmFua19sb2NhdGlvbnNcIiwgXCJkaXNwZXJzaW5nX3BvaW50c19wYV82XzJfMjAyMS5zaHBcIikpICU+JSBcbiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSBcbiAgYXNfU3BhdGlhbCgpIFxuYGBgIn0= -->
-<pre class="r"><code>used &lt;- st_read(dsn = here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;movebank_locations&quot;, &quot;dispersing_points_pa_6_2_2021.shp&quot;)) %&gt;% 
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Read in the used points
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVkWE5sWkNBOExTQnpkRjl5WldGa0tHUnpiaUE5SUdobGNtVW9YQ0p0WlhSb2IyUnpYQ0lzSUZ3aVVHVnVibDl0YVdkeVlYUnBiMjVmYlc5a1pXeGNJaXdnWENKdGIzWmxZbUZ1YTE5c2IyTmhkR2x2Ym5OY0lpd2dYQ0prYVhOd1pYSnphVzVuWDNCdmFXNTBjMTl3WVY4Mlh6SmZNakF5TVM1emFIQmNJaWtwSUNVK0pTQmNiaUFnYzNSZmRISmhibk5tYjNKdEtITjBYMk55Y3lod2NtVmthV04wYjNKZmMzUmhZMnRmWm5Wc2JDa3BJQ1UrSlNCY2JpQWdZWE5mVTNCaGRHbGhiQ2dwSUZ4dVhHNXpaWFF1YzJWbFpDZzRLVnh1WEc1aGRtRnBiRjkxYm1KcFlYTmxaQ0E4TFNCaGRtRnBiRjkxYm1KcFlYTmxaQ0FsUGlWY2JpQWdjM1JmWVhOZmMyWW9LU0FsUGlVZ1hHNGdJSE4wWDNSeVlXNXpabTl5YlNoemRGOWpjbk1vY0hKbFpHbGpkRzl5WDNOMFlXTnJYMloxYkd3cEtTQWxQaVVnWEc0Z0lITnNhV05sWDNOaGJYQnNaU2h1SUQwZ01qQXdNQ2tnSlQ0bElGeHVJQ0JoYzE5VGNHRjBhV0ZzS0NsY2JtQmdZQ0o5IC0tPlxuXG5gYGByXG51c2VkIDwtIHN0X3JlYWQoZHNuID0gaGVyZShcIm1ldGhvZHNcIiwgXCJQZW5uX21pZ3JhdGlvbl9tb2RlbFwiLCBcIm1vdmViYW5rX2xvY2F0aW9uc1wiLCBcImRpc3BlcnNpbmdfcG9pbnRzX3BhXzZfMl8yMDIxLnNocFwiKSkgJT4lIFxuICBzdF90cmFuc2Zvcm0oc3RfY3JzKHByZWRpY3Rvcl9zdGFja19mdWxsKSkgJT4lIFxuICBhc19TcGF0aWFsKCkgXG5cbnNldC5zZWVkKDgpXG5cbmF2YWlsX3VuYmlhc2VkIDwtIGF2YWlsX3VuYmlhc2VkICU+JVxuICBzdF9hc19zZigpICU+JSBcbiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSBcbiAgc2xpY2Vfc2FtcGxlKG4gPSAyMDAwKSAlPiUgXG4gIGFzX1NwYXRpYWwoKVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXNlZCA8LSBzdF9yZWFkKGRzbiA9IGhlcmUoXCJtZXRob2RzXCIsIFwiUGVubl9taWdyYXRpb25fbW9kZWxcIiwgXCJtb3ZlYmFua19sb2NhdGlvbnNcIiwgXCJkaXNwZXJzaW5nX3BvaW50c19wYV82XzJfMjAyMS5zaHBcIikpICU+JSBcbiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSBcbiAgYXNfU3BhdGlhbCgpIFxuXG5zZXQuc2VlZCg4KVxuXG5hdmFpbF91bmJpYXNlZCA8LSBhdmFpbF91bmJpYXNlZCAlPiVcbiAgc3RfYXNfc2YoKSAlPiUgXG4gIHN0X3RyYW5zZm9ybShzdF9jcnMocHJlZGljdG9yX3N0YWNrX2Z1bGwpKSAlPiUgXG4gIHNsaWNlX3NhbXBsZShuID0gMjAwMCkgJT4lIFxuICBhc19TcGF0aWFsKClcbmBgYCJ9 --&gt;
+
+```r
+used &lt;- st_read(dsn = here(&quot;methods&quot;, &quot;Penn_migration_model&quot;, &quot;movebank_locations&quot;, &quot;dispersing_points_pa_6_2_2021.shp&quot;)) %&gt;% 
   st_transform(st_crs(predictor_stack_full)) %&gt;% 
-  as_Spatial() </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVhZGluZyBsYXllciBgZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEnIGZyb20gZGF0YSBzb3VyY2UgXG4gIGAvVXNlcnMvbGlhbWJlcmlnYW4vTGlicmFyeS9DbG91ZFN0b3JhZ2UvT25lRHJpdmUtS2Fuc2FzU3RhdGVVbml2ZXJzaXR5L01haW5lQW5hbHlzaXMvUHJvamVjdHMvQU1XTy1zZWFzb25hbC13ZWlnaHRlZC1TRE0vbWV0aG9kcy9QZW5uX21pZ3JhdGlvbl9tb2RlbC9tb3ZlYmFua19sb2NhdGlvbnMvZGlzcGVyc2luZ19wb2ludHNfcGFfNl8yXzIwMjEuc2hwJyBcbiAgdXNpbmcgZHJpdmVyIGBFU1JJIFNoYXBlZmlsZSdcblNpbXBsZSBmZWF0dXJlIGNvbGxlY3Rpb24gd2l0aCAxMTMgZmVhdHVyZXMgYW5kIDcgZmllbGRzXG5HZW9tZXRyeSB0eXBlOiBQT0lOVFxuRGltZW5zaW9uOiAgICAgWFlcbkJvdW5kaW5nIGJveDogIHhtaW46IDEyNzk2NDggeW1pbjogMTk4OTI1NiB4bWF4OiAxNzQ2NzkwIHltYXg6IDIyOTE2NjlcblByb2plY3RlZCBDUlM6IE5BRDgzIC8gQ29udXMgQWxiZXJzXG4ifQ== -->
-<pre><code>Reading layer `dispersing_points_pa_6_2_2021&#39; from data source 
-  `/Users/liamberigan/Library/CloudStorage/OneDrive-KansasStateUniversity/MaineAnalysis/Projects/AMWO-seasonal-weighted-SDM/methods/Penn_migration_model/movebank_locations/dispersing_points_pa_6_2_2021.shp&#39; 
-  using driver `ESRI Shapefile&#39;
-Simple feature collection with 113 features and 7 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 1279648 ymin: 1989256 xmax: 1746790 ymax: 2291669
-Projected CRS: NAD83 / Conus Albers</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoOClcblxuYXZhaWxfdW5iaWFzZWQgPC0gYXZhaWxfdW5iaWFzZWQgJT4lXG4gIHN0X2FzX3NmKCkgJT4lIFxuICBzdF90cmFuc2Zvcm0oc3RfY3JzKHByZWRpY3Rvcl9zdGFja19mdWxsKSkgJT4lIFxuICBzbGljZV9zYW1wbGUobiA9IDIwMDApICU+JSBcbiAgYXNfU3BhdGlhbCgpXG5gYGAifQ== -->
-<pre class="r"><code>set.seed(8)
+  as_Spatial() 
+
+set.seed(8)
 
 avail_unbiased &lt;- avail_unbiased %&gt;%
   st_as_sf() %&gt;% 
@@ -1804,31 +1834,48 @@ avail_unbiased &lt;- avail_unbiased %&gt;%
   slice_sample(n = 2000) %&gt;% 
   as_Spatial()</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Prep SDMs</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3dkX2Z1bGwgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXCJTY29sb3BheCBtaW5vclwiLCBcbiAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcbmBgYCJ9 -->
-<pre class="r"><code>swd_full &lt;- prepareSWD(species = &quot;Scolopax minor&quot;, 
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dWMzZGtYMloxYkd3Z1BDMGdjSEpsY0dGeVpWTlhSQ2h6Y0dWamFXVnpJRDBnWEZ4VFkyOXNiM0JoZUNCdGFXNXZjbHhjTENCY2JpQWdJQ0FnSUNBZ0lDQWdaVzUySUQwZ2RHVnljbUU2T25KaGMzUW9jSEpsWkdsamRHOXlYM04wWVdOclgyWjFiR3dwTENCY2JpQWdJQ0FnSUNBZ0lDQWdjQ0E5SUhKbGJtRnRaU2hoY3k1a1lYUmhMbVp5WVcxbEtIVnpaV1JBWTI5dmNtUnpLU3dnZUNBOUlHTnZiM0prY3k1NE1Td2dlU0E5SUdOdmIzSmtjeTU0TWlrc0lGeHVJQ0FnSUNBZ0lDQWdJQ0JoSUQwZ1lYTXVaR0YwWVM1bWNtRnRaU2hoZG1GcGJGOTFibUpwWVhObFpFQmpiMjl5WkhNcExGeHVJQ0FnSUNBZ0lDQWdJQ0JqWVhSbFoyOXlhV05oYkNBOUlHTW9YRnhtYjNKbGMzUmZNekJ0WEZ3c0lGeGNaV052Y21WbmFXOXVjMXhjTENCY1hITmpiR0Z6YzF4Y0tTbGNibUJnWUZ4dVlHQmdJbjA9IC0tPlxuXG5gYGByXG5gYGByXG5zd2RfZnVsbCA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSBcXFNjb2xvcGF4IG1pbm9yXFwsIFxuICAgICAgICAgICBlbnYgPSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbCksIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcXGZvcmVzdF8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpKVxuYGBgXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3dkX2Z1bGwgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxTY29sb3BheCBtaW5vclxcLCBcbiAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcbmBgYFxuYGBgIn0= -->
+<pre class="r"><code>```r
+swd_full &lt;- prepareSWD(species = \Scolopax minor\, 
            env = terra::rast(predictor_stack_full), 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail_unbiased@coords),
-           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbuKclCBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgcHJlc2VuY2UgbG9jYXRpb25zIFs0NDhtc11cblxuXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= -->
+           categorical = c(\forest_30m\, \ecoregions\, \sclass\))</code></pre>
 <pre><code>
-ℹ Extracting predictor information for presence locations
-Warning: ! 1 location is NA for some environmental variables and has been discarded
-✔ Extracting predictor information for presence locations [448ms]
+&lt;!-- rnb-source-end --&gt;
 
 
-ℹ Extracting predictor information for absence/background locations
-Warning: ! 26 locations are NA for some environmental variables and have been discarded
-✔ Extracting predictor information for absence/background locations [6.5s]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTcGxpdCBwcmVzZW5jZSBsb2NhdGlvbnMgaW4gdHJhaW5pbmcgKDgwJSkgYW5kIHRlc3RpbmcgKDIwJSkgZGF0YXNldHNcbiMgZGF0YXNldHMgPC0gdHJhaW5WYWxUZXN0KHN3ZF9mdWxsLFxuIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMixcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIG9ubHlfcHJlc2VuY2UgPSBGQUxTRSxcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dXG4jIHRlc3QgPC0gZGF0YXNldHNbWzJdXVxua2ZvbGRzIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfZnVsbCwgb25seV9wcmVzZW5jZSA9IFRSVUUsIGsgPSA1LCBzZWVkID0gOClcbmBgYCJ9 -->
-<pre class="r"><code># Split presence locations in training (80%) and testing (20%) datasets
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcbuKclCBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgcHJlc2VuY2UgbG9jYXRpb25zIFs0NDhtc11cblxuXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= --&gt;
+</code></pre>
+<p>ℹ Extracting predictor information for presence locations Warning: !
+1 location is NA for some environmental variables and has been discarded
+✔ Extracting predictor information for presence locations [448ms]</p>
+<p>ℹ Extracting predictor information for absence/background locations
+Warning: ! 26 locations are NA for some environmental variables and have
+been discarded ✔ Extracting predictor information for absence/background
+locations [6.5s]</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dUl5QlRjR3hwZENCd2NtVnpaVzVqWlNCc2IyTmhkR2x2Ym5NZ2FXNGdkSEpoYVc1cGJtY2dLRGd3SlNrZ1lXNWtJSFJsYzNScGJtY2dLREl3SlNrZ1pHRjBZWE5sZEhOY2JpTWdaR0YwWVhObGRITWdQQzBnZEhKaGFXNVdZV3hVWlhOMEtITjNaRjltZFd4c0xGeHVJeUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdkR1Z6ZENBOUlEQXVNaXhjYmlNZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUc5dWJIbGZjSEpsYzJWdVkyVWdQU0JHUVV4VFJTeGNiaU1nSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJSE5sWldRZ1BTQTRLVnh1SXlCMGNtRnBiaUE4TFNCa1lYUmhjMlYwYzF0Yk1WMWRYRzRqSUhSbGMzUWdQQzBnWkdGMFlYTmxkSE5iV3pKZFhWeHVhMlp2YkdSeklEd3RJSEpoYm1SdmJVWnZiR1J6S0dSaGRHRWdQU0J6ZDJSZlpuVnNiQ3dnYjI1c2VWOXdjbVZ6Wlc1alpTQTlJRlJTVlVVc0lHc2dQU0ExTENCelpXVmtJRDBnT0NsY2JtQmdZRnh1WUdCZ0luMD0gLS0+XG5cbmBgYHJcbmBgYHJcbiMgU3BsaXQgcHJlc2VuY2UgbG9jYXRpb25zIGluIHRyYWluaW5nICg4MCUpIGFuZCB0ZXN0aW5nICgyMCUpIGRhdGFzZXRzXG4jIGRhdGFzZXRzIDwtIHRyYWluVmFsVGVzdChzd2RfZnVsbCxcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIHRlc3QgPSAwLjIsXG4jICAgICAgICAgICAgICAgICAgICAgICAgICBvbmx5X3ByZXNlbmNlID0gRkFMU0UsXG4jICAgICAgICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcbiMgdHJhaW4gPC0gZGF0YXNldHNbWzFdXVxuIyB0ZXN0IDwtIGRhdGFzZXRzW1syXV1cbmtmb2xkcyA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2Z1bGwsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBrID0gNSwgc2VlZCA9IDgpXG5gYGBcbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBTcGxpdCBwcmVzZW5jZSBsb2NhdGlvbnMgaW4gdHJhaW5pbmcgKDgwJSkgYW5kIHRlc3RpbmcgKDIwJSkgZGF0YXNldHNcbiMgZGF0YXNldHMgPC0gdHJhaW5WYWxUZXN0KHN3ZF9mdWxsLFxuIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMixcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIG9ubHlfcHJlc2VuY2UgPSBGQUxTRSxcbiMgICAgICAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dXG4jIHRlc3QgPC0gZGF0YXNldHNbWzJdXVxua2ZvbGRzIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfZnVsbCwgb25seV9wcmVzZW5jZSA9IFRSVUUsIGsgPSA1LCBzZWVkID0gOClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+# Split presence locations in training (80%) and testing (20%) datasets
 # datasets &lt;- trainValTest(swd_full,
 #                          test = 0.2,
 #                          only_presence = FALSE,
@@ -1836,85 +1883,183 @@ Warning: ! 26 locations are NA for some environmental variables and have been di
 # train &lt;- datasets[[1]]
 # test &lt;- datasets[[2]]
 kfolds &lt;- randomFolds(data = swd_full, only_presence = TRUE, k = 5, seed = 8)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Training a basic, full model</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWwgPC0gdHJhaW4obWV0aG9kID0gXCJSRlwiLFxuICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9mdWxsLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHMsXG4gICAgICAgICAgICAgICBudHJlZSA9IDIwMDApXG5gYGAifQ== -->
-<pre class="r"><code>model &lt;- train(method = &quot;RF&quot;,
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Training a basic, full model
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dWJXOWtaV3dnUEMwZ2RISmhhVzRvYldWMGFHOWtJRDBnWEZ4U1JseGNMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdaR0YwWVNBOUlITjNaRjltZFd4c0xGeHVJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1ptOXNaSE1nUFNCclptOXNaSE1zWEc0Z0lDQWdJQ0FnSUNBZ0lDQWdJQ0J1ZEhKbFpTQTlJREl3TURBcFhHNWdZR0JjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcbmBgYHJcbm1vZGVsIDwtIHRyYWluKG1ldGhvZCA9IFxcUkZcXCxcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfZnVsbCxcbiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzLFxuICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKVxuYGBgXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubW9kZWwgPC0gdHJhaW4obWV0aG9kID0gXFxSRlxcLFxuICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9mdWxsLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHMsXG4gICAgICAgICAgICAgICBudHJlZSA9IDIwMDApXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+model &lt;- train(method = \RF\,
                data = swd_full,
                folds = kfolds,
                ntree = 2000)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6IDE2cyAtIDAwOjAwOjA0XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgIDQwJSB8IEVUQTogMTJzIC0gMDA6MDA6Ny44XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgIDYwJSB8IEVUQTogIDhzIC0gMDA6MDA6MTEuNlxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjE1LjZcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxOS43XG4ifQ== -->
 <pre><code>
-Cross Validation  ■■■■■■■                           20% | ETA: 16s - 00:00:04
+&lt;!-- rnb-source-end --&gt;
 
-Cross Validation  ■■■■■■■■■■■■■                     40% | ETA: 12s - 00:00:7.8
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■               60% | ETA:  8s - 00:00:11.6
+&lt;!-- rnb-output-end --&gt;
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  4s - 00:00:15.6
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6IDE2cyAtIDAwOjAwOjA0XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgICAgICAgIDQwJSB8IEVUQTogMTJzIC0gMDA6MDA6Ny44XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgICAgICAgIDYwJSB8IEVUQTogIDhzIC0gMDA6MDA6MTEuNlxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICA4MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjE1LjZcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxOS43XG4ifQ== --&gt;
+</code></pre>
+<p>Cross Validation ■■■■■■■ 20% | ETA: 16s - 00:00:04</p>
+<p>Cross Validation ■■■■■■■■■■■■■ 40% | ETA: 12s - 00:00:7.8</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■ 60% | ETA: 8s - 00:00:11.6</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■ 80% | ETA: 4s -
+00:00:15.6</p>
+<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 100% | ETA: 0s -
+00:00:19.7</p>
+<pre><code>
 
-Cross Validation  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% | ETA:  0s - 00:00:19.7</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4NlxuYGBgIn0= -->
-<pre class="r"><code>auc(model, test = TRUE) #0.8587086</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODU4NzA4NlxuIn0= -->
-<pre><code>[1] 0.8587086</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHNzKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuNjI0NjEyMVxuYGBgIn0= -->
-<pre class="r"><code>tss(model, test = TRUE) #0.6246121</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNjI0NjEyMVxuIn0= -->
-<pre><code>[1] 0.6246121</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="remove-variables-with-high-correlation" class="section level1">
-<h1>Remove variables with high correlation</h1>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmcgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXCJDb3JyZWxhdGlvbiB0ZXN0XCIsXG4gICAgICAgICAgICAgICAgIGEgPSBhdmFpbF91bmJpYXNlZCxcbiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcblxuYGBgIn0= -->
-<pre class="r"><code>bg &lt;- prepareSWD(species = &quot;Correlation test&quot;,
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dVlYVmpLRzF2WkdWc0xDQjBaWE4wSUQwZ1ZGSlZSU2tnSXpBdU9EVTROekE0Tmx4dVlHQmdYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbmBgYHJcbmF1Yyhtb2RlbCwgdGVzdCA9IFRSVUUpICMwLjg1ODcwODZcbmBgYFxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4NlxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+auc(model, test = TRUE) #0.8587086</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODU4NzA4NlxuIn0= --&gt;
+</code></pre>
+<p>[1] 0.8587086</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dWRITnpLRzF2WkdWc0xDQjBaWE4wSUQwZ1ZGSlZSU2tnSXpBdU5qSTBOakV5TVZ4dVlHQmdYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbmBgYHJcbnRzcyhtb2RlbCwgdGVzdCA9IFRSVUUpICMwLjYyNDYxMjFcbmBgYFxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudHNzKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuNjI0NjEyMVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+tss(model, test = TRUE) #0.6246121</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNjI0NjEyMVxuIn0= --&gt;
+</code></pre>
+<p>[1] 0.6246121</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Remove variables with high correlation
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dVltY2dQQzBnY0hKbGNHRnlaVk5YUkNoemNHVmphV1Z6SUQwZ1hGeERiM0p5Wld4aGRHbHZiaUIwWlhOMFhGd3NYRzRnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJR0VnUFNCaGRtRnBiRjkxYm1KcFlYTmxaQ3hjYmlBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnWlc1MklEMGdkR1Z5Y21FNk9uSmhjM1FvY0hKbFpHbGpkRzl5WDNOMFlXTnJYMloxYkd3cExGeHVJQ0FnSUNBZ0lDQWdJQ0JqWVhSbFoyOXlhV05oYkNBOUlHTW9YRnhtYjNKbGMzUmZNekJ0WEZ3c0lGeGNaV052Y21WbmFXOXVjMXhjTENCY1hITmpiR0Z6YzF4Y0tTbGNibHh1WUdCZ1hHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuYGBgclxuYmcgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxDb3JyZWxhdGlvbiB0ZXN0XFwsXG4gICAgICAgICAgICAgICAgIGEgPSBhdmFpbF91bmJpYXNlZCxcbiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcblxuYGBgXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYmcgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxDb3JyZWxhdGlvbiB0ZXN0XFwsXG4gICAgICAgICAgICAgICAgIGEgPSBhdmFpbF91bmJpYXNlZCxcbiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcblxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+bg &lt;- prepareSWD(species = \Correlation test\,
                  a = avail_unbiased,
                  env = terra::rast(predictor_stack_full),
-           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
+           categorical = c(\forest_30m\, \ecoregions\, \sclass\))
 </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= -->
 <pre><code>
-ℹ Extracting predictor information for absence/background locations
-Warning: ! 26 locations are NA for some environmental variables and have been discarded
-✔ Extracting predictor information for absence/background locations [6.5s]</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Keeping: • Continuous: “lsm_1km_dev”, “lsm_10km_ed”, “lsm_10km_agri”,
-“lsm_10km_dev”, “elev_30m”, “slope_30m”, “soil_drainage_30m”, and
-“twi_30m” • Categorical: “forest_30m”, “ecoregions” and “sclass”</p>
-</div>
-<div id="tune-hyperparameters" class="section level1">
-<h1>Tune hyperparameters</h1>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG5lbnZfaHAgPC0gc3Vic2V0KGVudl9ocCwgYyhcImxzbV8xa21fZGV2XCIsIFwibHNtXzEwa21fZWRcIiwgXCJsc21fMTBrbV9hZ3JpXCIsIFwibHNtXzEwa21fZGV2XCIsIFwiZWxldl8zMG1cIiwgXCJzbG9wZV8zMG1cIiwgXCJzb2lsX2RyYWluYWdlXzMwbVwiLCBcInR3aV8zMG1cIiwgXCJmb3Jlc3RfMzBtXCIsIFwiZWNvcmVnaW9uc1wiLCBcInNjbGFzc1wiKSlcblxuc3dkX2hwIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIixcbiAgICAgICAgICAgZW52ID0gZW52X2hwLFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSxcbiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSxcbiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKFwiZm9yZXN0XzMwbVwiLCBcImVjb3JlZ2lvbnNcIiwgXCJzY2xhc3NcIikpXG5cbmtmb2xkc19ocCA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwLCBrID0gNSwgb25seV9wcmVzZW5jZSA9IFRSVUUsIHNlZWQgPSA4KVxuXG5tb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSBcIlJGXCIsXG4gICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAsXG4gICAgICAgICAgICAgICBudHJlZSA9IDIwMDApXG5cbmh5cGVycyA8LSBsaXN0KG10cnk9MTo4LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnMgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzLFxuICAgICAgICAgICAgICAgICAgICAgbWV0cmljID0gXCJhdWNcIixcbiAgICAgICAgICAgICAgICAgICAgICN0ZXN0ID0gdGVzdF9ocCxcbiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuXG50dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxuXG50dW5lZF9tdHJ5XzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG10cnlcbnR1bmVkX250cmVlXzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG50cmVlXG50dW5lZF9ub2Rlc2l6ZV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBub2Rlc2l6ZVxuYGBgIn0= -->
-<pre class="r"><code>env_hp &lt;- terra::rast(predictor_stack_full)
+&lt;!-- rnb-source-end --&gt;
 
-env_hp &lt;- subset(env_hp, c(&quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
 
-swd_hp &lt;- prepareSWD(species = &quot;Scolopax minor&quot;,
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIGFic2VuY2UvYmFja2dyb3VuZCBsb2NhdGlvbnNcbldhcm5pbmc6ICEgMjYgbG9jYXRpb25zIGFyZSBOQSBmb3Igc29tZSBlbnZpcm9ubWVudGFsIHZhcmlhYmxlcyBhbmQgaGF2ZSBiZWVuIGRpc2NhcmRlZFxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBhYnNlbmNlL2JhY2tncm91bmQgbG9jYXRpb25zIFs2LjVzXVxuIn0= --&gt;
+</code></pre>
+<p>ℹ Extracting predictor information for absence/background locations
+Warning: ! 26 locations are NA for some environmental variables and have
+been discarded ✔ Extracting predictor information for absence/background
+locations [6.5s]</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+Keeping: 
+• Continuous: &quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_agri&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;,
+&quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, and &quot;twi_30m&quot;
+• Categorical: &quot;forest_30m&quot;, &quot;ecoregions&quot; and &quot;sclass&quot;
+
+# Tune hyperparameters
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dVpXNTJYMmh3SUR3dElIUmxjbkpoT2pweVlYTjBLSEJ5WldScFkzUnZjbDl6ZEdGamExOW1kV3hzS1Z4dVhHNWxiblpmYUhBZ1BDMGdjM1ZpYzJWMEtHVnVkbDlvY0N3Z1l5aGNYR3h6YlY4eGEyMWZaR1YyWEZ3c0lGeGNiSE50WHpFd2EyMWZaV1JjWEN3Z1hGeHNjMjFmTVRCcmJWOWhaM0pwWEZ3c0lGeGNiSE50WHpFd2EyMWZaR1YyWEZ3c0lGeGNaV3hsZGw4ek1HMWNYQ3dnWEZ4emJHOXdaVjh6TUcxY1hDd2dYRnh6YjJsc1gyUnlZV2x1WVdkbFh6TXdiVnhjTENCY1hIUjNhVjh6TUcxY1hDd2dYRnhtYjNKbGMzUmZNekJ0WEZ3c0lGeGNaV052Y21WbmFXOXVjMXhjTENCY1hITmpiR0Z6YzF4Y0tTbGNibHh1YzNka1gyaHdJRHd0SUhCeVpYQmhjbVZUVjBRb2MzQmxZMmxsY3lBOUlGeGNVMk52Ykc5d1lYZ2diV2x1YjNKY1hDeGNiaUFnSUNBZ0lDQWdJQ0FnWlc1MklEMGdaVzUyWDJod0xGeHVJQ0FnSUNBZ0lDQWdJQ0J3SUQwZ2NtVnVZVzFsS0dGekxtUmhkR0V1Wm5KaGJXVW9kWE5sWkVCamIyOXlaSE1wTENCNElEMGdZMjl2Y21SekxuZ3hMQ0I1SUQwZ1kyOXZjbVJ6TG5neUtTeGNiaUFnSUNBZ0lDQWdJQ0FnWVNBOUlHRnpMbVJoZEdFdVpuSmhiV1VvWVhaaGFXeGZkVzVpYVdGelpXUkFZMjl2Y21SektTeGNiaUFnSUNBZ0lDQWdJQ0FnWTJGMFpXZHZjbWxqWVd3Z1BTQmpLRnhjWm05eVpYTjBYek13YlZ4Y0xDQmNYR1ZqYjNKbFoybHZibk5jWEN3Z1hGeHpZMnhoYzNOY1hDa3BYRzVjYm10bWIyeGtjMTlvY0NBOExTQnlZVzVrYjIxR2IyeGtjeWhrWVhSaElEMGdjM2RrWDJod0xDQnJJRDBnTlN3Z2IyNXNlVjl3Y21WelpXNWpaU0E5SUZSU1ZVVXNJSE5sWldRZ1BTQTRLVnh1WEc1dGIyUmxiRjlvY0NBOExTQjBjbUZwYmlodFpYUm9iMlFnUFNCY1hGSkdYRndzWEc0Z0lDQWdJQ0FnSUNBZ0lDQWdJQ0JrWVhSaElEMGdjM2RrWDJod0xGeHVJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ1ptOXNaSE1nUFNCclptOXNaSE5mYUhBc1hHNGdJQ0FnSUNBZ0lDQWdJQ0FnSUNCdWRISmxaU0E5SURJd01EQXBYRzVjYm1oNWNHVnljeUE4TFNCc2FYTjBLRzEwY25rOU1UbzRMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQnVkSEpsWlNBOUlITmxjU2htY205dElEMGdNVEF3TENCMGJ5QTlJRE13TURBc0lHSjVJRDBnTVRBd0tTeGNiaUFnSUNBZ0lDQWdJQ0FnSUNBZ2JtOWtaWE5wZW1VZ1BTQXhPakV3S1Z4dVhHNTBkVzVsWkY5b2VYQmxjbk1nUEMwZ2IzQjBhVzFwZW1WTmIyUmxiQ2h0YjJSbGJDQTlJRzF2WkdWc1gyaHdMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2FIbHdaWEp6SUQwZ2FIbHdaWEp6TEZ4dUlDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdiV1YwY21saklEMGdYRnhoZFdOY1hDeGNiaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNOMFpYTjBJRDBnZEdWemRGOW9jQ3hjYmlBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lITmxaV1FnUFNBNEtWeHVYRzUwZFc1bFpGOW9lWEJsY25OQWJXOWtaV3h6VzFzeFhWMGdJM1Z6WlNCMGFHVWdhSGx3WlhKd1lYSmhiV1YwWlhKeklHWnliMjBnZEdobElHSmxjM1FnYlc5a1pXd2daMjlwYm1jZ1ptOXlkMkZ5WkZ4dVhHNTBkVzVsWkY5dGRISjVYekVnUEMwZ2RIVnVaV1JmYUhsd1pYSnpRRzF2WkdWc2MxdGJNVjFkUUcxdlpHVnNjMXRiTVYxZFFHMXZaR1ZzUUcxMGNubGNiblIxYm1Wa1gyNTBjbVZsWHpFZ1BDMGdkSFZ1WldSZmFIbHdaWEp6UUcxdlpHVnNjMXRiTVYxZFFHMXZaR1ZzYzF0Yk1WMWRRRzF2WkdWc1FHNTBjbVZsWEc1MGRXNWxaRjl1YjJSbGMybDZaVjh4SUR3dElIUjFibVZrWDJoNWNHVnljMEJ0YjJSbGJITmJXekZkWFVCdGIyUmxiSE5iV3pGZFhVQnRiMlJsYkVCdWIyUmxjMmw2WlZ4dVlHQmdYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbmBgYHJcbmVudl9ocCA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwIDwtIHN1YnNldChlbnZfaHAsIGMoXFxsc21fMWttX2RldlxcLCBcXGxzbV8xMGttX2VkXFwsIFxcbHNtXzEwa21fYWdyaVxcLCBcXGxzbV8xMGttX2RldlxcLCBcXGVsZXZfMzBtXFwsIFxcc2xvcGVfMzBtXFwsIFxcc29pbF9kcmFpbmFnZV8zMG1cXCwgXFx0d2lfMzBtXFwsIFxcZm9yZXN0XzMwbVxcLCBcXGVjb3JlZ2lvbnNcXCwgXFxzY2xhc3NcXCkpXG5cbnN3ZF9ocCA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSBcXFNjb2xvcGF4IG1pbm9yXFwsXG4gICAgICAgICAgIGVudiA9IGVudl9ocCxcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcXGZvcmVzdF8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpKVxuXG5rZm9sZHNfaHAgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF9ocCwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAgPC0gdHJhaW4obWV0aG9kID0gXFxSRlxcLFxuICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9ocCxcbiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX2hwLFxuICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKVxuXG5oeXBlcnMgPC0gbGlzdChtdHJ5PTE6OCxcbiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksXG4gICAgICAgICAgICAgIG5vZGVzaXplID0gMToxMClcblxudHVuZWRfaHlwZXJzIDwtIG9wdGltaXplTW9kZWwobW9kZWwgPSBtb2RlbF9ocCxcbiAgICAgICAgICAgICAgICAgICAgIGh5cGVycyA9IGh5cGVycyxcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFxcYXVjXFwsXG4gICAgICAgICAgICAgICAgICAgICAjdGVzdCA9IHRlc3RfaHAsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcblxudHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dICN1c2UgdGhlIGh5cGVycGFyYW1ldGVycyBmcm9tIHRoZSBiZXN0IG1vZGVsIGdvaW5nIGZvcndhcmRcblxudHVuZWRfbXRyeV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBtdHJ5XG50dW5lZF9udHJlZV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBudHJlZVxudHVuZWRfbm9kZXNpemVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbm9kZXNpemVcbmBgYFxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG5lbnZfaHAgPC0gc3Vic2V0KGVudl9ocCwgYyhcXGxzbV8xa21fZGV2XFwsIFxcbHNtXzEwa21fZWRcXCwgXFxsc21fMTBrbV9hZ3JpXFwsIFxcbHNtXzEwa21fZGV2XFwsIFxcZWxldl8zMG1cXCwgXFxzbG9wZV8zMG1cXCwgXFxzb2lsX2RyYWluYWdlXzMwbVxcLCBcXHR3aV8zMG1cXCwgXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcblxuc3dkX2hwIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFxcU2NvbG9wYXggbWlub3JcXCxcbiAgICAgICAgICAgZW52ID0gZW52X2hwLFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSxcbiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSxcbiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKFxcZm9yZXN0XzMwbVxcLCBcXGVjb3JlZ2lvbnNcXCwgXFxzY2xhc3NcXCkpXG5cbmtmb2xkc19ocCA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwLCBrID0gNSwgb25seV9wcmVzZW5jZSA9IFRSVUUsIHNlZWQgPSA4KVxuXG5tb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSBcXFJGXFwsXG4gICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAsXG4gICAgICAgICAgICAgICBudHJlZSA9IDIwMDApXG5cbmh5cGVycyA8LSBsaXN0KG10cnk9MTo4LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnMgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzLFxuICAgICAgICAgICAgICAgICAgICAgbWV0cmljID0gXFxhdWNcXCxcbiAgICAgICAgICAgICAgICAgICAgICN0ZXN0ID0gdGVzdF9ocCxcbiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KVxuXG50dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxuXG50dW5lZF9tdHJ5XzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG10cnlcbnR1bmVkX250cmVlXzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG50cmVlXG50dW5lZF9ub2Rlc2l6ZV8xIDwtIHR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXUBtb2RlbHNbWzFdXUBtb2RlbEBub2Rlc2l6ZVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+env_hp &lt;- terra::rast(predictor_stack_full)
+
+env_hp &lt;- subset(env_hp, c(\lsm_1km_dev\, \lsm_10km_ed\, \lsm_10km_agri\, \lsm_10km_dev\, \elev_30m\, \slope_30m\, \soil_drainage_30m\, \twi_30m\, \forest_30m\, \ecoregions\, \sclass\))
+
+swd_hp &lt;- prepareSWD(species = \Scolopax minor\,
            env = env_hp,
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2),
            a = as.data.frame(avail_unbiased@coords),
-           categorical = c(&quot;forest_30m&quot;, &quot;ecoregions&quot;, &quot;sclass&quot;))
+           categorical = c(\forest_30m\, \ecoregions\, \sclass\))
 
 kfolds_hp &lt;- randomFolds(data = swd_hp, k = 5, only_presence = TRUE, seed = 8)
 
-model_hp &lt;- train(method = &quot;RF&quot;,
+model_hp &lt;- train(method = \RF\,
                data = swd_hp,
                folds = kfolds_hp,
                ntree = 2000)
@@ -1925,7 +2070,7 @@ hypers &lt;- list(mtry=1:8,
 
 tuned_hypers &lt;- optimizeModel(model = model_hp,
                      hypers = hypers,
-                     metric = &quot;auc&quot;,
+                     metric = \auc\,
                      #test = test_hp,
                      seed = 8)
 
@@ -1934,17 +2079,38 @@ tuned_hypers@models[[1]] #use the hyperparameters from the best model going forw
 tuned_mtry_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@mtry
 tuned_ntree_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@ntree
 tuned_nodesize_1 &lt;- tuned_hypers@models[[1]]@models[[1]]@model@nodesize</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>mtry: 1 ntree: 2100 nodesize: 8</p>
-</div>
-<div id="eliminate-variables-with-small-variable-importance" class="section level1">
-<h1>Eliminate variables with small variable importance</h1>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZW52X3ZpIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG4jY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpXG5cbmVudl92aSA8LSBzdWJzZXQoZW52X3ZpLCBjKFxcbHNtXzFrbV9kZXZcXCwgXFxsc21fMTBrbV9lZFxcLCBcXGxzbV8xMGttX2FncmlcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLCBcXHNvaWxfZHJhaW5hZ2VfMzBtXFwsIFxcdHdpXzMwbVxcLCBcXGZvcmVzdF8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpKVxuXG5zd2RfdmkgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxTY29sb3BheCBtaW5vclxcLCBcbiAgICAgICAgICAgZW52ID0gZW52X3ZpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcbmBgYFxuYGBgIn0= -->
-<pre class="r"><code>```r
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+mtry: 1
+ntree: 2100
+nodesize: 8
+
+# Eliminate variables with small variable importance
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZR0JnY2x4dVlHQmdjbHh1Wlc1MlgzWnBJRHd0SUhSbGNuSmhPanB5WVhOMEtIQnlaV1JwWTNSdmNsOXpkR0ZqYTE5bWRXeHNLVnh1WEc0alkyOXNibUZ0WlhNb2NtVnpkV3gwYzE5MmFVQmtZWFJoUUdSaGRHRXBYRzVjYm1WdWRsOTJhU0E4TFNCemRXSnpaWFFvWlc1MlgzWnBMQ0JqS0Z4Y2JITnRYekZyYlY5a1pYWmNYQ3dnWEZ4c2MyMWZNVEJyYlY5bFpGeGNMQ0JjWEd4emJWOHhNR3R0WDJGbmNtbGNYQ3dnWEZ4c2MyMWZNVEJyYlY5a1pYWmNYQ3dnWEZ4bGJHVjJYek13YlZ4Y0xDQmNYSE5zYjNCbFh6TXdiVnhjTENCY1hITnZhV3hmWkhKaGFXNWhaMlZmTXpCdFhGd3NJRnhjZEhkcFh6TXdiVnhjTENCY1hHWnZjbVZ6ZEY4ek1HMWNYQ3dnWEZ4bFkyOXlaV2RwYjI1elhGd3NJRnhjYzJOc1lYTnpYRndwS1Z4dVhHNXpkMlJmZG1rZ1BDMGdjSEpsY0dGeVpWTlhSQ2h6Y0dWamFXVnpJRDBnWEZ4VFkyOXNiM0JoZUNCdGFXNXZjbHhjTENCY2JpQWdJQ0FnSUNBZ0lDQWdaVzUySUQwZ1pXNTJYM1pwTENCY2JpQWdJQ0FnSUNBZ0lDQWdjQ0E5SUhKbGJtRnRaU2hoY3k1a1lYUmhMbVp5WVcxbEtIVnpaV1JBWTI5dmNtUnpLU3dnZUNBOUlHTnZiM0prY3k1NE1Td2dlU0E5SUdOdmIzSmtjeTU0TWlrc0lGeHVJQ0FnSUNBZ0lDQWdJQ0JoSUQwZ1lYTXVaR0YwWVM1bWNtRnRaU2hoZG1GcGJGOTFibUpwWVhObFpFQmpiMjl5WkhNcExGeHVJQ0FnSUNBZ0lDQWdJQ0JqWVhSbFoyOXlhV05oYkNBOUlHTW9YRnhtYjNKbGMzUmZNekJ0WEZ3c0lGeGNaV052Y21WbmFXOXVjMXhjTENCY1hITmpiR0Z6YzF4Y0tTbGNibUJnWUZ4dVlHQmdYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbmBgYHJcbmBgYHJcbmVudl92aSA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuI2NvbG5hbWVzKHJlc3VsdHNfdmlAZGF0YUBkYXRhKVxuXG5lbnZfdmkgPC0gc3Vic2V0KGVudl92aSwgYyhcXGxzbV8xa21fZGV2XFwsIFxcbHNtXzEwa21fZWRcXCwgXFxsc21fMTBrbV9hZ3JpXFwsIFxcbHNtXzEwa21fZGV2XFwsIFxcZWxldl8zMG1cXCwgXFxzbG9wZV8zMG1cXCwgXFxzb2lsX2RyYWluYWdlXzMwbVxcLCBcXHR3aV8zMG1cXCwgXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcblxuc3dkX3ZpIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFxcU2NvbG9wYXggbWlub3JcXCwgXG4gICAgICAgICAgIGVudiA9IGVudl92aSwgXG4gICAgICAgICAgIHAgPSByZW5hbWUoYXMuZGF0YS5mcmFtZSh1c2VkQGNvb3JkcyksIHggPSBjb29yZHMueDEsIHkgPSBjb29yZHMueDIpLCBcbiAgICAgICAgICAgYSA9IGFzLmRhdGEuZnJhbWUoYXZhaWxfdW5iaWFzZWRAY29vcmRzKSxcbiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKFxcZm9yZXN0XzMwbVxcLCBcXGVjb3JlZ2lvbnNcXCwgXFxzY2xhc3NcXCkpXG5gYGBcbmBgYFxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYGBgclxuZW52X3ZpIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKVxuXG4jY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpXG5cbmVudl92aSA8LSBzdWJzZXQoZW52X3ZpLCBjKFxcbHNtXzFrbV9kZXZcXCwgXFxsc21fMTBrbV9lZFxcLCBcXGxzbV8xMGttX2FncmlcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLCBcXHNvaWxfZHJhaW5hZ2VfMzBtXFwsIFxcdHdpXzMwbVxcLCBcXGZvcmVzdF8zMG1cXCwgXFxlY29yZWdpb25zXFwsIFxcc2NsYXNzXFwpKVxuXG5zd2RfdmkgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gXFxTY29sb3BheCBtaW5vclxcLCBcbiAgICAgICAgICAgZW52ID0gZW52X3ZpLCBcbiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIFxuICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLFxuICAgICAgICAgICBjYXRlZ29yaWNhbCA9IGMoXFxmb3Jlc3RfMzBtXFwsIFxcZWNvcmVnaW9uc1xcLCBcXHNjbGFzc1xcKSlcbmBgYFxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+```r
 env_vi &lt;- terra::rast(predictor_stack_full)
 
 #colnames(results_vi@data@data)
@@ -1956,154 +2122,21 @@ swd_vi &lt;- prepareSWD(species = \Scolopax minor\,
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail_unbiased@coords),
            categorical = c(\forest_30m\, \ecoregions\, \sclass\))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ihLkgRXh0cmFjdGluZyBwcmVkaWN0b3IgaW5mb3JtYXRpb24gZm9yIHByZXNlbmNlIGxvY2F0aW9uc1xuV2FybmluZzogISAxIGxvY2F0aW9uIGlzIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXMgYmVlbiBkaXNjYXJkZWRcblxu4pyUIEV4dHJhY3RpbmcgcHJlZGljdG9yIGluZm9ybWF0aW9uIGZvciBwcmVzZW5jZSBsb2NhdGlvbnMgWzE3Mm1zXVxuXG5cbuKEuSBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgYWJzZW5jZS9iYWNrZ3JvdW5kIGxvY2F0aW9uc1xuV2FybmluZzogISAxOSBsb2NhdGlvbnMgYXJlIE5BIGZvciBzb21lIGVudmlyb25tZW50YWwgdmFyaWFibGVzIGFuZCBoYXZlIGJlZW4gZGlzY2FyZGVkXG5cbuKclCBFeHRyYWN0aW5nIHByZWRpY3RvciBpbmZvcm1hdGlvbiBmb3IgYWJzZW5jZS9iYWNrZ3JvdW5kIGxvY2F0aW9ucyBbNDM1bXNdXG4ifQ== --&gt;
-</code></pre>
-<p>ℹ Extracting predictor information for presence locations Warning: !
-1 location is NA for some environmental variables and has been
-discarded</p>
-<p>✔ Extracting predictor information for presence locations [172ms]</p>
-<p>ℹ Extracting predictor information for absence/background locations
-Warning: ! 19 locations are NA for some environmental variables and have
-been discarded</p>
-<p>✔ Extracting predictor information for absence/background locations
-[435ms]</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxua2ZvbGRzX3ZpIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfdmksIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpXG5cbm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9IFxcUkZcXCxcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfdmksXG4gICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc192aSxcbiAgICAgICAgICAgICAgIG10cnkgPSB0dW5lZF9tdHJ5XzEsXG4gICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsXG4gICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-kfolds_vi &lt;- randomFolds(data = swd_vi, k = 5, only_presence = TRUE, seed = 8)
-
-model_vi &lt;- train(method = \RF\,
-               data = swd_vi,
-               folds = kfolds_vi,
-               mtry = tuned_mtry_1,
-               ntree = tuned_ntree_1,
-               nodesize = tuned_nodesize_1)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICAgICAgICAyMCUgfCBFVEE6ICA4cyAtIDAwOjAwOjEuOVxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICAgICAgICA0MCUgfCBFVEE6ICA2cyAtIDAwOjAwOjA0IFxuXG5Dcm9zcyBWYWxpZGF0aW9uICDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqDilqAgICAgICAgICAgICAgICA2MCUgfCBFVEE6ICA0cyAtIDAwOjAwOjA2XG5cbkNyb3NzIFZhbGlkYXRpb24gIOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoOKWoCAgICAgICAgIDgwJSB8IEVUQTogIDJzIC0gMDA6MDA6MDhcblxuQ3Jvc3MgVmFsaWRhdGlvbiAg4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pag4pagICAxMDAlIHwgRVRBOiAgMHMgLSAwMDowMDoxMFxuIn0= --&gt;
-</code></pre>
-<p>Cross Validation ■■■■■■■ 20% | ETA: 8s - 00:00:1.9</p>
-<p>Cross Validation ■■■■■■■■■■■■■ 40% | ETA: 6s - 00:00:04</p>
-<p>Cross Validation ■■■■■■■■■■■■■■■■■■■ 60% | ETA: 4s - 00:00:06</p>
-<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■ 80% | ETA: 2s -
-00:00:08</p>
-<p>Cross Validation ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 100% | ETA: 0s -
-00:00:10</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzdWx0c192aSA8LSByZWR1Y2VWYXIobW9kZWwgPSBtb2RlbF92aSxcbiAgICAgICAgICB0aCA9IDIsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyXG4gICAgICAgICAgI3Rlc3QgPSB0ZXN0X3ZpLFxuICAgICAgICAgIHVzZV9qayA9IFRSVUUsXG4gICAgICAgICAgbWV0cmljID0gXFxhdWNcXCxcbiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-results_vi &lt;- reduceVar(model = model_vi,
-          th = 2, #cite the SDMTune paper
-          #test = test_vi,
-          use_jk = TRUE,
-          metric = \auc\,
-          permut = 10) #25 (see Geneur et al. 2015)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoi4pyUIFRoZSB2YXJpYWJsZXMgZm9yZXN0XzMwbSwgZWNvcmVnaW9ucywgYW5kIGxzbV8xMGttX2FncmkgaGF2ZSBiZWVuIHJlbW92ZWRcbiJ9 --&gt;
-</code></pre>
-<p>✔ The variables forest_30m, ecoregions, and lsm_10km_agri have been
-removed</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzdWx0c192aVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-results_vi</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiXG7ilIDilIAgT2JqZWN0IG9mIGNsYXNzOiA8U0RNbW9kZWxDVj4g4pSA4pSAXG5cbk1ldGhvZDogUmFuZG9tIEZvcmVzdFxuXG7ilIDilIAgSHlwZXJwYXJhbWV0ZXJzIFxu4oCiIG10cnk6IDFcbuKAoiBudHJlZTogMjEwMFxu4oCiIG5vZGVzaXplOiA4XG5cbuKUgOKUgCBJbmZvIFxu4oCiIFNwZWNpZXM6IFNjb2xvcGF4IG1pbm9yXG7igKIgUmVwbGljYXRlczogNVxu4oCiIFRvdGFsIHByZXNlbmNlIGxvY2F0aW9uczogMTEyXG7igKIgVG90YWwgYWJzZW5jZSBsb2NhdGlvbnM6IDE5ODFcblxu4pSA4pSAIFZhcmlhYmxlcyBcbuKAoiBDb250aW51b3VzOiBcXGxzbV8xa21fZGV2XFwsIFxcbHNtXzEwa21fZWRcXCwgXFxsc21fMTBrbV9kZXZcXCwgXFxlbGV2XzMwbVxcLCBcXHNsb3BlXzMwbVxcLFxuXFxzb2lsX2RyYWluYWdlXzMwbVxcLCBhbmQgXFx0d2lfMzBtXFxcbuKAoiBDYXRlZ29yaWNhbDogXFxzY2xhc3NcXFxuIn0= --&gt;
-</code></pre>
-<p>── Object of class: <SDMmodelCV> ──</p>
-<p>Method: Random Forest</p>
-<p>── Hyperparameters • mtry: 1 • ntree: 2100 • nodesize: 8</p>
-<p>── Info • Species: Scolopax minor • Replicates: 5 • Total presence
-locations: 112 • Total absence locations: 1981</p>
-<p>── Variables • Continuous: _1km_dev, _10km_ed, _10km_dev, _30m, _30m,
-_drainage_30m, and _30m<br />
-• Categorical: <br />
-</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXVjKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC41ODYxNjQ5XG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-auc(results_vi, test = TRUE) #0.5861649</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuODQ2ODQzM1xuIn0= --&gt;
-</code></pre>
-<p>[1] 0.8468433</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudHNzKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC4yMDkwMDI2XG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-tss(results_vi, test = TRUE) #0.2090026</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNTk2Nzk3NlxuIn0= --&gt;
-</code></pre>
-<p>[1] 0.5967976</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-Final variables:
-• Continuous: &quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;,
-&quot;soil_drainage_30m&quot;, and &quot;twi_30m&quot;
-• Categorical: &quot;sclass&quot;
-
-Retune hyperparameters for the final model (which is in a separate script)
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwMiA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwMiA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2RldlwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfaHAyIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIiwgXG4gICAgICAgICAgIGVudiA9IGVudl9ocDIsIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcInNjbGFzc1wiKSlcblxua2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAyLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAyLFxuICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSxcbiAgICAgICAgICAgICAgIG50cmVlID0gdHVuZWRfbnRyZWVfMSxcbiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSlcblxuaHlwZXJzMiA8LSBsaXN0KG10cnk9MTo3LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnNfMiA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAyLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMixcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFwiYXVjXCIsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcblxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIGF1Yyh0ZXN0ID0gVFJVRSkgIzAuODI4OTU2NFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIHRzcyh0ZXN0ID0gVFJVRSkgIzAuNTU3NTQ2OVxuYGBgIn0= --&gt;
-
-```r
-env_hp2 &lt;- terra::rast(predictor_stack_full)
+<pre><code></code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Final variables: • Continuous: “lsm_1km_dev”, “lsm_10km_ed”,
+“lsm_10km_dev”, “elev_30m”, “slope_30m”, “soil_drainage_30m”, and
+“twi_30m” • Categorical: “sclass”</p>
+<p>Retune hyperparameters for the final model (which is in a separate
+script)</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVaVzUyWDJod01pQThMU0IwWlhKeVlUbzZjbUZ6ZENod2NtVmthV04wYjNKZmMzUmhZMnRmWm5Wc2JDbGNibHh1Wlc1MlgyaHdNaUE4TFNCemRXSnpaWFFvWlc1MlgzWnBMQ0JqS0Z3aWJITnRYekZyYlY5a1pYWmNJaXdnWENKc2MyMWZNVEJyYlY5bFpGd2lMQ0JjSW14emJWOHhNR3R0WDJSbGRsd2lMQ0JjSW1Wc1pYWmZNekJ0WENJc0lGd2ljMnh2Y0dWZk16QnRYQ0lzSUZ3aWMyOXBiRjlrY21GcGJtRm5aVjh6TUcxY0lpd2dYQ0owZDJsZk16QnRYQ0lzSUZ3aWMyTnNZWE56WENJcEtWeHVYRzV6ZDJSZmFIQXlJRHd0SUhCeVpYQmhjbVZUVjBRb2MzQmxZMmxsY3lBOUlGd2lVMk52Ykc5d1lYZ2diV2x1YjNKY0lpd2dYRzRnSUNBZ0lDQWdJQ0FnSUdWdWRpQTlJR1Z1ZGw5b2NESXNJRnh1SUNBZ0lDQWdJQ0FnSUNCd0lEMGdjbVZ1WVcxbEtHRnpMbVJoZEdFdVpuSmhiV1VvZFhObFpFQmpiMjl5WkhNcExDQjRJRDBnWTI5dmNtUnpMbmd4TENCNUlEMGdZMjl2Y21SekxuZ3lLU3dnWEc0Z0lDQWdJQ0FnSUNBZ0lHRWdQU0JoY3k1a1lYUmhMbVp5WVcxbEtHRjJZV2xzWDNWdVltbGhjMlZrUUdOdmIzSmtjeWtzWEc0Z0lDQWdJQ0FnSUNBZ0lHTmhkR1ZuYjNKcFkyRnNJRDBnWXloY0luTmpiR0Z6YzF3aUtTbGNibHh1YTJadmJHUnpYMmh3TWlBOExTQnlZVzVrYjIxR2IyeGtjeWhrWVhSaElEMGdjM2RrWDJod01pd2dheUE5SURVc0lHOXViSGxmY0hKbGMyVnVZMlVnUFNCVVVsVkZMQ0J6WldWa0lEMGdPQ2xjYmx4dWJXOWtaV3hmYUhBeUlEd3RJSFJ5WVdsdUtHMWxkR2h2WkNBOUlGd2lVa1pjSWl4Y2JpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUdSaGRHRWdQU0J6ZDJSZmFIQXlMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdabTlzWkhNZ1BTQnJabTlzWkhOZmFIQXlMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdiWFJ5ZVNBOUlIUjFibVZrWDIxMGNubGZNU3hjYmlBZ0lDQWdJQ0FnSUNBZ0lDQWdJRzUwY21WbElEMGdkSFZ1WldSZmJuUnlaV1ZmTVN4Y2JpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUc1dlpHVnphWHBsSUQwZ2RIVnVaV1JmYm05a1pYTnBlbVZmTVNsY2JseHVhSGx3WlhKek1pQThMU0JzYVhOMEtHMTBjbms5TVRvM0xGeHVJQ0FnSUNBZ0lDQWdJQ0FnSUNCdWRISmxaU0E5SUhObGNTaG1jbTl0SUQwZ01UQXdMQ0IwYnlBOUlETXdNREFzSUdKNUlEMGdNVEF3S1N4Y2JpQWdJQ0FnSUNBZ0lDQWdJQ0FnYm05a1pYTnBlbVVnUFNBeE9qRXdLVnh1WEc1MGRXNWxaRjlvZVhCbGNuTmZNaUE4TFNCdmNIUnBiV2w2WlUxdlpHVnNLRzF2WkdWc0lEMGdiVzlrWld4ZmFIQXlMRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ2FIbHdaWEp6SUQwZ2FIbHdaWEp6TWl4Y2JpQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJRzFsZEhKcFl5QTlJRndpWVhWalhDSXNYRzRnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNCelpXVmtJRDBnT0NsY2JseHVkSFZ1WldSZmFIbHdaWEp6WHpKQWJXOWtaV3h6VzFzeFhWMGdJM1Z6WlNCMGFHVWdhSGx3WlhKd1lYSmhiV1YwWlhKeklHWnliMjBnZEdobElHSmxjM1FnYlc5a1pXd2daMjlwYm1jZ1ptOXlkMkZ5WkZ4dWRIVnVaV1JmYUhsd1pYSnpYekpBYlc5a1pXeHpXMXN4WFYwZ0pUNGxJR0YxWXloMFpYTjBJRDBnVkZKVlJTa2dJekF1T0RJNE9UVTJORnh1ZEhWdVpXUmZhSGx3WlhKelh6SkFiVzlrWld4elcxc3hYVjBnSlQ0bElIUnpjeWgwWlhOMElEMGdWRkpWUlNrZ0l6QXVOVFUzTlRRMk9WeHVZR0JnSW4wPSAtLT5cblxuYGBgclxuZW52X2hwMiA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwMiA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2RldlwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfaHAyIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIiwgXG4gICAgICAgICAgIGVudiA9IGVudl9ocDIsIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcInNjbGFzc1wiKSlcblxua2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAyLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAyLFxuICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSxcbiAgICAgICAgICAgICAgIG50cmVlID0gdHVuZWRfbnRyZWVfMSxcbiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSlcblxuaHlwZXJzMiA8LSBsaXN0KG10cnk9MTo3LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnNfMiA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAyLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMixcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFwiYXVjXCIsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcblxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIGF1Yyh0ZXN0ID0gVFJVRSkgIzAuODI4OTU2NFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIHRzcyh0ZXN0ID0gVFJVRSkgIzAuNTU3NTQ2OVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW52X2hwMiA8LSB0ZXJyYTo6cmFzdChwcmVkaWN0b3Jfc3RhY2tfZnVsbClcblxuZW52X2hwMiA8LSBzdWJzZXQoZW52X3ZpLCBjKFwibHNtXzFrbV9kZXZcIiwgXCJsc21fMTBrbV9lZFwiLCBcImxzbV8xMGttX2RldlwiLCBcImVsZXZfMzBtXCIsIFwic2xvcGVfMzBtXCIsIFwic29pbF9kcmFpbmFnZV8zMG1cIiwgXCJ0d2lfMzBtXCIsIFwic2NsYXNzXCIpKVxuXG5zd2RfaHAyIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9IFwiU2NvbG9wYXggbWlub3JcIiwgXG4gICAgICAgICAgIGVudiA9IGVudl9ocDIsIFxuICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwgXG4gICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksXG4gICAgICAgICAgIGNhdGVnb3JpY2FsID0gYyhcInNjbGFzc1wiKSlcblxua2ZvbGRzX2hwMiA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2hwMiwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOClcblxubW9kZWxfaHAyIDwtIHRyYWluKG1ldGhvZCA9IFwiUkZcIixcbiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfaHAyLFxuICAgICAgICAgICAgICAgZm9sZHMgPSBrZm9sZHNfaHAyLFxuICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSxcbiAgICAgICAgICAgICAgIG50cmVlID0gdHVuZWRfbnRyZWVfMSxcbiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSlcblxuaHlwZXJzMiA8LSBsaXN0KG10cnk9MTo3LFxuICAgICAgICAgICAgICBudHJlZSA9IHNlcShmcm9tID0gMTAwLCB0byA9IDMwMDAsIGJ5ID0gMTAwKSxcbiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKVxuXG50dW5lZF9oeXBlcnNfMiA8LSBvcHRpbWl6ZU1vZGVsKG1vZGVsID0gbW9kZWxfaHAyLFxuICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMixcbiAgICAgICAgICAgICAgICAgICAgIG1ldHJpYyA9IFwiYXVjXCIsXG4gICAgICAgICAgICAgICAgICAgICBzZWVkID0gOClcblxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIGF1Yyh0ZXN0ID0gVFJVRSkgIzAuODI4OTU2NFxudHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gJT4lIHRzcyh0ZXN0ID0gVFJVRSkgIzAuNTU3NTQ2OVxuYGBgIn0= -->
+<pre class="r"><code>env_hp2 &lt;- terra::rast(predictor_stack_full)
 
 env_hp2 &lt;- subset(env_vi, c(&quot;lsm_1km_dev&quot;, &quot;lsm_10km_ed&quot;, &quot;lsm_10km_dev&quot;, &quot;elev_30m&quot;, &quot;slope_30m&quot;, &quot;soil_drainage_30m&quot;, &quot;twi_30m&quot;, &quot;sclass&quot;))
 
@@ -2135,11 +2168,11 @@ tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going fo
 tuned_hypers_2@models[[1]] %&gt;% auc(test = TRUE) #0.8289564
 tuned_hypers_2@models[[1]] %&gt;% tss(test = TRUE) #0.5575469</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>mtry: 2 ntree: 3000 nodesize: 9</p>
 <!-- rnb-text-end -->
-</div>
 
 <div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoU0RNdHVuZSkKbGlicmFyeShoZXJlKQpsaWJyYXJ5KHJhc3RlcikKbGlicmFyeShzcCkKbGlicmFyeShzZikKYGBgCgpSZWFkIGluIHByZXByb2Nlc3NlZCBhdmFpbGFibGUgZGF0YQpgYGB7cn0KcHJlZGljdG9yX3N0YWNrX2Z1bGwgPC0gc3RhY2tPcGVuKGhlcmUoIm1ldGhvZHMiLCAiUGVubl9taWdyYXRpb25fbW9kZWwiLCAicHJlZGljdG9yX3N0YWNrX2Z1bGxfbWlnLnN0ayIpKQoKbmFtZXMocHJlZGljdG9yX3N0YWNrX2Z1bGwpIDwtIGMoImxzbV81MDBtX2FpIiwgImxzbV81MDBtX2NvaGVzaW9uIiwgImxzbV81MDBtX2VkIiwgImxzbV81MDBtX3BsYW5kIiwgImxzbV81MDBtX2FncmkiLCAibHNtXzUwMG1fZGV2IiwgImxzbV8xa21fYWkiLCAibHNtXzFrbV9jb2hlc2lvbiIsICJsc21fMWttX2VkIiwgImxzbV8xa21fcGxhbmQiLCAibHNtXzFrbV9hZ3JpIiwgImxzbV8xa21fZGV2IiwgImxzbV81a21fYWkiLCAibHNtXzVrbV9jb2hlc2lvbiIsICJsc21fNWttX2VkIiwgImxzbV81a21fcGxhbmQiLCAibHNtXzVrbV9hZ3JpIiwgImxzbV81a21fZGV2IiwgImxzbV8xMGttX2FpIiwgImxzbV8xMGttX2NvaGVzaW9uIiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX3BsYW5kIiwgImxzbV8xMGttX2FncmkiLCAibHNtXzEwa21fZGV2IiwgImZvcmVzdF8zMG0iLCAiZWxldl8zMG0iLCAic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgInR3aV8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKQoKYXZhaWxfdW5iaWFzZWQgPC0gcmVhZFJEUyhoZXJlKCJtZXRob2RzIiwgIlBlbm5fbWlncmF0aW9uX21vZGVsIiwgImF2YWlsX3VuYmlhc2VkLnJkcyIpKQoKYGBgCgpSZWFkIGluIHRoZSB1c2VkIHBvaW50cwpgYGB7cn0KdXNlZCA8LSBzdF9yZWFkKGRzbiA9IGhlcmUoIm1ldGhvZHMiLCAiUGVubl9taWdyYXRpb25fbW9kZWwiLCAibW92ZWJhbmtfbG9jYXRpb25zIiwgImRpc3BlcnNpbmdfcG9pbnRzX3BhXzZfMl8yMDIxLnNocCIpKSAlPiUgCiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSAKICBhc19TcGF0aWFsKCkgCgpzZXQuc2VlZCg4KQoKYXZhaWxfdW5iaWFzZWQgPC0gYXZhaWxfdW5iaWFzZWQgJT4lCiAgc3RfYXNfc2YoKSAlPiUgCiAgc3RfdHJhbnNmb3JtKHN0X2NycyhwcmVkaWN0b3Jfc3RhY2tfZnVsbCkpICU+JSAKICBzbGljZV9zYW1wbGUobiA9IDIwMDApICU+JSAKICBhc19TcGF0aWFsKCkKYGBgCgpQcmVwIFNETXMKYGBge3J9CnN3ZF9mdWxsIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJTY29sb3BheCBtaW5vciIsIAogICAgICAgICAgIGVudiA9IHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKSwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpCgojIFNwbGl0IHByZXNlbmNlIGxvY2F0aW9ucyBpbiB0cmFpbmluZyAoODAlKSBhbmQgdGVzdGluZyAoMjAlKSBkYXRhc2V0cwojIGRhdGFzZXRzIDwtIHRyYWluVmFsVGVzdChzd2RfZnVsbCwKIyAgICAgICAgICAgICAgICAgICAgICAgICAgdGVzdCA9IDAuMiwKIyAgICAgICAgICAgICAgICAgICAgICAgICAgb25seV9wcmVzZW5jZSA9IEZBTFNFLAojICAgICAgICAgICAgICAgICAgICAgICAgICBzZWVkID0gOCkKIyB0cmFpbiA8LSBkYXRhc2V0c1tbMV1dCiMgdGVzdCA8LSBkYXRhc2V0c1tbMl1dCmtmb2xkcyA8LSByYW5kb21Gb2xkcyhkYXRhID0gc3dkX2Z1bGwsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBrID0gNSwgc2VlZCA9IDgpCmBgYAoKVHJhaW5pbmcgYSBiYXNpYywgZnVsbCBtb2RlbApgYGB7cn0KbW9kZWwgPC0gdHJhaW4obWV0aG9kID0gIlJGIiwKICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9mdWxsLAogICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkcywKICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKQoKYXVjKG1vZGVsLCB0ZXN0ID0gVFJVRSkgIzAuODU4NzA4Ngp0c3MobW9kZWwsIHRlc3QgPSBUUlVFKSAjMC42MjQ2MTIxCmBgYAoKIyBSZW1vdmUgdmFyaWFibGVzIHdpdGggaGlnaCBjb3JyZWxhdGlvbgoKYGBge3J9CmJnIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJDb3JyZWxhdGlvbiB0ZXN0IiwKICAgICAgICAgICAgICAgICBhID0gYXZhaWxfdW5iaWFzZWQsCiAgICAgICAgICAgICAgICAgZW52ID0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpLAogICAgICAgICAgIGNhdGVnb3JpY2FsID0gYygiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKcmVzdWx0c192cyA8LSB2YXJTZWwobW9kZWwsCiAgICAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwKICAgICAgICAgICAgIGJnNGNvciA9IGJnLAogICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0LAogICAgICAgICAgICAgY29yX3RoID0gMC43LCAjY2l0ZSB0aGUgU0RNVHVuZSBwYXBlcgogICAgICAgICAgICAgcGVybXV0ID0gMTApICMyNSAoc2VlIEdlbmV1ciBldCBhbC4gMjAxNSkKcmVzdWx0c192cwpgYGAKS2VlcGluZzogCuKAoiBDb250aW51b3VzOiAibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLAoic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgYW5kICJ0d2lfMzBtIgrigKIgQ2F0ZWdvcmljYWw6ICJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiIGFuZCAic2NsYXNzIgoKIyBUdW5lIGh5cGVycGFyYW1ldGVycwpgYGB7cn0KZW52X2hwIDwtIHRlcnJhOjpyYXN0KHByZWRpY3Rvcl9zdGFja19mdWxsKQoKZW52X2hwIDwtIHN1YnNldChlbnZfaHAsIGMoImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2FncmkiLCAibHNtXzEwa21fZGV2IiwgImVsZXZfMzBtIiwgInNsb3BlXzMwbSIsICJzb2lsX2RyYWluYWdlXzMwbSIsICJ0d2lfMzBtIiwgImZvcmVzdF8zMG0iLCAiZWNvcmVnaW9ucyIsICJzY2xhc3MiKSkKCnN3ZF9ocCA8LSBwcmVwYXJlU1dEKHNwZWNpZXMgPSAiU2NvbG9wYXggbWlub3IiLAogICAgICAgICAgIGVudiA9IGVudl9ocCwKICAgICAgICAgICBwID0gcmVuYW1lKGFzLmRhdGEuZnJhbWUodXNlZEBjb29yZHMpLCB4ID0gY29vcmRzLngxLCB5ID0gY29vcmRzLngyKSwKICAgICAgICAgICBhID0gYXMuZGF0YS5mcmFtZShhdmFpbF91bmJpYXNlZEBjb29yZHMpLAogICAgICAgICAgIGNhdGVnb3JpY2FsID0gYygiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKa2ZvbGRzX2hwIDwtIHJhbmRvbUZvbGRzKGRhdGEgPSBzd2RfaHAsIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpCgptb2RlbF9ocCA8LSB0cmFpbihtZXRob2QgPSAiUkYiLAogICAgICAgICAgICAgICBkYXRhID0gc3dkX2hwLAogICAgICAgICAgICAgICBmb2xkcyA9IGtmb2xkc19ocCwKICAgICAgICAgICAgICAgbnRyZWUgPSAyMDAwKQoKaHlwZXJzIDwtIGxpc3QobXRyeT0xOjgsCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksCiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKQoKdHVuZWRfaHlwZXJzIDwtIG9wdGltaXplTW9kZWwobW9kZWwgPSBtb2RlbF9ocCwKICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzLAogICAgICAgICAgICAgICAgICAgICBtZXRyaWMgPSAiYXVjIiwKICAgICAgICAgICAgICAgICAgICAgI3Rlc3QgPSB0ZXN0X2hwLAogICAgICAgICAgICAgICAgICAgICBzZWVkID0gOCkKCnR1bmVkX2h5cGVyc0Btb2RlbHNbWzFdXSAjdXNlIHRoZSBoeXBlcnBhcmFtZXRlcnMgZnJvbSB0aGUgYmVzdCBtb2RlbCBnb2luZyBmb3J3YXJkCgp0dW5lZF9tdHJ5XzEgPC0gdHVuZWRfaHlwZXJzQG1vZGVsc1tbMV1dQG1vZGVsc1tbMV1dQG1vZGVsQG10cnkKdHVuZWRfbnRyZWVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbnRyZWUKdHVuZWRfbm9kZXNpemVfMSA8LSB0dW5lZF9oeXBlcnNAbW9kZWxzW1sxXV1AbW9kZWxzW1sxXV1AbW9kZWxAbm9kZXNpemUKYGBgCgptdHJ5OiAxCm50cmVlOiAyMTAwCm5vZGVzaXplOiA4CgojIEVsaW1pbmF0ZSB2YXJpYWJsZXMgd2l0aCBzbWFsbCB2YXJpYWJsZSBpbXBvcnRhbmNlCmBgYHtyfQplbnZfdmkgPC0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpCgojY29sbmFtZXMocmVzdWx0c192aUBkYXRhQGRhdGEpCgplbnZfdmkgPC0gc3Vic2V0KGVudl92aSwgYygibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fYWdyaSIsICJsc21fMTBrbV9kZXYiLCAiZWxldl8zMG0iLCAic2xvcGVfMzBtIiwgInNvaWxfZHJhaW5hZ2VfMzBtIiwgInR3aV8zMG0iLCAiZm9yZXN0XzMwbSIsICJlY29yZWdpb25zIiwgInNjbGFzcyIpKQoKc3dkX3ZpIDwtIHByZXBhcmVTV0Qoc3BlY2llcyA9ICJTY29sb3BheCBtaW5vciIsIAogICAgICAgICAgIGVudiA9IGVudl92aSwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJmb3Jlc3RfMzBtIiwgImVjb3JlZ2lvbnMiLCAic2NsYXNzIikpCgprZm9sZHNfdmkgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF92aSwgayA9IDUsIG9ubHlfcHJlc2VuY2UgPSBUUlVFLCBzZWVkID0gOCkKCm1vZGVsX3ZpIDwtIHRyYWluKG1ldGhvZCA9ICJSRiIsCiAgICAgICAgICAgICAgIGRhdGEgPSBzd2RfdmksCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX3ZpLAogICAgICAgICAgICAgICBtdHJ5ID0gdHVuZWRfbXRyeV8xLAogICAgICAgICAgICAgICBudHJlZSA9IHR1bmVkX250cmVlXzEsCiAgICAgICAgICAgICAgIG5vZGVzaXplID0gdHVuZWRfbm9kZXNpemVfMSkKCnJlc3VsdHNfdmkgPC0gcmVkdWNlVmFyKG1vZGVsID0gbW9kZWxfdmksCiAgICAgICAgICB0aCA9IDIsICNjaXRlIHRoZSBTRE1UdW5lIHBhcGVyCiAgICAgICAgICAjdGVzdCA9IHRlc3RfdmksCiAgICAgICAgICB1c2VfamsgPSBUUlVFLAogICAgICAgICAgbWV0cmljID0gImF1YyIsCiAgICAgICAgICBwZXJtdXQgPSAxMCkgIzI1IChzZWUgR2VuZXVyIGV0IGFsLiAyMDE1KQoKcmVzdWx0c192aQphdWMocmVzdWx0c192aSwgdGVzdCA9IFRSVUUpICMwLjg0Njg0MzMKdHNzKHJlc3VsdHNfdmksIHRlc3QgPSBUUlVFKSAjMC41OTY3OTc2CmBgYApGaW5hbCB2YXJpYWJsZXM6CuKAoiBDb250aW51b3VzOiAibHNtXzFrbV9kZXYiLCAibHNtXzEwa21fZWQiLCAibHNtXzEwa21fZGV2IiwgImVsZXZfMzBtIiwgInNsb3BlXzMwbSIsCiJzb2lsX2RyYWluYWdlXzMwbSIsIGFuZCAidHdpXzMwbSIK4oCiIENhdGVnb3JpY2FsOiAic2NsYXNzIgoKUmV0dW5lIGh5cGVycGFyYW1ldGVycyBmb3IgdGhlIGZpbmFsIG1vZGVsICh3aGljaCBpcyBpbiBhIHNlcGFyYXRlIHNjcmlwdCkKYGBge3J9CmVudl9ocDIgPC0gdGVycmE6OnJhc3QocHJlZGljdG9yX3N0YWNrX2Z1bGwpCgplbnZfaHAyIDwtIHN1YnNldChlbnZfdmksIGMoImxzbV8xa21fZGV2IiwgImxzbV8xMGttX2VkIiwgImxzbV8xMGttX2RldiIsICJlbGV2XzMwbSIsICJzbG9wZV8zMG0iLCAic29pbF9kcmFpbmFnZV8zMG0iLCAidHdpXzMwbSIsICJzY2xhc3MiKSkKCnN3ZF9ocDIgPC0gcHJlcGFyZVNXRChzcGVjaWVzID0gIlNjb2xvcGF4IG1pbm9yIiwgCiAgICAgICAgICAgZW52ID0gZW52X2hwMiwgCiAgICAgICAgICAgcCA9IHJlbmFtZShhcy5kYXRhLmZyYW1lKHVzZWRAY29vcmRzKSwgeCA9IGNvb3Jkcy54MSwgeSA9IGNvb3Jkcy54MiksIAogICAgICAgICAgIGEgPSBhcy5kYXRhLmZyYW1lKGF2YWlsX3VuYmlhc2VkQGNvb3JkcyksCiAgICAgICAgICAgY2F0ZWdvcmljYWwgPSBjKCJzY2xhc3MiKSkKCmtmb2xkc19ocDIgPC0gcmFuZG9tRm9sZHMoZGF0YSA9IHN3ZF9ocDIsIGsgPSA1LCBvbmx5X3ByZXNlbmNlID0gVFJVRSwgc2VlZCA9IDgpCgptb2RlbF9ocDIgPC0gdHJhaW4obWV0aG9kID0gIlJGIiwKICAgICAgICAgICAgICAgZGF0YSA9IHN3ZF9ocDIsCiAgICAgICAgICAgICAgIGZvbGRzID0ga2ZvbGRzX2hwMiwKICAgICAgICAgICAgICAgbXRyeSA9IHR1bmVkX210cnlfMSwKICAgICAgICAgICAgICAgbnRyZWUgPSB0dW5lZF9udHJlZV8xLAogICAgICAgICAgICAgICBub2Rlc2l6ZSA9IHR1bmVkX25vZGVzaXplXzEpCgpoeXBlcnMyIDwtIGxpc3QobXRyeT0xOjcsCiAgICAgICAgICAgICAgbnRyZWUgPSBzZXEoZnJvbSA9IDEwMCwgdG8gPSAzMDAwLCBieSA9IDEwMCksCiAgICAgICAgICAgICAgbm9kZXNpemUgPSAxOjEwKQoKdHVuZWRfaHlwZXJzXzIgPC0gb3B0aW1pemVNb2RlbChtb2RlbCA9IG1vZGVsX2hwMiwKICAgICAgICAgICAgICAgICAgICAgaHlwZXJzID0gaHlwZXJzMiwKICAgICAgICAgICAgICAgICAgICAgbWV0cmljID0gImF1YyIsCiAgICAgICAgICAgICAgICAgICAgIHNlZWQgPSA4KQoKdHVuZWRfaHlwZXJzXzJAbW9kZWxzW1sxXV0gI3VzZSB0aGUgaHlwZXJwYXJhbWV0ZXJzIGZyb20gdGhlIGJlc3QgbW9kZWwgZ29pbmcgZm9yd2FyZAp0dW5lZF9oeXBlcnNfMkBtb2RlbHNbWzFdXSAlPiUgYXVjKHRlc3QgPSBUUlVFKSAjMC44Mjg5NTY0CnR1bmVkX2h5cGVyc18yQG1vZGVsc1tbMV1dICU+JSB0c3ModGVzdCA9IFRSVUUpICMwLjU1NzU0NjkKYGBgCgptdHJ5OiAyCm50cmVlOiAzMDAwCm5vZGVzaXplOiA5Cgo=</div>
 

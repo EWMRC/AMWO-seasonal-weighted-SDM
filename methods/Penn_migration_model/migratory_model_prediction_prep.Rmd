@@ -10,6 +10,7 @@ library(here)
 library(raster)
 library(sp)
 library(sf)
+library(ecospat)
 ```
 
 Read in preprocessed available data
@@ -24,7 +25,7 @@ avail_unbiased <- readRDS(here("methods", "Penn_migration_model", "avail_unbiase
 
 Read in the used points
 ```{r}
-used <- st_read(dsn = there::here_file("Data", "movebank_locations", "dispersing_points_pa_6_2_2021.shp")) %>% 
+used <- st_read(dsn = here("methods", "Penn_migration_model","dispersing_points_pa_6_2_2021.shp")) %>% 
   st_transform(st_crs(predictor_stack_full)) %>% 
   as_Spatial() 
 
@@ -85,7 +86,26 @@ model <- train(method = "RF",
                nodesize = 9)
 
 auc(model, test = TRUE) #0.8302482
-tss(model, test = TRUE) #0.5601317
+#tss(model, test = TRUE) #0.5601317 #tss is not appropriate for presence-only
+
+# calculating the boyce index (Hirzel et al. (2006))
+
+rf_predictions <- tibble(pres_abs = swd@pa,
+                         value = predict(model, swd))
+
+predicted_rast <- terra::rast(here("methods", "Penn_migration_model", "output_layer","rf_mig_5_15_24.tif")) #this is a bit circular, but bear with me
+
+predicted_used <- rf_predictions %>% 
+  filter(pres_abs == 1) %>% 
+  pull(value)
+
+predicted_background <- terra::values(predicted_rast)
+
+predicted_background <- predicted_background[!is.na(predicted_background)]
+
+boyce_results <- ecospat.boyce(predicted_background, predicted_used, nclass = 10)
+
+boyce_results$cor #0.205
 
 saveRDS(model, here("methods", "Penn_migration_model", "model_migratory.rds"))
 
