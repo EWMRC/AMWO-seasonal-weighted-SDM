@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(randomForest)
+library(SDMtune)
+library(here)
+```
+
+```{r}
+model_mig <- readRDS(here("methods", "Penn_migration_model", "model_migratory.rds"))
+
+model_res <- readRDS(here("methods", "Penn_residential_model", "model_residential.rds"))
+```
+
+Calculating permutation importance: "returns the average and the standard deviation of the permutation importances of the single models"
+
+normalized to % decrease in training AUC (higher is more important)
+
+Default is 10 permutations
+```{r}
+vi_mig <- varImp(model_mig)
+vi_res <- varImp(model_res)
+```
+
+Combine into a single dataframe
+```{r}
+vi_mig$model <- "Migratory"
+vi_res$model <- "Breeding"
+
+vi <- bind_rows(vi_mig,vi_res) %>% 
+  filter()
+```
+
+Let's figure out how to plot it
+```{r}
+ggplot(vi, aes(x ))
+```
+
