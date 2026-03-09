@@ -107,6 +107,8 @@ boyce_results <- ecospat.boyce(predicted_background, predicted_used)
 
 boyce_results$cor #0.396
 
+# saving results
+
 saveRDS(model, here("methods", "Penn_migration_model", "model_migratory.rds"))
 
 # individual models (for prediction on the cluster)

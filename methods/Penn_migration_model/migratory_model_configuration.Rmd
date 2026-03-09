@@ -62,7 +62,7 @@ model <- train(method = "RF",
                ntree = 2000)
 
 auc(model, test = TRUE) #0.8587086
-tss(model, test = TRUE) #0.6246121
+#tss(model, test = TRUE) #0.6246121 #TSS not useful for presence-only
 ```
 
 # Remove variables with high correlation
@@ -158,7 +158,7 @@ results_vi <- reduceVar(model = model_vi,
 
 results_vi
 auc(results_vi, test = TRUE) #0.8468433
-tss(results_vi, test = TRUE) #0.5967976
+#tss(results_vi, test = TRUE) #0.5967976
 ```
 Final variables:
 • Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_dev", "elev_30m", "slope_30m",
@@ -197,7 +197,7 @@ tuned_hypers_2 <- optimizeModel(model = model_hp2,
 
 tuned_hypers_2@models[[1]] #use the hyperparameters from the best model going forward
 tuned_hypers_2@models[[1]] %>% auc(test = TRUE) #0.8289564
-tuned_hypers_2@models[[1]] %>% tss(test = TRUE) #0.5575469
+#tuned_hypers_2@models[[1]] %>% tss(test = TRUE) #0.5575469
 ```
 
 mtry: 2
