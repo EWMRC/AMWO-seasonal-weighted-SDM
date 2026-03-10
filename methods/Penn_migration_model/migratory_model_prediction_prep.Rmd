@@ -78,6 +78,7 @@ train_data_5@data <- train_data_5@data[kfolds$train[,5],]
 train_data_5@pa <- train_data_5@pa[kfolds$train[,5]]
 
 ## Normal model (for evaluation)
+set.seed(8)
 model <- train(method = "RF",
                data = swd,
                folds = kfolds,
@@ -86,26 +87,6 @@ model <- train(method = "RF",
                nodesize = 9)
 
 auc(model, test = TRUE) #0.8302482
-#tss(model, test = TRUE) #0.5601317 #tss is not appropriate for presence-only
-
-# calculating the boyce index (Hirzel et al. (2006))
-
-rf_predictions <- tibble(pres_abs = swd@pa,
-                         value = predict(model, swd))
-
-predicted_rast <- terra::rast(here("methods", "Penn_migration_model", "output_layer","rf_mig_5_15_24.tif")) #this is a bit circular, but bear with me
-
-predicted_used <- rf_predictions %>% 
-  filter(pres_abs == 1) %>% 
-  pull(value)
-
-predicted_background <- terra::values(predicted_rast)
-
-predicted_background <- predicted_background[!is.na(predicted_background)]
-
-boyce_results <- ecospat.boyce(predicted_background, predicted_used)
-
-boyce_results$cor #0.396
 
 # saving results
 
@@ -149,22 +130,33 @@ saveRDS(model_3, here("methods", "Penn_migration_model", "model_migratory_3.rds"
 saveRDS(model_4, here("methods", "Penn_migration_model", "model_migratory_4.rds"))
 saveRDS(model_5, here("methods", "Penn_migration_model", "model_migratory_5.rds"))
 
-# modelReport(model, here("methods", "Penn_migration_model", "report")) #not working
-# # use for a statistical report in another file
-# plotResponse(model, var = "lsm_1km_dev")
-# plotResponse(model, var = "lsm_10km_ed")
-# plotResponse(model, var = "lsm_10km_dev")
-# plotResponse(model, var = "elev_30m")
-# plotResponse(model, var = "slope_30m")
-# plotResponse(model, var = "soil_drainage_30m")
-# plotResponse(model, var = "twi_30m")
-# plotResponse(model, var = "sclass")
-# plotROC(model@models[[1]])
-
-# model_vi <- varImp(model) #calculates permutation importance, which comes from MaxEnt
-# model_vi
-# plotVarImp(model_vi)
 ```
+
+Calculating the boyce index (Hirzel et al. (2006)) using cross validation
+```{r}
+boyce_values <- map2_dbl(1:5,list(model_1, model_2, model_3, model_4, model_5), function(x, k){
+  rf_predictions <- tibble(pres_abs = swd@pa[kfolds$test[,x]],
+                             value = predict(k, swd)[kfolds$test[,x]])
+  
+  predicted_background <- rf_predictions %>% 
+    filter(pres_abs==0) %>% 
+    pull(value)
+  
+  predicted_used <- rf_predictions %>% 
+    filter(pres_abs==1) %>% 
+    pull(value)
+  
+  boyce_results <- ecospat.boyce(predicted_background, predicted_used)
+  
+  boyce_results$cor %>% 
+    return()
+})
+
+mean(boyce_values)
+# 0.6878
+
+```
+
 
 # Making a prediction layer
 Cutting using a fishnet for parallel processing
