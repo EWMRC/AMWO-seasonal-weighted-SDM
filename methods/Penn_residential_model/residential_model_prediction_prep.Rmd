@@ -62,14 +62,14 @@ Run fully configured model
 ```{r}
 env <- terra::rast(predictor_stack_full)
 
-env <- subset(env, c("lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m")) 
+env <- subset(env, c("lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "ecoregions", "sclass")) 
 
 swd <- prepareSWD(species = "Scolopax minor", 
                   env = env, 
                   p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
-                  a = as.data.frame(avail@coords)) #categorical = c("ecoregions", "sclass")
+                  a = as.data.frame(avail@coords), categorical = c("ecoregions", "sclass"))
 
-swd@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+# swd@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
 
 kfolds <- randomFolds(data = swd, k = 5, seed = 8)
 
@@ -99,15 +99,16 @@ train_data_5@data <- train_data_5@data[kfolds$train[,5],]
 train_data_5@pa <- train_data_5@pa[kfolds$train[,5]]
 
 ## Normal model (for evaluation)
+set.seed(12)
 model <- train(method = "RF",
                data = swd,
                folds = kfolds,
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
-auc(model, test = TRUE) #0.7947335 new 0.7995098
-tss(model, test = TRUE) #0.6002011 new 0.5730518
+auc(model, test = TRUE) #0.7995098 new 0.6738269
+tss(model, test = TRUE) #0.5730518 new 0.431825
 
 saveRDS(model, here("methods", "Penn_residential_model", "model_residential.rds"))
 
@@ -117,31 +118,31 @@ model_1 <- train(method = "RF",
                data = train_data_1, #training dataset
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
 model_2 <- train(method = "RF",
                data = train_data_2, #training dataset
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
 model_3 <- train(method = "RF",
                data = train_data_3, #training dataset
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
 model_4 <- train(method = "RF",
                data = train_data_4, #training dataset
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
 model_5 <- train(method = "RF",
                data = train_data_5, #training dataset
                mtry = 2,
                ntree = 200,
-               nodesize = 1)
+               nodesize = 2)
 
 saveRDS(model_1, here("methods", "Penn_residential_model", "model_residential_1.rds"))
 saveRDS(model_2, here("methods", "Penn_residential_model", "model_residential_2.rds"))
@@ -168,17 +169,17 @@ saveRDS(model_5, here("methods", "Penn_residential_model", "model_residential_5.
 
 Add a "survey" layer to the raster stack for prediction
 ```{r}
-forest_30m <- here("methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster()
-
-survey <- forest_30m
-names(survey) <- "survey"
-survey[survey] <- 0
-# levels(survey) <- data.frame(ID = 0:1, survey = 0:1)
-
-env_survey <- c(env, terra::rast(survey))
-names(env_survey)[length(names(env_survey))] <- "survey"
-
-env_survey
+# forest_30m <- here("methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster()
+# 
+# survey <- forest_30m
+# names(survey) <- "survey"
+# survey[survey] <- 0
+# # levels(survey) <- data.frame(ID = 0:1, survey = 0:1)
+# 
+# env_survey <- c(env, terra::rast(survey))
+# names(env_survey)[length(names(env_survey))] <- "survey"
+# 
+# env_survey
 ```
 
 # Making a prediction layer
