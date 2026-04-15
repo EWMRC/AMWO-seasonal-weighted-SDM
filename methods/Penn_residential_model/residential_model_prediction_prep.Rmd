@@ -7,14 +7,14 @@ output: html_notebook
 library(tidyverse)
 library(SDMtune)
 library(here)
-library(raster)
+library(terra)
 library(sp)
 library(sf)
 ```
 
 Read in preprocessed available data
 ```{r}
-predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
+predictor_stack_full <- raster::stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
 
 names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
 ```
@@ -62,12 +62,12 @@ Run fully configured model
 ```{r}
 env <- terra::rast(predictor_stack_full)
 
-env <- subset(env, c("lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "ecoregions", "sclass")) 
+env <- subset(env, c("lsm_10km_agri", "lsm_10km_dev", "elev_30m","slope_30m", "soil_drainage_30m"))
 
 swd <- prepareSWD(species = "Scolopax minor", 
                   env = env, 
                   p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
-                  a = as.data.frame(avail@coords), categorical = c("ecoregions", "sclass"))
+                  a = as.data.frame(avail@coords))
 
 # swd@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
 
@@ -99,16 +99,16 @@ train_data_5@data <- train_data_5@data[kfolds$train[,5],]
 train_data_5@pa <- train_data_5@pa[kfolds$train[,5]]
 
 ## Normal model (for evaluation)
-set.seed(12)
+set.seed(8)
 model <- train(method = "RF",
                data = swd,
                folds = kfolds,
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
-auc(model, test = TRUE) #0.7995098 new 0.6738269
-tss(model, test = TRUE) #0.5730518 new 0.431825
+auc(model, test = TRUE) #0.6896137
+tss(model, test = TRUE) #0.4027401
 
 saveRDS(model, here("methods", "Penn_residential_model", "model_residential.rds"))
 
@@ -116,33 +116,33 @@ saveRDS(model, here("methods", "Penn_residential_model", "model_residential.rds"
 
 model_1 <- train(method = "RF",
                data = train_data_1, #training dataset
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
 model_2 <- train(method = "RF",
                data = train_data_2, #training dataset
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
 model_3 <- train(method = "RF",
                data = train_data_3, #training dataset
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
 model_4 <- train(method = "RF",
                data = train_data_4, #training dataset
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
 model_5 <- train(method = "RF",
                data = train_data_5, #training dataset
-               mtry = 2,
+               mtry = 4,
                ntree = 200,
-               nodesize = 2)
+               nodesize = 9)
 
 saveRDS(model_1, here("methods", "Penn_residential_model", "model_residential_1.rds"))
 saveRDS(model_2, here("methods", "Penn_residential_model", "model_residential_2.rds"))
@@ -150,36 +150,7 @@ saveRDS(model_3, here("methods", "Penn_residential_model", "model_residential_3.
 saveRDS(model_4, here("methods", "Penn_residential_model", "model_residential_4.rds"))
 saveRDS(model_5, here("methods", "Penn_residential_model", "model_residential_5.rds"))
 
-# modelReport(model, here("methods", "Penn_migration_model", "report")) #not working
-# # use for a statistical report in another file
-# plotResponse(model, var = "lsm_1km_dev")
-# plotResponse(model, var = "lsm_10km_ed")
-# plotResponse(model, var = "lsm_10km_dev")
-# plotResponse(model, var = "elev_30m")
-# plotResponse(model, var = "slope_30m")
-# plotResponse(model, var = "soil_drainage_30m")
-# plotResponse(model, var = "twi_30m")
-# plotResponse(model, var = "sclass")
-# plotROC(model@models[[1]])
 
-# model_vi <- varImp(model) #calculates permutation importance, which comes from MaxEnt
-# model_vi
-# plotVarImp(model_vi)
-```
-
-Add a "survey" layer to the raster stack for prediction
-```{r}
-# forest_30m <- here("methods", "Penn_migration_model", "predictor_rasters", "nlcd2016_forestpatches.tif") %>% raster()
-# 
-# survey <- forest_30m
-# names(survey) <- "survey"
-# survey[survey] <- 0
-# # levels(survey) <- data.frame(ID = 0:1, survey = 0:1)
-# 
-# env_survey <- c(env, terra::rast(survey))
-# names(env_survey)[length(names(env_survey))] <- "survey"
-# 
-# env_survey
 ```
 
 # Making a prediction layer
@@ -189,8 +160,8 @@ fishnet <- st_read(here("methods", "Penn_residential_model", "fishnet", "pa_fish
   st_transform(crs(predictor_stack_full))
 
 for(i in 1:nrow(fishnet)){
-  temp_extent <- fishnet[i,] %>% as_Spatial() %>% extent()
-  crop(x = env, y = temp_extent, 
+  temp_extent <- fishnet[i,] %>% as_Spatial() %>% raster::extent()
+  raster::crop(x = env, y = temp_extent, 
        filename = here("methods", "Penn_residential_model", "predictor_stack", paste0("predictor_stack_30m_",i,".grd")), overwrite = TRUE) 
 }
 ```

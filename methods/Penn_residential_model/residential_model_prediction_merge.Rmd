@@ -17,7 +17,7 @@ tile_names <- here("methods", "Penn_residential_model", "predict_output") %>%
   list.files()
 
 tile_rasters <- map(tile_names, function(x){
-  here("methods", "Penn_residential_model", "predict_output", x)%>%
+  here("methods", "Penn_residential_model", "predict_output", x) %>%
     raster()
 })
 
@@ -27,6 +27,6 @@ for(i in 2:length(tile_rasters)){
   merged_rasters <- raster::merge(merged_rasters, tile_rasters[[i]])
 }
 
-writeRaster(merged_rasters, here("methods", "Penn_residential_model", "output_layer", "rf_res_5_15_24.tif"))
+writeRaster(merged_rasters, here("methods", "Penn_residential_model", "output_layer", "rf_res_4_13_26.tif"))
 ```
 

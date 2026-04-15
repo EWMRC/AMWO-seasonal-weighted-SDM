@@ -17,8 +17,7 @@ predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predi
 
 names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
 
-## why is this in here? commenting it out for now
-# predictor_stack_full <- subset(predictor_stack_full, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m")) #remove "ecoregions", "sclass"
+predictor_stack_full <- subset(predictor_stack_full, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m")) #remove "ecoregions", "sclass"
 ```
 
 Read in the used points, and transform the used and available points to match the predictor stack
@@ -60,14 +59,13 @@ avail <- surveys_all %>%
   as_Spatial()
 ```
 
-
 Prep SDMs
 ```{r}
 swd_full <- prepareSWD(species = "Scolopax minor", 
            env = terra::rast(predictor_stack_full), 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail@coords),
-           categorical = c("forest_30m", "ecoregions", "sclass"))
+           categorical = c("forest_30m"))
 
 kfolds <- randomFolds(data = swd_full, k = 5, seed = 8)
 ```
@@ -79,8 +77,8 @@ model <- train(method = "RF",
                folds = kfolds,
                ntree = 2000)
 
-auc(model, test = TRUE) #0.726965
-tss(model, test = TRUE) #0.4666164
+auc(model, test = TRUE) #0.7171841
+tss(model, test = TRUE) #0.4525138
 ```
 
 # Remove variables with high correlation
@@ -102,7 +100,7 @@ bg_coords <- avail_unbiased %>%
 bg <- prepareSWD(species = "Correlation test",
                  a = bg_coords,
                  env = terra::rast(predictor_stack_full),
-           categorical = c("forest_30m", "ecoregions", "sclass")) #
+           categorical = c("forest_30m")) #
 
 results_vs <- varSel(model,
              metric = "auc",
@@ -113,32 +111,22 @@ results_vs <- varSel(model,
 results_vs
 ```
 Keeping: 
-• Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m",
-• Categorical: "forest_30m", "ecoregions", "sclass"
+• Continuous: "lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri",
+"lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", and
+"twi_30m"
+• Categorical: "forest_30m"
 
 # Tune hyperparameters
 ```{r}
 env_hp <- terra::rast(predictor_stack_full)
 
-env_hp <- subset(env_hp, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m", "ecoregions", "sclass"))
+env_hp <- subset(env_hp, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m"))
 
 swd_hp <- prepareSWD(species = "Scolopax minor", 
            env = env_hp, 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail@coords),
-           categorical = c("forest_30m", "ecoregions", "sclass"))
-
-#adding back in survey type manually
-# swd_hp@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
-
-# Split presence locations in training (80%) and testing (20%) datasets
-# datasets_hp <- trainValTest(swd_hp,
-#                          test = 0.2,
-#                          only_presence = FALSE,
-#                          seed = 8)
-# 
-# train_hp <- datasets_hp[[1]]
-# test_hp <- datasets_hp[[2]]
+           categorical = c("forest_30m"))
 
 kfolds_hp <- randomFolds(data = swd_hp, k = 5, seed = 8)
 
@@ -154,7 +142,6 @@ hypers <- list(mtry=1:8,
 tuned_hypers <- optimizeModel(model = model_hp,
                      hypers = hypers,
                      metric = "auc",
-                     #test = test_hp,
                      seed = 8)
 
 tuned_hypers@models[[1]] #use the hyperparameters from the best model going forward
@@ -164,9 +151,9 @@ tuned_ntree_1 <- tuned_hypers@models[[1]]@models[[1]]@model@ntree
 tuned_nodesize_1 <- tuned_hypers@models[[1]]@models[[1]]@model@nodesize
 ```
 
-mtry: 6
-ntree: 1000
-nodesize: 8
+• mtry: 6
+• ntree: 1000
+• nodesize: 6
 
 # Eliminate variables with small variable importance
 ```{r}
@@ -174,25 +161,13 @@ env_vi <- terra::rast(predictor_stack_full)
 
 #colnames(results_vi@data@data)
 
-env_vi <- subset(env_vi, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m", "ecoregions", "sclass"))
+env_vi <- subset(env_hp, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m"))
 
 swd_vi <- prepareSWD(species = "Scolopax minor", 
            env = env_vi, 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail@coords),
-           categorical = c("forest_30m", "ecoregions", "sclass")) #, "ecoregions", "sclass"
-
-# Split presence locations in training (80%) and testing (20%) datasets
-# datasets_vi <- trainValTest(swd_vi,
-#                          test = 0.2,
-#                          only_presence = FALSE,
-#                          seed = 8)
-# 
-# train_vi <- datasets_vi[[1]]
-# test_vi <- datasets_vi[[2]]
-
-#adding back in survey type manually
-# swd_vi@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+           categorical = c("forest_30m")) 
 
 kfolds_vi <- randomFolds(data = swd_vi, k = 5, seed = 8)
 
@@ -211,36 +186,24 @@ results_vi <- reduceVar(model = model_vi,
           permut = 10) #25 (see Geneur et al. 2015)
 
 results_vi
-auc(results_vi, test = TRUE) #0.8041017 0.6744574
-tss(results_vi, test = TRUE) #0.5792609 0.3986928
+auc(results_vi, test = TRUE) #0.6962879
+tss(results_vi, test = TRUE) #0.4102313
 ```
 Final variables:
-• Continuous: "lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m",
-• Categorical: "ecoregions", "sclass"
+• Continuous: "lsm_10km_agri", "lsm_10km_dev", "elev_30m",
+"slope_30m", and "soil_drainage_30m"
+• Categorical: NA
 
 Retune hyperparameters for the final model (which is in a separate script)
 ```{r}
 env_hp2 <- terra::rast(predictor_stack_full)
 
-env_hp2 <- subset(env_vi, c("lsm_10km_agri", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "ecoregions", "sclass"))
+env_hp2 <- subset(env_vi, c("lsm_10km_agri", "lsm_10km_dev", "elev_30m","slope_30m", "soil_drainage_30m"))
 
 swd_hp2 <- prepareSWD(species = "Scolopax minor", 
            env = env_hp2, 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
-           a = as.data.frame(avail@coords),
-           categorical = c("ecoregions", "sclass")) 
-
-# Split presence locations in training (80%) and testing (20%) datasets
-# datasets_hp2 <- trainValTest(swd_hp2,
-#                          test = 0.2,
-#                          only_presence = FALSE,
-#                          seed = 8)
-# 
-# train_hp2 <- datasets_hp2[[1]]
-# test_hp2 <- datasets_hp2[[2]]
-
-#adding back in survey type manually
-# swd_hp2@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+           a = as.data.frame(avail@coords)) 
 
 kfolds_hp2 <- randomFolds(data = swd_hp2, k = 5, seed = 8)
 
@@ -266,7 +229,7 @@ tuned_hypers_2@models[[1]] %>% auc(test = TRUE) #0.8232906 now 0.695207
 tuned_hypers_2@models[[1]] %>% tss(test = TRUE) #0.6181498 now 0.4262695
 ```
 
-mtry: 2
-ntree: 200
-nodesize: 2
+• mtry: 4
+• ntree: 200
+• nodesize: 9
 

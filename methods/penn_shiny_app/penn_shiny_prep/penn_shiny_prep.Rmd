@@ -7,7 +7,7 @@ output: html_notebook
 library(tidyverse)
 library(raster)
 library(here)
-library(there)
+#library(there)
 library(sf)
 library(parallel)
 library(pbapply)
@@ -20,11 +20,11 @@ library(leaflet.esri)
 
 270m resolution (needs to be small enough that leaflet can handle it)
 ```{r}
-prediction_migration <- raster(here("methods", "Penn_migration_model", "output_layer", "rf_mig_5_15_24.tif")) %>% aggregate(9)
+prediction_migration <- raster(here("methods", "Penn_migration_model", "output_layer", "rf_mig_3_13_26.tif")) %>% aggregate(9)
 
 # prediction_migration <- raster(here_file("Projects", "Penn_migration_model", "rf_unbiased_6_16_21.tif")) %>% aggregate(9)
 
-prediction_residential <- raster(here("methods", "Penn_residential_model", "output_layer", "rf_res_5_15_24.tif")) %>% 
+prediction_residential <- raster(here("methods", "Penn_residential_model", "output_layer", "rf_res_3_13_26.tif")) %>% 
   aggregate(9) %>%
   resample(prediction_migration)
 
@@ -38,7 +38,7 @@ prediction_residential <- raster(here("methods", "Penn_residential_model", "outp
 prediction_migration[is.na(values(prediction_migration))] <- 0
 prediction_residential[is.na(values(prediction_migration))] <- 0
 
-pa_state <- st_read(here_file("Data", "Govt_boundaries", "pennsylvania_5070.shp")) %>%
+pa_state <- st_read(here("methods", "penn_shiny_app", "penn_shiny_prep", "pennsylvania_5070.shp")) %>%
   st_transform(crs(prediction_migration))
 
 prediction_migration <- mask(prediction_migration, pa_state) %>% projectRaster(crs = "+init=epsg:3857")
@@ -48,7 +48,7 @@ prediction_residential <- mask(prediction_residential, pa_state) %>% projectRast
 Scaling the prediction rasters to between 0 and 1
 ```{r}
 prediction_migration_scaled <- ((prediction_migration - cellStats(prediction_migration, stat = 'min')) * (1 - 0) / (cellStats(prediction_migration, stat = 'max') - cellStats(prediction_migration, stat = 'min'))) + 0
-  
+
 prediction_residential_scaled <- ((prediction_residential - cellStats(prediction_residential, stat = 'min')) * (1 - 0) / (cellStats(prediction_residential, stat = 'max') - cellStats(prediction_residential, stat = 'min'))) + 0
 ```
 
@@ -87,38 +87,37 @@ m1r9 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m1r9.tif"))
 m0r10 <- raster(here("methods", "penn_shiny_app", "penn_shiny_prep", "m0r10.tif"))
 ```
 
-
 Calculating gameland statistics and appending them as attributes
 ```{r}
-gamelands <- st_read(here_file("Data", "Public_land", "PA_gameland", "PGC_StateGameland2020.shp")) %>%
+gamelands <- st_read(here("methods", "penn_shiny_app", "penn_shiny_prep", "PA_gameland", "PGC_StateGameland2020.shp")) %>%
   st_transform(crs = crs(prediction_migration)) %>% #note: this fixes the acreage bug from launch
   transmute(name = NAME)
 
 numCores <- 3
-  cl <- makeCluster(numCores)
-  clusterEvalQ(cl, { #preparing each new process to run our code
-    library(sf)
-    library(raster)
-    library(tidyverse)
-  })
-  clusterExport(cl, "gamelands")
-  clusterExport(cl, "m10r0")
-  clusterExport(cl, "m9r1")
-  clusterExport(cl, "m8r2")
-  clusterExport(cl, "m7r3")
-  clusterExport(cl, "m6r4")
-  clusterExport(cl, "m5r5")
-  clusterExport(cl, "m4r6")
-  clusterExport(cl, "m3r7")
-  clusterExport(cl, "m2r8")
-  clusterExport(cl, "m1r9")
-  clusterExport(cl, "m0r10")
+cl <- makeCluster(numCores)
+clusterEvalQ(cl, { #preparing each new process to run our code
+  library(sf)
+  library(raster)
+  library(tidyverse)
+})
+clusterExport(cl, "gamelands")
+clusterExport(cl, "m10r0")
+clusterExport(cl, "m9r1")
+clusterExport(cl, "m8r2")
+clusterExport(cl, "m7r3")
+clusterExport(cl, "m6r4")
+clusterExport(cl, "m5r5")
+clusterExport(cl, "m4r6")
+clusterExport(cl, "m3r7")
+clusterExport(cl, "m2r8")
+clusterExport(cl, "m1r9")
+clusterExport(cl, "m0r10")
 
 gamelands$area_ac <- gamelands %>%
   st_transform(crs = 5070) %>%
   st_area(.) %>%
   as.numeric(.)*0.000247105
-  
+
 #average habitat in each cell
 gamelands$m10r0_mean <- pblapply(1:nrow(gamelands), function(i){
   temp <- raster::extract(x = m10r0, y = as_Spatial(gamelands[i,]))
