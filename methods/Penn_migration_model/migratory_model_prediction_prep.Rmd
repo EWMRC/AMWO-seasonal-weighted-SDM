@@ -42,13 +42,15 @@ Run fully configured model
 ```{r}
 env <- terra::rast(predictor_stack_full)
 
-env <- subset(env, c("lsm_1km_dev", "lsm_10km_ed", "lsm_10km_dev", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "sclass"))
+env <- subset(env, c("lsm_1km_dev", "lsm_10km_ed",
+"lsm_10km_agri", "lsm_10km_dev", "elev_30m",
+"slope_30m", "soil_drainage_30m", "twi_30m", "forest_30m"))
 
 swd <- prepareSWD(species = "Scolopax minor", 
                   env = env, 
                   p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
                   a = as.data.frame(avail_unbiased@coords),
-                  categorical = c("sclass"))
+                  categorical = c("forest_30m"))
 
 kfolds <- randomFolds(data = swd, k = 5, only_presence = TRUE, seed = 8)
 
@@ -83,10 +85,10 @@ model <- train(method = "RF",
                data = swd,
                folds = kfolds,
                mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
-auc(model, test = TRUE) #0.8302482
+auc(model, test = TRUE) #0.8282803
 
 # saving results
 
@@ -97,32 +99,32 @@ saveRDS(model, here("methods", "Penn_migration_model", "model_migratory.rds"))
 model_1 <- train(method = "RF",
                data = train_data_1, #training dataset
                mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
 model_2 <- train(method = "RF",
                data = train_data_2, #training dataset
                mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
 model_3 <- train(method = "RF",
                data = train_data_3, #training dataset
               mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
 model_4 <- train(method = "RF",
                data = train_data_4, #training dataset
                mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
 model_5 <- train(method = "RF",
                data = train_data_5, #training dataset
                mtry = 2,
-               ntree = 3000,
-               nodesize = 9)
+               ntree = 1800,
+               nodesize = 3)
 
 saveRDS(model_1, here("methods", "Penn_migration_model", "model_migratory_1.rds"))
 saveRDS(model_2, here("methods", "Penn_migration_model", "model_migratory_2.rds"))
@@ -153,7 +155,7 @@ boyce_values <- map2_dbl(1:5,list(model_1, model_2, model_3, model_4, model_5), 
 })
 
 mean(boyce_values)
-# 0.6878
+# 0.7576
 
 ```
 
@@ -167,56 +169,55 @@ fishnet <- st_read(here("methods", "Penn_residential_model", "fishnet", "pa_fish
 for(i in 1:nrow(fishnet)){
   temp_extent <- fishnet[i,] %>% as_Spatial() %>% extent()
   crop(x = env, y = temp_extent, 
-       filename = here("methods", "Penn_migration_model", "predictor_stack_3", paste0("predictor_stack_3_30m_",i,".grd")), overwrite = TRUE) 
+       filename = here("methods", "Penn_migration_model", "predictor_stack", paste0("predictor_stack_30m_",i,".grd")), overwrite = TRUE) 
 }
 ```
 
 Write a series of R scripts that can be used to run these predictions on the cluster
 ```{r}
-for(index in 1:nrow(fishnet)){
-  sink(here("methods", "Penn_migration_model", "batch_files", paste0("predict_batch_", index, ".R")))
-  cat(paste0("
-library(tidyverse)
-library(SDMtune) # Needs version 1.1.6 to run: https://cran.r-project.org/src/contrib/Archive/SDMtune/SDMtune_1.1.6.tar.gz
-library(raster)
-library(sp)
-library(sf)
-library(randomForest)
-
-print('reading models')
-
-model_1 <- readRDS('/home/lberigan/SDM_mig/model_migratory_1.rds')
-model_2 <- readRDS('/home/lberigan/SDM_mig/model_migratory_2.rds')
-model_3 <- readRDS('/home/lberigan/SDM_mig/model_migratory_3.rds')
-model_4 <- readRDS('/home/lberigan/SDM_mig/model_migratory_4.rds')
-model_5 <- readRDS('/home/lberigan/SDM_mig/model_migratory_5.rds')
-
-print('reading raster')
-
-predictor_stack_iter <- brick('/home/lberigan/SDM_mig/predictor_stack_3/predictor_stack_3_30m_", index,".grd')
-predictor_stack_iter <- stack(predictor_stack_iter)
-
-print('predicting variables')
-
-f <- list(sclass = c(1,2,3,4,5,6,7,111,120,132,180))
-
-pred_1 <- predict(model_1, data = predictor_stack_iter, factors = f)
-pred_2 <- predict(model_2, data = predictor_stack_iter, factors = f)
-pred_3 <- predict(model_3, data = predictor_stack_iter, factors = f)
-pred_4 <- predict(model_4, data = predictor_stack_iter, factors = f)
-pred_5 <- predict(model_5, data = predictor_stack_iter, factors = f)
-
-print('stacking')
-
-pred_stack <- stack(pred_1, pred_2, pred_3, pred_4, pred_5)
-
-print('averaging')
-
-calc(pred_stack, fun = mean, filename = '/home/lberigan/SDM_mig/predict_output/predict_", index,".tif')
-
-print('done')
-             "))
-  sink()
-}
-
+# for(index in 1:nrow(fishnet)){
+#   sink(here("methods", "Penn_migration_model", "batch_files", paste0("predict_batch_", index, ".R")))
+#   cat(paste0("
+# library(tidyverse)
+# library(SDMtune) # Needs version 1.1.6 to run: https://cran.r-project.org/src/contrib/Archive/SDMtune/SDMtune_1.1.6.tar.gz
+# library(raster)
+# library(sp)
+# library(sf)
+# library(randomForest)
+# 
+# print('reading models')
+# 
+# model_1 <- readRDS('/home/lberigan/SDM_mig/model_migratory_1.rds')
+# model_2 <- readRDS('/home/lberigan/SDM_mig/model_migratory_2.rds')
+# model_3 <- readRDS('/home/lberigan/SDM_mig/model_migratory_3.rds')
+# model_4 <- readRDS('/home/lberigan/SDM_mig/model_migratory_4.rds')
+# model_5 <- readRDS('/home/lberigan/SDM_mig/model_migratory_5.rds')
+# 
+# print('reading raster')
+# 
+# predictor_stack_iter <- brick('/home/lberigan/SDM_mig/predictor_stack_3/predictor_stack_3_30m_", index,".grd')
+# predictor_stack_iter <- stack(predictor_stack_iter)
+# 
+# print('predicting variables')
+# 
+# f <- list(sclass = c(1,2,3,4,5,6,7,111,120,132,180))
+# 
+# pred_1 <- predict(model_1, data = predictor_stack_iter, factors = f)
+# pred_2 <- predict(model_2, data = predictor_stack_iter, factors = f)
+# pred_3 <- predict(model_3, data = predictor_stack_iter, factors = f)
+# pred_4 <- predict(model_4, data = predictor_stack_iter, factors = f)
+# pred_5 <- predict(model_5, data = predictor_stack_iter, factors = f)
+# 
+# print('stacking')
+# 
+# pred_stack <- stack(pred_1, pred_2, pred_3, pred_4, pred_5)
+# 
+# print('averaging')
+# 
+# calc(pred_stack, fun = mean, filename = '/home/lberigan/SDM_mig/predict_output/predict_", index,".tif')
+# 
+# print('done')
+#              "))
+#   sink()
+# }
 ```

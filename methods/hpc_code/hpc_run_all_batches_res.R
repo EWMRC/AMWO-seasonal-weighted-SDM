@@ -18,11 +18,11 @@ model_4 <- readRDS('/home/aublab001/Penn_residential_model/model_residential_4.r
 model_5 <- readRDS('/home/aublab001/Penn_residential_model/model_residential_5.rds')
 
 hpc_predict <- function(index){
+  library(SDMtune) 
+  library(randomForest)
+  
   predictor_stack_iter <- rast(paste0("/home/aublab001/Penn_residential_model/predictor_stack/predictor_stack_30m_", index,".grd"))
-  
-  predictor_stack_iter$ecoregions <- as.factor(predictor_stack_iter$ecoregions)
-  predictor_stack_iter$sclass <- as.factor(predictor_stack_iter$sclass)
-  
+
   pred_1 <- predict(model_1, data = predictor_stack_iter)
   pred_2 <- predict(model_2, data = predictor_stack_iter)
   pred_3 <- predict(model_3, data = predictor_stack_iter)
