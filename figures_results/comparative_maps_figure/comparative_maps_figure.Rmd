@@ -8,20 +8,20 @@ library(tidyverse)
 library(terra)
 library(sf)
 library(tidyterra)
-library(there)
 library(ggpubr)
 library(ggspatial)
+library(here)
 ```
 
 ```{r}
-prediction_migration <- rast(here_file("Projects", "AMWO-seasonal-weighted-SDM", "code", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) %>% 
+prediction_migration <- rast(here("methods", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) %>% 
   project("epsg:4326")
 
-prediction_residential <- rast(here_file("Projects", "AMWO-seasonal-weighted-SDM", "code", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) %>% 
-  project(y = prediction_migration) %>%
-  resample(prediction_migration)
+prediction_residential <- rast(here("methods", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) %>% 
+  project(y = prediction_migration) #%>%
+  #resample(prediction_migration)
 
-basemap <- rast(here_file("Data", "basemaps", "esri_lightgrey", "esri_lightgrey_36_48_4326_pa.tif"))
+basemap <- rast(here("figures_results", "comparative_maps_figure", "esri_lightgrey_36_48_4326_pa.tif"))
 ```
 
 Rescale values to a quantile scale
@@ -110,7 +110,7 @@ comp_map <- ggarrange(plotlist =  list(resplot2, migplot2),
                       legend = "right",
                       hjust = -0.3)
 
-ggsave(filename = "comparative_maps_4_26_23.png", plot = comp_map, dpi = 300, bg = "white",
+ggsave(filename = here("figures_results", "comparative_maps_figure", "comparative_maps_4_18_26.png"), plot = comp_map, dpi = 600, bg = "white",
        width = 6,
        height = 7)
 ```

@@ -1,0 +1,219 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(raster)
+library(here)
+library(stars)
+library(RColorBrewer)
+library(ggpattern)
+library(ggmap)
+library(leaflet)
+library(leaflet.providers)
+library(leaflet.esri)
+library(ggpubr)
+library(cowplot)
+library(viridis)
+
+rf <- colorRampPalette(rev(brewer.pal(11,'Spectral')))
+r <- rf(32)
+```
+
+```{r}
+#predictive
+ras_res <- raster(here("methods", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) 
+ras_mig <- raster(here("methods", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) 
+
+#landscape
+lsm_10km_agri <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_agri_90m_10km_5070.tif")) 
+lsm_10km_dev <- raster(here("methods", "Penn_migration_model", "lsm_10km", "lsm_dev_90m_10km_5070.tif")) 
+
+#level iii ecoregions
+ras_ecoregion <- here("methods", "Penn_migration_model", "additional_covariates", "level_iii_ecoregions_pa.tif") %>% raster()
+
+#terrain
+drainage_30m <- here("methods", "Penn_migration_model", "additional_covariates", "soil_drainage_5070.tif") %>% raster() 
+```
+
+Standardizing by quantile
+```{r}
+quantiles <- raster::quantile(ras_res, 1:100/100)
+intervals <- findInterval(getValues(ras_res), quantiles)
+ras_res <- setValues(ras_res, intervals)
+
+quantiles <- raster::quantile(ras_mig, 1:100/100)
+intervals <- findInterval(getValues(ras_mig), quantiles)
+ras_mig <- setValues(ras_mig, intervals)
+```
+
+
+Generate sample points
+```{r}
+#landcover: set background values to NA
+forest_30m <- here("methods", "Penn_migration_model", "additional_covariates", "nlcd2016_forestpatches.tif") %>% raster() 
+forest_30m[forest_30m == 128] <- NA
+
+sample_points <- enmSdmX::sampleRast(x = projectRaster(forest_30m, crs = crs("+init=epsg:4326")), n = 10000, replace = TRUE, prob = FALSE) %>%
+  as.data.frame()
+
+coordinates(sample_points) <- ~ x + y
+
+proj4string(sample_points) <- CRS("+init=epsg:4326")
+
+sample_points <- st_as_sf(sample_points)
+
+sample_points %>%
+  st_transform(st_crs(5070)) ->
+  sample_points
+
+sample_points <- as_Spatial(sample_points)
+```
+
+Extract values at these points
+```{r}
+values_res <- ras_res %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_mig <- ras_mig %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_ecoregion <- ras_ecoregion %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_agri <- lsm_10km_agri %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_10km_dev <- lsm_10km_dev %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+
+values_drainage <- drainage_30m %>% 
+  projectRaster(from = ., crs = "+init=epsg:5070") %>%
+  raster::extract(x = ., y = sample_points)
+```
+
+```{r}
+point_values <- sample_points %>%
+  st_as_sf() %>%
+  mutate(
+    res = values_res,
+    mig = values_mig,
+    ecoregion = values_ecoregion,
+    agri10km = values_10km_agri,
+    dev10km = values_10km_dev,
+    drainage = values_drainage
+  )
+```
+
+```{r}
+point_values -> point_values_sampled
+```
+
+```{r}
+point_values_sampled %>%
+  pivot_longer(cols = c(mig, res), names_to = "season") ->
+  point_values_longer
+```
+
+Relationships with variables for each season
+
+Agri 10km
+```{r}
+agri_10km_plot <- point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = agri10km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season)  +
+  ylab("Habitat suitability") +
+  xlab("Percent agricultural (10 km)") +
+  scale_x_continuous(labels = scales::percent, breaks = seq(0, 1, by = .25)) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) +
+  labs(fill="Count") + 
+  theme(legend.position = "none")
+
+agri_10km_plot
+
+ggsave(plot = agri_10km_plot,
+       filename = here("figures_results","covariate_graphs_figure", "agri_10km_4_19_26.png"), height = 4, width = 7, dpi = 600)
+```
+
+dev 10km (good one to show tolerance for developed landscapes among migratory birds)
+```{r}
+dev_10km_plot <- point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" )) %>%
+  ggplot(aes(x = dev10km, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season) +
+  ylab("Habitat suitability") +
+  xlab("Percent developed (10 km)") +
+  scale_x_continuous(labels = scales::percent) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) + 
+  labs(fill="Count") + 
+  theme(legend.position = "none") +
+  theme(axis.title.y = element_blank())
+
+dev_10km_plot
+
+ggsave(plot = agri_10km_plot,
+       filename = here("figures_results","covariate_graphs_figure", "dev_10km_4_19_26.png"), height = 4, width = 7, dpi = 600)
+```
+
+drainage
+```{r}
+drainage_tbl <- point_values_longer %>%
+  mutate(season = recode(season, "mig" = "Migratory", "res" = "Breeding" ),
+         drainage = round(drainage)) %>%  
+         # drainage = as.factor(recode_values(round(drainage), 
+         #                   0 ~ "Excessively drained",
+         #                   1 ~ "S. excessively drained",
+         #                   2 ~ "Well drained",
+         #                   3 ~ "M. well drained",
+         #                   4 ~ "S. poorly drained",
+         #                   5 ~ "Poorly drained",
+         #                   6 ~ "V. poorly drained"))) %>% 
+  filter(!is.na(drainage))
+
+# drainage_tbl$drainage <- factor(drainage_tbl$drainage, levels = c("Excessively drained", "S. excessively drained", "Well drained", "M. well drained", "S. poorly drained", "Poorly drained", "V. poorly drained"), ordered = TRUE)
+
+drainage_plot <- drainage_tbl %>% 
+  ggplot(aes(x = drainage, y = value)) +
+  geom_hex() +
+  #geom_point() +
+  theme_bw() +
+  facet_wrap(~season) +
+  ylab("Habitat suitability") +
+  xlab("Soil drainage class") +
+  #scale_x_continuous(labels = scales::percent) +
+  scale_fill_gradientn(colours=rf(405), limits = c(1,405), trans = "log", labels = round) + 
+  labs(fill="Count") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + 
+  theme(legend.position = "none") +
+  theme(axis.title.y = element_blank())
+
+drainage_plot
+
+ ggsave(plot = drainage_plot,
+       filename = here("figures_results","covariate_graphs_figure", "drainage_4_19_26.png"), height = 4, width = 7, dpi = 600)
+```
+
+
+```{r fig.height=4, fig.width=10}
+ggarrange(agri_10km_plot, dev_10km_plot, drainage_plot, ncol = 3, nrow = 1, widths = c(3.1,3,3))
+ggsave(here("figures_results","covariate_graphs_figure", "covariate_comparison.png"), height = 4, width = 10, dpi = 600, units = "in")
+```
+1) woodcock are much more tolerant of high % agri during migration
+2) woodcock use developed areas less during breeding and more during migration
+3) woodcock use poorly-drained areas similarly during both seasons, but this effect is a more important predictor during migration
+

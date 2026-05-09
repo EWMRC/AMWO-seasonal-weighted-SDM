@@ -32,11 +32,29 @@ vi_mig$model <- "Migratory"
 vi_res$model <- "Breeding"
 
 vi <- bind_rows(vi_mig,vi_res) %>% 
-  filter()
+  mutate(variable_clean = recode_values(Variable,
+                                        "soil_drainage_30m" ~ "Soil drainage",
+                                        "lsm_10km_dev" ~ " % Developed (10km)",
+                                        "twi_30m" ~ "Topographic wetness index",
+                                        "lsm_10km_ed" ~ "Edge density (10km)",
+                                        "lsm_1km_dev" ~ "% Developed (1km)",
+                                        "lsm_10km_agri" ~ "% Agricultural (10km)",
+                                        "slope_30m" ~ "Slope",
+                                        "elev_30m" ~ "Elevation",
+                                        "forest_30m" ~ "Forest"
+                                        ))
 ```
 
 Let's figure out how to plot it
 ```{r}
-ggplot(vi, aes(x ))
+ggplot(vi, aes(x = variable_clean, y = Permutation_importance)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = Permutation_importance - 1.96*sd, ymax = Permutation_importance + 1.96*sd)) +
+  facet_wrap(vars(model), scales = "free_x") +
+  theme_bw() +
+  labs(x = "Variable", y = "Permutation importance") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggsave(here("figures_results", "variable_importance", "var_imp.png"), dpi = 600, units = "in", height = 5, width = 7)
 ```
 
