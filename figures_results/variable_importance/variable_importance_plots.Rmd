@@ -42,19 +42,35 @@ vi <- bind_rows(vi_mig,vi_res) %>%
                                         "slope_30m" ~ "Slope",
                                         "elev_30m" ~ "Elevation",
                                         "forest_30m" ~ "Forest"
-                                        ))
+  ),
+  Permutation_importance = Permutation_importance/100,
+  sd = sd/100)
 ```
 
 Let's figure out how to plot it
-```{r}
-ggplot(vi, aes(x = variable_clean, y = Permutation_importance)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = Permutation_importance - 1.96*sd, ymax = Permutation_importance + 1.96*sd)) +
-  facet_wrap(vars(model), scales = "free_x") +
+```{r fig.height=4, fig.width=6}
+ggplot(vi, aes(x = tidytext::reorder_within(variable_clean, Permutation_importance, model), y = Permutation_importance)) +
+  # geom_point(color = "black", fill = "white") +
+  # geom_errorbar(aes(ymin = Permutation_importance - 1.96*sd, ymax = Permutation_importance + 1.96*sd)) +
+  geom_pointrange(
+    aes(ymin = Permutation_importance - 1.96*sd, ymax = Permutation_importance + 1.96*sd),
+    linewidth  = 0.5,
+    size       = 0.4,
+    shape      = 21,          # filled circle with border
+    fill       = "white",
+    color      = "black"
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(vars(model), scales = "free_y") +
   theme_bw() +
-  labs(x = "Variable", y = "Permutation importance") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  labs(y = "Permutation importance") +
+  theme(axis.text.x = element_text(angle = 315, hjust = 0, size = 9)) +
+  #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  scale_y_continuous(labels = scales::percent) +
+  tidytext::scale_x_reordered() +
+  theme(axis.title.y = element_blank()) +
+  coord_flip()
 
-ggsave(here("figures_results", "variable_importance", "var_imp.png"), dpi = 600, units = "in", height = 5, width = 7)
+ggsave(here("figures_results", "variable_importance", "var_imp.png"), dpi = 600, units = "in", height = 4, width = 6)
 ```
 

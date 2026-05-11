@@ -5,15 +5,15 @@ output: html_notebook
 
 ```{r}
 library(tidyverse)
-library(there)
+library(here)
 library(terra)
 ```
 
 ```{r}
-prediction_migration <- rast(here_file("Projects", "AMWO-seasonal-weighted-SDM", "code", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) %>% 
+prediction_migration <- rast(here("methods", "penn_shiny_app", "prerender_PA_app", "m10r0.tif")) %>% 
   project("epsg:4326")
 
-prediction_residential <- rast(here_file("Projects", "AMWO-seasonal-weighted-SDM", "code", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) %>% 
+prediction_residential <- rast(here("methods", "penn_shiny_app", "prerender_PA_app", "m0r10.tif")) %>% 
   project(y = prediction_migration) %>%
   resample(prediction_migration)
 ```

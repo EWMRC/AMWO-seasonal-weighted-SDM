@@ -151,7 +151,7 @@ scale_fill_manual(values = c("Northeastern Highlands" = "#a6cee3", "Northern All
 Creating an ecoregion map with a corresponding color scheme 
 ```{r fig.height=5, fig.width=8}
 #Read and dissolve ecoregions
-pa_ecoregions <- st_read(here_file("Data", "physiographic_provinces", "level_iii_ecoregions_pa.shp"))
+pa_ecoregions <- st_read(here("methods", "Penn_migration_model", "additional_covariates", "level_iii_ecoregions_pa.shp"))
 
 pa_ecoregions %>% 
   group_by(US_L3CODE) %>%
@@ -177,7 +177,7 @@ pa_ecoregions_nested %>%
 #bbox <- c(-80.6, 39.7, -74.7, 42.3)
 
 #basemap <- get_map(location = bbox, source = "google", maptype = "roadmap")
-register_google(key = "AIzaSyB1iOfMzu6DuJuoXb4FoUL8ZxOh_SiwlXw")
+register_google(key = "AIzaSyBj92-KOz5sosbleU_IJWpI1lTktOh4wVU")
 basemap <- get_googlemap(center = c(lon = -77.66, lat = 40.85), source="google", maptype = "hybrid", color="bw", zoom = 6)
 
 ggmap(basemap)
@@ -223,7 +223,7 @@ ggdraw() +
    draw_plot(ecoregion_map_plot, x = 0, y = 0.5, width = 1, height = .5) +
    draw_plot(ecoregion_bw_plot, x = 0, y = 0, width = 1, height = .5)
 
-ggsave(filename = "pa_comparative_ecoregion_cbfriendly_6_29_23.tif", width = 8, height = 7, dpi = 320, device = "tiff", 
+ggsave(filename = "pa_comparative_ecoregion.tif", width = 8, height = 7, dpi = 600, device = "tiff",
        type = "cairo", bg = "white")
 ```
 

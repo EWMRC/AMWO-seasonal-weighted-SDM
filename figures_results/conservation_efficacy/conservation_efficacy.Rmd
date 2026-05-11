@@ -1,0 +1,187 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(viridis)
+```
+
+```{r}
+gamelands <- here("methods", "penn_shiny_app", "woodcock_weighted_habitat", "gamelands.rds") %>% 
+  read_rds()
+```
+
+```{r}
+game_df <- gamelands %>% 
+  transmute(mig_suit = m10r0_si,
+            res_suit = m0r10_si,
+            blended_suit_1 = m5r5_si,
+            blended_suit_2 = m3r7_si,
+            blended_suit_3 = m7r3_si
+  ) %>% 
+  mutate(mig_quantile = rank(mig_suit)/nrow(gamelands),
+         res_quantile = rank(res_suit)/nrow(gamelands),
+         blended_quantile_1 = rank(blended_suit_1)/nrow(gamelands),
+         blended_quantile_2 = rank(blended_suit_2)/nrow(gamelands),
+         blended_quantile_3 = rank(blended_suit_3)/nrow(gamelands))
+
+cum_df_mig <- tibble(quantile = (1:100)/100) %>% 
+  mutate(mig_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(mig_quantile >= q) %>% 
+             pull(mig_suit) %>% 
+             sum()
+         }),
+         res_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(mig_quantile >= q) %>% 
+             pull(res_suit) %>% 
+             sum()
+         })) %>% 
+  mutate(mig_cum_suit = mig_cum_suit/max(mig_cum_suit),
+         res_cum_suit = res_cum_suit/max(res_cum_suit)) %>% 
+  pivot_longer(cols = contains("cum_suit"),
+               names_to = "season",
+               values_to = "cum_suit") %>% 
+  mutate(strategy = "Migratory-only (0:100)")
+
+cum_df_res <- tibble(quantile = (1:100)/100) %>% 
+  mutate(mig_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(res_quantile >= q) %>% 
+             pull(mig_suit) %>% 
+             sum()
+         }),
+         res_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(res_quantile >= q) %>% 
+             pull(res_suit) %>% 
+             sum()
+         })) %>% 
+  mutate(mig_cum_suit = mig_cum_suit/max(mig_cum_suit),
+         res_cum_suit = res_cum_suit/max(res_cum_suit)) %>% 
+  pivot_longer(cols = contains("cum_suit"),
+               names_to = "season",
+               values_to = "cum_suit") %>% 
+  mutate(strategy = "Breeding-only (100:0)")
+
+cum_df_blended_1 <- tibble(quantile = (1:100)/100) %>% 
+  mutate(mig_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_1 >= q) %>% 
+             pull(mig_suit) %>% 
+             sum()
+         }),
+         res_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_1 >= q) %>% 
+             pull(res_suit) %>% 
+             sum()
+         })) %>% 
+  mutate(mig_cum_suit = mig_cum_suit/max(mig_cum_suit),
+         res_cum_suit = res_cum_suit/max(res_cum_suit)) %>% 
+  pivot_longer(cols = contains("cum_suit"),
+               names_to = "season",
+               values_to = "cum_suit") %>% 
+  mutate(strategy = "Cross-seasonal (50:50)")
+
+cum_df_blended_2 <- tibble(quantile = (1:100)/100) %>% 
+  mutate(mig_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_2 >= q) %>% 
+             pull(mig_suit) %>% 
+             sum()
+         }),
+         res_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_2 >= q) %>% 
+             pull(res_suit) %>% 
+             sum()
+         })) %>% 
+  mutate(mig_cum_suit = mig_cum_suit/max(mig_cum_suit),
+         res_cum_suit = res_cum_suit/max(res_cum_suit)) %>% 
+  pivot_longer(cols = contains("cum_suit"),
+               names_to = "season",
+               values_to = "cum_suit") %>% 
+  mutate(strategy = "Cross-seasonal (70:30)")
+
+cum_df_blended_3 <- tibble(quantile = (1:100)/100) %>% 
+  mutate(mig_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_3 >= q) %>% 
+             pull(mig_suit) %>% 
+             sum()
+         }),
+         res_cum_suit = map_dbl(quantile,
+         function(q){
+           game_df %>% 
+             filter(blended_quantile_3 >= q) %>% 
+             pull(res_suit) %>% 
+             sum()
+         })) %>% 
+  mutate(mig_cum_suit = mig_cum_suit/max(mig_cum_suit),
+         res_cum_suit = res_cum_suit/max(res_cum_suit)) %>% 
+  pivot_longer(cols = contains("cum_suit"),
+               names_to = "season",
+               values_to = "cum_suit") %>% 
+  mutate(strategy = "Cross-seasonal (30:70)")
+```
+
+```{r}
+cum_df_all <- bind_rows(cum_df_res, cum_df_mig, cum_df_blended_1, cum_df_blended_2, cum_df_blended_3) %>% 
+  mutate(strategy = factor(strategy, levels = c("Breeding-only (100:0)", "Cross-seasonal (70:30)", "Cross-seasonal (50:50)", "Cross-seasonal (30:70)", "Migratory-only (0:100)"), ordered = TRUE)) %>% 
+  mutate(season = replace_values(season,
+                                 "res_cum_suit" ~ "Breeding habitat",
+                                 "mig_cum_suit" ~ "Migratory habitat"))
+```
+
+```{r fig.height=3, fig.width=6}
+ggplot(data = cum_df_all, mapping = aes(x =  1 - quantile, y = cum_suit, col = strategy)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Percent of gamelands managed for woodcock", y = "Percent of total habitat conserved", color = "Distribution model") +
+  facet_wrap(vars(season)) +
+  scale_color_manual(values = c(
+  "Breeding-only (100:0)"  = "#B35806",
+  "Cross-seasonal (70:30)" = "#E08A00",
+  "Cross-seasonal (50:50)" = "#A89A8A",
+  "Cross-seasonal (30:70)" = "#4A90C4",
+  "Migratory-only (0:100)" = "#1A4E8A"
+)) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    legend.position        = "inside",
+    legend.position.inside = c(0.850, 0.248),
+    legend.background      = element_rect(fill = "white", color = "grey80", linewidth = 0.3),
+    legend.margin          = margin(4, 6, 4, 6),
+    legend.key.size        = unit(0.4, "cm"),
+    legend.text            = element_text(size = 8),
+    legend.title           = element_text(size = 8, face = "bold")
+  )
+
+ggsave(here("figures_results", "conservation_efficacy", "conservation_efficacy.png"), dpi = 600, height = 3, width = 6, units = "in")
+```
+Tldr: All cross seasonal strategies have a similar efficacy at breeding habitat as the residential-only strategy. However, these models perform better at conserving migratory habitat. May throw in a few additional cross-seasonal options (75:25, 25:75)
+
+```{r}
+cor_df <- tibble(
+    res = gamelands$m0r10_si, 
+    mig = gamelands$m10r0_si,
+    blended = gamelands$m5r5_si)
+
+cor(cor_df)
+```
+

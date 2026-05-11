@@ -49,7 +49,7 @@ ui <- shinyUI(
                                                     <li>The model is most useful at a > 1 kilometer scale (i.e. the width of 4 pixels); inference at a finer scale is not recommended.</li>
                                                                    </ul>"))),
                                 column(6, panel_div("success", "User Guides", HTML("For Land Managers: <a href='W-PAST_manual.pdf' target = 'blank' download='W-PAST_manual.pdf'> User Manual </a> <br/> Watch the video tutorial here: <a href='https://youtu.be/U7brDAFVqyU' target='_top'>How to use W-PAST</a>"))), #HTML("<br/> For Researchers: Technical Report (link will be added when complete)") downloadLink("download_manual", "User Manual")
-                                column(6, panel_div("info", "Credits", HTML("<i>Version 2.0 (updated 2024-10-11)</i><br/>
+                                column(6, panel_div("info", "Credits", HTML("<i>Version 2.0 (updated 2026-5-9)</i><br/>
                                 This app was created by the University of Maine and the Pennsylvania Game Commision using data from the <a href='https://www.citizenscience.gov/catalog/182/#' target='_top'>American Woodcock Singing-ground Survey</a>, Pennsylvania Game Commission surveys, and migratory stopover locations from the <a href='https://www.woodcockmigration.org/' target='_top'>Eastern Woodcock Migration Research Cooperative</a>.<br/><br/> 
                                                                             Need help? Email: <a href='mailto:liamaberigan@gmail.com?Subject=W-PAST%20Help' target='_top'>Liam Berigan</a>"))))
                             ,  # end of fluidRow
