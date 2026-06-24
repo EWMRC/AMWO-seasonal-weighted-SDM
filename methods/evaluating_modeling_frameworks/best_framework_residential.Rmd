@@ -16,6 +16,8 @@ Read in preprocessed available data
 predictor_stack_full <- stackOpen(here("methods", "Penn_migration_model", "predictor_stack_full_mig.stk"))
 
 names(predictor_stack_full) <- c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m", "ecoregions", "sclass")
+
+predictor_stack_full <- subset(predictor_stack_full, c("lsm_500m_ai", "lsm_500m_cohesion", "lsm_500m_ed", "lsm_500m_pland", "lsm_500m_agri", "lsm_500m_dev", "lsm_1km_ai", "lsm_1km_cohesion", "lsm_1km_ed", "lsm_1km_pland", "lsm_1km_agri", "lsm_1km_dev", "lsm_5km_ai", "lsm_5km_cohesion", "lsm_5km_ed", "lsm_5km_pland", "lsm_5km_agri", "lsm_5km_dev", "lsm_10km_ai", "lsm_10km_cohesion", "lsm_10km_ed", "lsm_10km_pland", "lsm_10km_agri", "lsm_10km_dev", "forest_30m", "elev_30m", "slope_30m", "soil_drainage_30m", "twi_30m")) #remove "ecoregions", "sclass"
 ```
 
 Read in the used points, and transform the used and available points to match the predictor stack
@@ -63,21 +65,21 @@ swd_full <- prepareSWD(species = "Scolopax minor",
            env = terra::rast(predictor_stack_full), 
            p = rename(as.data.frame(used@coords), x = coords.x1, y = coords.x2), 
            a = as.data.frame(avail@coords),
-           categorical = c("forest_30m", "ecoregions", "sclass"))
-
-#adding back in survey type manually
-swd_full@data$survey <- factor(c(used$survey_type, avail$survey_type), levels = c(0,1))
+           categorical = c("forest_30m"))
 
 swd_full_folds <- randomFolds(swd_full, k = 5, seed = 8)
 ```
 
 RF test
 ```{r}
-rf_full <- train(method = "RF", data = swd_full, swd_full_folds, ntree = 500)
+rf_full <- train(method = "RF", data = swd_full, swd_full_folds,
+               mtry = 5,
+               ntree = 500,
+               nodesize = 1)
 
-auc(rf_full, test = TRUE) #0.7866516
+auc(rf_full, test = TRUE) #0.717668
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(rf_full, test = TRUE) #0.5446456
+tss(rf_full, test = TRUE) #0.4512318
 ```
 
 Maxnet test (think maxent but not in Java: https://cran.r-project.org/web/packages/maxnet/index.html)
@@ -93,7 +95,7 @@ Boosted Regression Tree test
 ```{r}
 brt_unbiased <- train(method = "BRT", data = swd_full, swd_full_folds)
 
-auc(brt_unbiased, test = TRUE) #0.7709402
+auc(brt_unbiased, test = TRUE) #0.6323236
 #The TSS scores are measured from 1 to + 1, with 1 signifying perfect agreement and 0.60 to 0.90 suggesting good to excellent model performance (Allouche et al.
-tss(brt_unbiased, test = TRUE) #0.5482655
+tss(brt_unbiased, test = TRUE) #0.3236551
 ```
