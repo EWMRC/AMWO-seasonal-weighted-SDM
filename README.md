@@ -1,4 +1,4 @@
-# Multi-seasonal species distribution models better facilitate habitat conservation for a migratory bird
+# Cross-seasonal species distribution models better facilitate habitat conservation for a migratory bird
  
 Currently under review. Contents of this repository are as follows:
 - methods: code used to create the seasonal models used in the Woodcock Priority Area and Siting (W-PAST) tool, available at https://woodcock.shinyapps.io/W-PAST/
