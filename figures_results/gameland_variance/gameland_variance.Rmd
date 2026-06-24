@@ -1,0 +1,108 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(sf)
+```
+
+Retrieve the gameland rankings from the app
+```{r}
+gamelands <- here("methods", "penn_shiny_app", "woodcock_weighted_habitat", "gamelands.rds") %>% 
+  readRDS()
+```
+
+# Average pixel value
+Migratory
+```{r}
+gamelands$m10r0_mean %>% min()
+gamelands$m10r0_mean %>% max()
+gamelands$m10r0_mean %>% sd()
+hist(gamelands$m10r0_mean)
+```
+
+Breeding
+```{r}
+gamelands$m0r10_mean %>% min()
+gamelands$m0r10_mean %>% max()
+gamelands$m0r10_mean %>% sd()
+hist(gamelands$m0r10_mean)
+```
+
+# total habitat
+Migratory
+```{r}
+gamelands$m10r0_si %>% mean()
+gamelands$m10r0_si %>% median()
+gamelands$m10r0_si %>% min()
+gamelands$m10r0_si %>% max()
+gamelands$m10r0_si %>% var()
+hist(gamelands$m10r0_si)
+
+3*(mean(gamelands$m10r0_si) - median(gamelands$m10r0_si)) / sd(gamelands$m10r0_si)
+```
+
+Breeding
+```{r}
+gamelands$m0r10_si %>% mean()
+gamelands$m0r10_si %>% median()
+gamelands$m0r10_si %>% min()
+gamelands$m0r10_si %>% max()
+gamelands$m0r10_si %>% var()
+hist(gamelands$m0r10_si)
+
+3*(mean(gamelands$m0r10_si) - median(gamelands$m0r10_si)) / sd(gamelands$m0r10_si)
+```
+
+Experimental
+```{r}
+top_num <- 10
+
+# migratory
+gamelands %>% 
+  st_drop_geometry() %>% 
+  dplyr::select(m10r0_si) %>% 
+  arrange(desc(m10r0_si)) %>% 
+  slice_head(n = top_num) %>% 
+  pull(m10r0_si) %>% 
+  sum(.)/sum(gamelands$m10r0_si)
+
+# breeding
+gamelands %>% 
+  st_drop_geometry() %>% 
+  dplyr::select(m0r10_si) %>% 
+  arrange(desc(m0r10_si)) %>% 
+  slice_head(n = top_num) %>% 
+  pull(m0r10_si) %>% 
+  sum(.)/sum(gamelands$m0r10_si)
+```
+
+```{r}
+top_num <- 10
+
+# migratory
+gamelands %>% 
+  st_drop_geometry() %>% 
+  # dplyr::select(m10r0_si) %>% 
+  arrange(desc(m0r10_si)) %>% 
+  slice_head(n = top_num) #%>% 
+  # pull(m10r0_si) %>% 
+  # sum(.)/sum(gamelands$m10r0_si)
+
+# breeding
+# gamelands %>% 
+#   st_drop_geometry() %>% 
+#   # dplyr::select(m0r10_si) %>% 
+#   arrange(desc(m10r0_si)) %>% 
+#   slice_head(n = top_num) %>% 
+#   pull(m0r10_si) %>% 
+#   sum(.)/sum(gamelands$m0r10_si)
+```
+
+```{r}
+cor(x = gamelands$m10r0_si, y = gamelands$m0r10_si, method = "pearson")
+```
+
