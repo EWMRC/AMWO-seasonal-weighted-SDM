@@ -151,7 +151,7 @@ cum_df_all <- bind_rows(cum_df_res, cum_df_mig, cum_df_blended_1, cum_df_blended
 ggplot(data = cum_df_all, mapping = aes(x =  1 - quantile, y = cum_suit, col = strategy)) +
   geom_line() +
   theme_bw() +
-  labs(x = "Percent of gamelands managed for woodcock", y = "Percent of total habitat conserved", color = "Distribution model") +
+  labs(x = "Percent of gamelands managed for woodcock", y = "Percent of total habitat conserved", color = "Predictive layer") +
   facet_wrap(vars(season)) +
   scale_color_manual(values = c(
   "Breeding-only (100:0)"  = "#B35806",
