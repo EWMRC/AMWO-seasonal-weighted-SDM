@@ -127,9 +127,6 @@ methods/Penn_residential_model/output_layer/rf_res_3_13_26.tif
 methods/Penn_migration_model/output_layer/rf_mig_3_13_26.tif
 figures_results/comparative_maps_figure/esri_lightgrey_36_48_4326_pa.tif
 .positai
-/old
 
 # anything I don't want on Zenodo.
-manuscript_drafts/
-app_manual/
-presentations/
+/not_tracked/
