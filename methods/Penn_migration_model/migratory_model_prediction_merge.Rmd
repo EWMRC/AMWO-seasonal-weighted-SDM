@@ -27,6 +27,6 @@ for(i in 2:length(tile_rasters)){
   merged_rasters <- raster::merge(merged_rasters, tile_rasters[[i]])
 }
 
-writeRaster(merged_rasters, here("methods", "Penn_migration_model", "rf_mig_3_13_26.tif"))
+writeRaster(merged_rasters, here("methods", "Penn_migration_model", "output_layer", "rf_mig_3_13_26.tif"))
 ```
 
